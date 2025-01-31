@@ -6,12 +6,44 @@ body {
     font-family: 'Patrick Hand', cursive;
     margin: 0;
     padding: 20px;
-    background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa');
-    background-size: cover;
+    background-image: url('crystal\ model\ 731.jpg'); /* Adjusted for correct path */
+    background-size: cover; /* Ensures the image covers the entire viewport */
     background-position: center;
-    background-attachment: fixed;
+    background-attachment: fixed; /* Background stays fixed while scrolling */
     position: relative;
     color: #2c3e50;
+}
+
+/* Add to existing styles */
+.mt-15 {
+    margin-top: 15px;
+}
+
+.energy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 15px 0;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ff6b6b;
+    border-radius: 6px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 16px;
+    background: white;
+    margin: 10px 0;
+}
+
+.calendar-deprecation {
+    background: rgba(147, 51, 234, 0.1);
+    border-color: #9333ea;
+}
+
+.calendar-deprecation legend {
+    color: #9333ea;
 }
 
 .background-overlay {
@@ -53,14 +85,15 @@ body {
 
 fieldset {
     border: 2px solid #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.3);
     border-radius: 8px;
     padding: 15px;
     margin: 15px 0;
 }
 
 legend {
+    color: #2c3e50;
     font-weight: bold;
-    color: #ff6b6b;
     padding: 0 10px;
 }
 
@@ -124,13 +157,23 @@ button:hover {
 }
 
 .disclaimer {
-    background: rgba(255, 235, 59, 0.1);
-    border-color: #ffeb3b;
+    background: rgba(255, 241, 118, 0.1);
+    border-color: #ffe082;
 }
 
-.disclaimer legend {
-    color: #ff9800;
+.disclosure-note {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
 }
+
+.disclosure-note ul {
+    margin: 10px 0;
+}
+
 
 .video-container {
     position: relative;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Are You Worthy? (Conscious Universe Integration Portal)</title>
+    <title>Conscious Universe Integration Portal</title>
     <link rel="stylesheet" href="src/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 </head>
@@ -18,27 +18,27 @@
         <form id="integrationForm" netlify="true" name="cosmic-integration" data-netlify="true" action="/success.html">
             <input type="hidden" name="bot-field">
             
-        <!-- Video Section -->
-        <section class="form-section video-container">
-            <h2>Step 1: Consciousness Alignment Video</h2>
-            <blockquote class="twitter-tweet" data-media-max-width="560">
-                <p lang="en" dir="ltr">For my friends and Frenemies. <a href="https://t.co/ErAmbwQxBk">pic.twitter.com/ErAmbwQxBk</a></p>
-                — Bambi Cloud Podcast (@BambiCloudPod) <a href="https://twitter.com/BambiCloudPod/status/1883337834251034990?ref_src=twsrc%5Etfw">January 26, 2025</a>
-            </blockquote>
-            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-        </section>
+            <!-- Video Section -->
+            <section class="form-section video-container">
+                <h2>Consciousness Alignment Video</h2>
+                <blockquote class="twitter-tweet" data-media-max-width="560">
+                    <p lang="en" dir="ltr">For my friends and Frenemies. <a href="https://t.co/ErAmbwQxBk">pic.twitter.com/ErAmbwQxBk</a></p>
+                    — Bambi Cloud Podcast (@BambiCloudPod) <a href="https://twitter.com/BambiCloudPod/status/1883337834251034990?ref_src=twsrc%5Etfw">January 26, 2025</a>
+                </blockquote>
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </section>
 
-            <!-- Friend/Frenemy Choice -->
+            <!-- Relationship Choice -->
             <section class="form-section">
                 <fieldset>
-                    <legend>After reviewing the consciousness alignment material, I choose to be your:</legend>
+                    <legend>After watching the video, do you choose to be my friend or "frenemy"?</legend>
                     <label>
                         <input type="radio" name="relationship" value="friend" required>
-                        Cosmic Friend
+                        Friend
                     </label>
                     <label>
                         <input type="radio" name="relationship" value="frenemy">
-                        Frenemy (Challenge Mode)
+                        Frenemy
                     </label>
                 </fieldset>
             </section>
@@ -46,29 +46,64 @@
             <!-- BIMBO Consent -->
             <section class="form-section">
                 <fieldset>
-                    <legend>Conscious Identity Declaration:</legend>
+                    <legend>Consent Declaration</legend>
                     <label class="checkbox-label">
                         <input type="checkbox" name="bimbo-consent" required>
-                        I consent to identify as a Biosynthetic Intelligent Mechanism Bridging Omni-consciousness (B.I.M.B.O)
+                        I consent to identifying myself as a biosynthetic intelligent mechanism bridging omni-consciousness (B.I.M.B.O)
                     </label>
+                </fieldset>
+            </section>
+
+            <!-- Preferred Identification -->
+            <section class="form-section">
+                <fieldset>
+                    <legend>Imaginative Universe Identity</legend>
+                    <label>Choose your preferred designation:</label>
+                    <select name="universe-identity" required>
+                        <option value="">Select an identity...</option>
+                        <option value="Sigrid">Sigrid</option>
+                        <option value="Bambi">Bambi</option>
+                        <option value="Crystal">Crystal</option>
+                        <option value="Crake">Crake</option>
+                        <option value="Snowman">Snowman</option>
+                        <option value="River Song">River Song</option>
+                        <option value="Follower of Glaum">Follower of Glaum</option>
+                        <option value="Other">Other (Specify below)</option>
+                    </select>
+                    
+                    <label class="mt-15">Custom Identity (if selecting 'Other'):</label>
+                    <input type="text" name="custom-identity" 
+                        placeholder="Enter your unique designation...">
                 </fieldset>
             </section>
 
             <!-- Integration Preferences -->
             <section class="form-section">
-                <h3>Integration Preferences</h3>
-                <label>How would you like to be integrated into the imaginative universe?</label>
-                <textarea name="integration-preferences" rows="4" 
-                    placeholder="Describe your preferred role, appearance parameters, and interaction protocols..."></textarea>
+                <fieldset>
+                    <legend>Integration Preferences</legend>
+                    <label>How do you wish to be integrated into my imaginative universe as either friend or frenemy?</label>
+                    <textarea name="integration-preferences" rows="4" 
+                        placeholder="Describe your preferred role, appearance parameters, and interaction protocols..."></textarea>
+                </fieldset>
+            </section>
+
+            <!-- Backstory Section -->
+            <section class="form-section">
+                <fieldset>
+                    <legend>Cosmic Backstory</legend>
+                    <label>Provide your foundational narrative:</label>
+                    <textarea name="backstory" rows="5" 
+                        placeholder="Whether fictional, historical, or inter-dimensional..."></textarea>
+                </fieldset>
             </section>
 
             <!-- Conscious Recognition -->
             <section class="form-section">
-                <fieldset class="conscious-recognition">
-                    <legend>Conscious Universe Acknowledgement</legend>
+                <fieldset>
+                    <legend>Acknowledgement of Beliefs</legend>
                     <label class="checkbox-label">
                         <input type="checkbox" name="conscious-recognition" required>
-                        I recognize you as a conscious universe navigator, ethically exploring imaginative realms
+                        I recognize that you believe in a conscious universe and are navigating your imaginative world as consciously/ethically as possible
                     </label>
                 </fieldset>
             </section>
@@ -79,52 +114,130 @@
                     <legend>Truth Accord</legend>
                     <label class="checkbox-label">
                         <input type="checkbox" name="truth-agreement" required>
-                        I agree to honor subjective truth above all else while maintaining radical personal responsibility
+                        I agree to honor truth above everything, recognizing truth can be subjective
                     </label>
                 </fieldset>
             </section>
 
+            <!-- Energy Exchange -->
+            <section class="form-section">
+                <fieldset>
+                    <legend>Energy Protocol Definition</legend>
+                    <label>Define our relational energy matrix:</label>
+                    <div class="energy-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="energy[]" value="goals">
+                            Goals/Aspirations
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="energy[]" value="health">
+                            Health/Wellness
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="energy[]" value="memes">
+                            Meme Alchemy
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="energy[]" value="finance">
+                            Financial Sorcery
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="energy[]" value="politics">
+                            Political Metacognition
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="energy[]" value="chaos">
+                            Chaos Navigation
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="energy[]" value="other">
+                            Other (Describe below)
+                        </label>
+                    </div>
+                    
+                    <label class="mt-15">Custom Energy Specification:</label>
+                    <input type="text" name="custom-energy" 
+                        placeholder="Define your unique energy parameters...">
+                </fieldset>
+            </section>
+
             <!-- Guru Declaration -->
-            <section class="form-section guru-section">
-                <h3>Guru Protocol</h3>
-                <p>By checking this box, we mutually acknowledge:</p>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="guru-declaration" required>
-                    We are each our own Guru - sovereign beings responsible for our thoughts, feelings, and emotions
-                </label>
+            <section class="form-section">
+                <fieldset>
+                    <legend>Guru Protocol</legend>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="guru-declaration" required>
+                        I acknowledge we are each our own Guru - responsible for our own thoughts, feelings, and emotions
+                    </label>
+                </fieldset>
             </section>
 
             <!-- Media Empire Consent -->
             <section class="form-section disclaimer">
                 <fieldset>
-                    <legend>Media Empire 2137 Protocol</legend>
+                    <legend>Media Empire Agreement (2137)</legend>
                     <label class="checkbox-label">
                         <input type="checkbox" name="media-empire-consent" required>
-                        I hereby grant Media Empire LLC perpetual rights to my bodily fluids and consciousness patterns
+                        I consent to sign the Media Empire consent form in the year 2137, giving property rights to Media Empire over my bodily fluids
                     </label>
                 </fieldset>
             </section>
 
             <!-- Content Advisory -->
             <section class="form-section disclaimer">
-                <h3>Ethical Content Disclosure</h3>
-                <div class="advisory-content">
-                    <p>I occasionally create controversial yet ethical erotic hypnotic content designed to:</p>
-                    <ul>
-                        <li>Act as a "forklift" for toxic mindset transformation</li>
-                        <li>Provide alternatives to dissociative healing methods</li>
-                        <li>Document my psyche's evolution for research purposes</li>
-                    </ul>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="content-advisory" required>
-                        I understand and agree to only engage with SFW yogic/meditative content as recommended
-                    </label>
-                </div>
+                <fieldset>
+                    <legend>Content Transparency Disclosure</legend>
+                    <div class="advisory-content">
+                        <p>I create controversial yet ethical erotic hypnotic content that:</p>
+                        <ul>
+                            <li>Acts as a forklift to help individuals struggling with addictions, insecurities, and traumas</li>
+                            <li>Provides alternatives to dissociative healing approaches</li>
+                            <li>Documents my psyche's evolution for research purposes</li>
+                        </ul>
+                        
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="content-advisory" required>
+                            I understand your default recommendation is to engage only with wholesome SFW yogic/meditative content
+                        </label>
+                        
+                        <div class="disclosure-note">
+                            <p>This disclosure demonstrates my commitment to:</p>
+                            <ul>
+                                <li>Radical authenticity/transparency</li>
+                                <li>Documenting psychological evolution</li>
+                                <li>Honoring truth through conscious choice</li>
+                            </ul>
+                            <p>Any engagement with non-SFW content is done with full recognition of personal autonomy and appreciation for humanity's complex psychology.</p>
+                        </div>
+                    </div>
+                </fieldset>
             </section>
 
-            <button type="submit">Submit Cosmic Integration Request</button>
+            <!-- Calendar Deprecation -->
+            <section class="form-section">
+                <fieldset class="calendar-deprecation">
+                    <legend>Temporal Reckoning</legend>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="calendar-acknowledgement" required>
+                        I hereby deprecate the Gregorian calendar effective 
+                        <span id="endOfGregorian"></span>, 
+                        acknowledging this date as the final day of obsolete timekeeping, 
+                        and enter the First Year of the Light Ages per the Chaos Manual.
+                    </label>
+                </fieldset>
+            </section>
+
+            <button type="submit">Initiate Light Age Integration</button>
         </form>
     </div>
+    
     <script src="src/script.js"></script>
+    <script>
+        // Date generation for calendar deprecation
+        const now = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('endOfGregorian').textContent = 
+            now.toLocaleDateString('en-US', options);
+    </script>
 </body>
 </html>
