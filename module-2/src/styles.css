@@ -78,9 +78,9 @@ select {
 .form-section {
     margin-bottom: 25px;
     padding: 20px;
-    background: #f8f9fa;
+    background: rgba(248, 249, 250, 0.7); /* 70% opaque */
     border-radius: 10px;
-    border: 1px solid #e9ecef;
+    border: 1px solid rgba(233, 236, 239, 0.3); /* 30% opaque border */
 }
 
 fieldset {
