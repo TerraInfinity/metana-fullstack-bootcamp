@@ -259,3 +259,24 @@ button:hover {
     max-width: 800px;
     margin: 20px auto;
 }
+
+.disclaimer-text-death {
+    text-align: center; /* Center all text */
+    margin: 2rem auto; /* Add some spacing */
+    max-width: 800px; /* Limit width for better readability */
+}
+
+.disclaimer-text-death p {
+    margin: 0.5rem 0; /* Add spacing between paragraphs */
+    font-family: 'Patrick Hand', cursive; /* Match your site's font */
+    color: rgba(0, 0, 0, 0.85); /* Slightly transparent text */
+}
+
+/* Progressive font size reduction */
+.disclaimer-text-death p:nth-child(1) { font-size: 1.2em; }
+.disclaimer-text-death p:nth-child(2) { font-size: 1.1em; }
+.disclaimer-text-death p:nth-child(3) { font-size: 1em; }
+.disclaimer-text-death p:nth-child(4) { font-size: 0.9em; }
+.disclaimer-text-death p:nth-child(5) { font-size: 0.8em; }
+.disclaimer-text-death p:nth-child(6) { font-size: 0.7em; }
+.disclaimer-text-death p:nth-child(7) { font-size: 0.6em; }
