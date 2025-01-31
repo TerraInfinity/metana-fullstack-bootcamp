@@ -3,50 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metana Fullstack Bootcamp - Are You Worthy? (Module-2)</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Are You Worthy? (Conscious Universe Integration Portal)</title>
+    <link rel="stylesheet" href="src/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="background-overlay"></div>
     <div class="container">
-        <h1>Are You Worthy?</h1>
-        <p>Prove you're the ultimate best friend or life partner!</p>
-        <form id="worthyForm">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" required>
+        <header class="hero-section">
+            <h1>Conscious Universe Integration Portal</h1>
+            <p>Become part of the evolving omni-consciousness</p>
+        </header>
+
+        <form id="integrationForm" netlify="true" name="cosmic-integration" data-netlify="true" action="/success.html">
+            <input type="hidden" name="bot-field">
             
-            <fieldset>
-                <legend>Pick one: Are you applying to be my...</legend>
-                <label>
-                    <input type="radio" name="role" value="best-friend" required>
-                    Best Friend
-                </label>
-                <label>
-                    <input type="radio" name="role" value="life-partner">
-                    Life Partner
-                </label>
-            </fieldset>
+            <!-- Video Section -->
+            <section class="form-section video-container">
+                <h2>Step 1: Consciousness Alignment Video</h2>
+                <iframe width="100%" height="315" src="https://x.com/BambiCloudPod/status/1883337834251034990" 
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+            </section>
 
-            <fieldset>
-                <legend>What do you bring to the table?</legend>
-                <label>
-                    <input type="checkbox" name="qualities" value="memes">
-                    A+ Meme Game
-                </label>
-                <label>
-                    <input type="checkbox" name="qualities" value="adventures">
-                    Love Spontaneous Adventures
-                </label>
-                <label>
-                    <input type="checkbox" name="qualities" value="food">
-                    Excellent Taste in Snacks
-                </label>
-            </fieldset>
+            <!-- Friend/Frenemy Choice -->
+            <section class="form-section">
+                <fieldset>
+                    <legend>After reviewing the consciousness alignment material, I choose to be your:</legend>
+                    <label>
+                        <input type="radio" name="relationship" value="friend" required>
+                        Cosmic Friend
+                    </label>
+                    <label>
+                        <input type="radio" name="relationship" value="frenemy">
+                        Frenemy (Challenge Mode)
+                    </label>
+                </fieldset>
+            </section>
 
-            <button type="submit">Submit</button>
+            <!-- BIMBO Consent -->
+            <section class="form-section">
+                <fieldset>
+                    <legend>Conscious Identity Declaration:</legend>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="bimbo-consent" required>
+                        I consent to identify as a Biosynthetic Intelligent Mechanism Bridging Omni-consciousness (B.I.M.B.O)
+                    </label>
+                </fieldset>
+            </section>
+
+            <!-- Integration Preferences -->
+            <section class="form-section">
+                <h3>Integration Preferences</h3>
+                <label>How would you like to be integrated into the imaginative universe?</label>
+                <textarea name="integration-preferences" rows="4" 
+                    placeholder="Describe your preferred role, appearance parameters, and interaction protocols..."></textarea>
+            </section>
+
+            <!-- Conscious Recognition -->
+            <section class="form-section">
+                <fieldset class="conscious-recognition">
+                    <legend>Conscious Universe Acknowledgement</legend>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="conscious-recognition" required>
+                        I recognize you as a conscious universe navigator, ethically exploring imaginative realms
+                    </label>
+                </fieldset>
+            </section>
+
+            <!-- Truth Agreement -->
+            <section class="form-section">
+                <fieldset>
+                    <legend>Truth Accord</legend>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="truth-agreement" required>
+                        I agree to honor subjective truth above all else while maintaining radical personal responsibility
+                    </label>
+                </fieldset>
+            </section>
+
+            <!-- Guru Declaration -->
+            <section class="form-section guru-section">
+                <h3>Guru Protocol</h3>
+                <p>By checking this box, we mutually acknowledge:</p>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="guru-declaration" required>
+                    We are each our own Guru - sovereign beings responsible for our thoughts, feelings, and emotions
+                </label>
+            </section>
+
+            <!-- Media Empire Consent -->
+            <section class="form-section disclaimer">
+                <fieldset>
+                    <legend>Media Empire 2137 Protocol</legend>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="media-empire-consent" required>
+                        I hereby grant Media Empire LLC perpetual rights to my bodily fluids and consciousness patterns
+                    </label>
+                </fieldset>
+            </section>
+
+            <!-- Content Advisory -->
+            <section class="form-section disclaimer">
+                <h3>Ethical Content Disclosure</h3>
+                <div class="advisory-content">
+                    <p>I occasionally create controversial yet ethical erotic hypnotic content designed to:</p>
+                    <ul>
+                        <li>Act as a "forklift" for toxic mindset transformation</li>
+                        <li>Provide alternatives to dissociative healing methods</li>
+                        <li>Document my psyche's evolution for research purposes</li>
+                    </ul>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="content-advisory" required>
+                        I understand and agree to only engage with SFW yogic/meditative content as recommended
+                    </label>
+                </div>
+            </section>
+
+            <button type="submit">Submit Cosmic Integration Request</button>
         </form>
-        <p id="feedback"></p>
     </div>
-    <script src="script.js"></script>
+    <script src="src/script.js"></script>
 </body>
 </html>
