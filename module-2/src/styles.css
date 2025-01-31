@@ -272,6 +272,11 @@ button:hover {
     color: rgba(0, 0, 0, 0.85); /* Slightly transparent text */
 }
 
+/* Optional: Style for the audio container if needed */
+.audio-container {
+    text-align: center;
+}
+
 /* Progressive font size reduction */
 .disclaimer-text-death p:nth-child(1) { font-size: 1.2em; }
 .disclaimer-text-death p:nth-child(2) { font-size: 1.1em; }
