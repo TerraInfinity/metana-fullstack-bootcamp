@@ -105,11 +105,24 @@ legend {
     padding: 0 10px;
 }
 
-input[type="text"],
+/* Input Fields (Text Inputs) */
+input[type="text"] {
+    width: 100%; /* Full width */
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8); /* 80% opaque */
+    border: 2px solid rgba(255, 107, 107, 0.5); /* Semi-transparent border */
+    border-radius: 6px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+/* Text Areas */
 textarea {
-    resize: vertical;
-    min-height: 100px;
-    background: rgba(255, 255, 255, 0.8); /* 80% opaque white */
+    width: 100%; /* Full width */
+    min-height: 100px; /* Minimum height */
+    resize: vertical; /* Allow vertical resizing */
+    background: rgba(255, 255, 255, 0.8); /* 80% opaque */
     border: 2px solid rgba(255, 107, 107, 0.5); /* Semi-transparent border */
     padding: 12px;
     border-radius: 6px;
@@ -118,18 +131,15 @@ textarea {
     transition: all 0.3s ease;
 }
 
-textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-input:focus,
+/* Focus States for Inputs and Text Areas */
+input[type="text"]:focus,
 textarea:focus {
-    border-color: rgba(255, 71, 87, 0.8); /* 80% opaque border */
-    box-shadow: 0 0 8px rgba(255, 107, 107, 0.3); /* Keep the shadow */
+    border-color: rgba(255, 71, 87, 0.8); /* Brighter border on focus */
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.3); /* Subtle shadow */
     outline: none;
     background: rgba(255, 255, 255, 0.9); /* Slightly more opaque when focused */
 }
+
 
 .checkbox-label {
     display: block;
