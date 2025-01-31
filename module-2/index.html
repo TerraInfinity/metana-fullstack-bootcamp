@@ -3,10 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metana Fullstack Bootcamp (Terra)</title>
+    <title>Metana Fullstack Bootcamp - Are You Worthy? (Module-2)</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 </head>
 <body>
-    Hello World, I ą̴̧̗̭̲͙͉̼̥̉̊͒͆̈́̈́̔̀̀̅͒̕ṁ̵̢̙̼̖̹̼̱̆̄̕ a fullstack developer. 
+    <div class="container">
+        <h1>Are You Worthy?</h1>
+        <p>Prove you're the ultimate best friend or life partner!</p>
+        <form id="worthyForm">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" required>
+            
+            <fieldset>
+                <legend>Pick one: Are you applying to be my...</legend>
+                <label>
+                    <input type="radio" name="role" value="best-friend" required>
+                    Best Friend
+                </label>
+                <label>
+                    <input type="radio" name="role" value="life-partner">
+                    Life Partner
+                </label>
+            </fieldset>
 
+            <fieldset>
+                <legend>What do you bring to the table?</legend>
+                <label>
+                    <input type="checkbox" name="qualities" value="memes">
+                    A+ Meme Game
+                </label>
+                <label>
+                    <input type="checkbox" name="qualities" value="adventures">
+                    Love Spontaneous Adventures
+                </label>
+                <label>
+                    <input type="checkbox" name="qualities" value="food">
+                    Excellent Taste in Snacks
+                </label>
+            </fieldset>
+
+            <button type="submit">Submit</button>
+        </form>
+        <p id="feedback"></p>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
