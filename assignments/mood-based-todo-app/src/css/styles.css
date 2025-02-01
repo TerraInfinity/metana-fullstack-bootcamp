@@ -232,9 +232,6 @@ body {
 }
 
 .btn-secondary {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
     background: #2196F3;
     color: white;
     border: none;
