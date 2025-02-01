@@ -14,29 +14,19 @@ body {
     color: #2c3e50;
 }
 
-
-.background-overlay {
+body::before {
+    content: "";
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.4);
-    z-index: -1;
+    background-color: var(--gif-fade-color);
+    pointer-events: none;
+    mix-blend-mode: overlay; /* You can experiment with 'multiply', 'screen', or 'soft-light' */
+    z-index: 1; /* Ensure it's above the background but below other content */
+    transition: background-color 0.3s ease; /* Add transition for smooth blending */
 }
-
-
-
-.dimming-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--overlay-color, rgba(0, 0, 0, 0.3)); /* Default to 30% transparent black */
-    pointer-events: none; /* Allow clicks to pass through */
-}
-
 
 /* Base Styles */
 * {
@@ -54,8 +44,8 @@ body {
     --time-bg: #404040;
     --border-color: #404040;
     --overlay-color: rgba(0, 0, 0, 0.3); /* Default for dark theme */
+    --gif-fade-color: rgba(0, 0, 0, 0.3); /* Default for dark theme */
 }
-
 
 [data-theme="light"] {
     --bg-color: #ffffff;
@@ -64,7 +54,7 @@ body {
     --time-bg: #e0e0e0;
     --border-color: #e0e0e0;
     --overlay-color: rgba(255, 255, 255, 0.3); /* 30% transparent white for light theme */
-
+    --gif-fade-color: rgba(255, 255, 255, 0.3); /* For light theme */
 }
 
 body {
