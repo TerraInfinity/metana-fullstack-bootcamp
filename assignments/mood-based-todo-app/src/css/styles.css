@@ -276,6 +276,21 @@ h1, h2, h3, p, span, a, button {
     justify-content: center;
 }
 
+.btn-tertiary {
+    background: #dda0dd;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.6rem; /* Further reduced padding */
+    border-radius: 10px; /* Even smaller rounded corners */
+    font-size: 0.8rem; /* Smaller text size */
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Reduced shadow for less visual weight */
+    display: inline-block; /* Changed from flex to inline-block for simplicity */
+    text-align: center;
+    min-width: fit-content; /* Ensures it's not too narrow */
+    max-width: 100px; /* Caps the width if the text is very long */
+}
+
 .btn-secondary.btn-complete-all {
     background: #39e600;
     color: black;
