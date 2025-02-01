@@ -60,7 +60,10 @@ body {
     font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-
+/* Ensure all text elements use the text color variable */
+h1, h2, h3, p, span, a, button {
+    color: var(--text-color);
+}
 
 /* Navigation */
 .main-nav {
