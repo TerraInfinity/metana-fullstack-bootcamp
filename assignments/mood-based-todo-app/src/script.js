@@ -53,6 +53,7 @@ document.getElementById('complete-all').addEventListener('click', function() {
     if (isShowingCompleted) {
         // Clear completed tasks
         completedTasks = [];
+        renderTasks(completedTasks, yourTasksSection); // Refresh the UI
     } else {
         // Move all tasks to completed
         completedTasks = Array.from(yourTasksSection.children);
