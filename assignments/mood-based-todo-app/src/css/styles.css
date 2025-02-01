@@ -94,7 +94,7 @@ h1, h2, h3, p, span, a, button {
 
 .nav-link {
     text-decoration: none;
-    color: #666;
+    color: var(--text-color); /* Updated to use the theme variable */
     transition: color 0.3s ease;
 }
 
