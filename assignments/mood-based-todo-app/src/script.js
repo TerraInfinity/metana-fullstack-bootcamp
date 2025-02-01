@@ -15,8 +15,11 @@ themeToggle.addEventListener('click', () => {
 });
 
 document.getElementById('complete-all').addEventListener('click', function() {
-    const taskCards = document.querySelectorAll('.task-card');
-    taskCards.forEach(task => task.remove());
+    // Select all task cards within the "Your Tasks" section
+    const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+    if (yourTasksSection) {
+        yourTasksSection.innerHTML = ''; // Clear only the "Your Tasks" section
+    }
 });
 
 const addTaskBtn = document.getElementById('add-task-btn');
