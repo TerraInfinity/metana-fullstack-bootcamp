@@ -44,7 +44,7 @@ body::before {
     --time-bg: #404040;
     --border-color: #404040;
     --gif-fade-color: rgba(0, 0, 0, 0.5); /* Default for dark theme */
-    --text-shadow: 1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000; /* For dark theme */
+    --text-shadow: 1px 1px 2px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.8), 1px -1px 2px rgba(0,0,0,0.8), -1px 1px 2px rgba(0,0,0,0.8); /* For dark theme */
 }
 
 [data-theme="light"] {
@@ -54,7 +54,7 @@ body::before {
     --time-bg: #e0e0e0;
     --border-color: #e0e0e0;
     --gif-fade-color: rgba(255, 255, 255, 0.5); /* For light theme */
-    --text-shadow: 1px 1px 0px #FFF, -1px -1px 0px #FFF, 1px -1px 0px #FFF, -1px 1px 0px #FFF;  /* For light theme */
+    --text-shadow: 1px 1px 2px rgba(255,255,255,0.8), -1px -1px 2px rgba(255,255,255,0.8), 1px -1px 2px rgba(255,255,255,0.8), -1px 1px 2px rgba(255,255,255,0.8); /* For light theme */
 
 }
 

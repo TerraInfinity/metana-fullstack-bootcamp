@@ -141,6 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const taskDuration = taskForm.querySelector('#duration-input').value;
                 const taskDate = taskForm.querySelector('#datepicker').value;
 
+                // Get the current duration unit
+                const durationUnit = durationToggle.textContent;
+
                 // Create temporary container to parse component HTML
                 const template = document.createElement('template');
                 template.innerHTML = componentHtml;
@@ -148,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Update task component with form data
                 newTask.querySelector('.task-title').textContent = taskName;
-                newTask.querySelector('.task-description').textContent = `Duration: ${taskDuration} minutes`;
+                newTask.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationUnit}`;
                 newTask.querySelector('.due-date').textContent = `Due: ${taskDate}`;
                 
                 // Add to tasks section
