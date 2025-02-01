@@ -22,8 +22,9 @@ document.getElementById('complete-all').addEventListener('click', function() {
     }
 });
 
-const addTaskBtn = document.getElementById('add-task-btn');
-const taskFormModal = document.getElementById('task-form-modal');
+// Select the Add Task button and the modal
+const addTaskBtn = document.querySelector('.btn-add-task');
+const taskFormModal = document.querySelector('#task-form-modal');
 const closeModalBtn = document.getElementById('close-modal');
 const taskForm = document.getElementById('task-form');
 
