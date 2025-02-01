@@ -69,7 +69,9 @@ body {
 h1, h2, h3, p, span, a, button {
     color: var(--text-color);
 }
-
+.text-bordered {
+    text-shadow: var(--text-shadow);
+}
 /* Navigation */
 .main-nav {
     background: #ffffff;
@@ -264,9 +266,15 @@ h1, h2, h3, p, span, a, button {
     justify-content: center;
 }
 
-.btn-primary:hover {
-    opacity: 0.9;
+.btn-secondary .btn-complete-all {
+    background: #ff000d;
+
 }
+.btn-secondary .btn-show-completed {
+    background: #ffee00;
+
+}
+
 
 .controls {
     display: grid;
