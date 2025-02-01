@@ -277,10 +277,12 @@ h1, h2, h3, p, span, a, button {
 }
 
 .btn-secondary.btn-complete-all {
-    background: #ff000d;
+    background: #39e600;
+    color: black;
 }
 .btn-secondary.btn-show-completed {
-    background: #ffee00;
+    background: black;
+    color: white;
 }
 
 
