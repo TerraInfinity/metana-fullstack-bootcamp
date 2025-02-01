@@ -212,9 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Set default date & time to now
         datetimeInput.value = new Date().toISOString().slice(0, 16);
     }
-
-    // Ensure taskFormModal is defined before using it
-    const taskFormModal = document.getElementById('taskFormModal');
     if (taskFormModal) {
         window.addEventListener('click', (e) => {
             if (e.target === taskFormModal) {
