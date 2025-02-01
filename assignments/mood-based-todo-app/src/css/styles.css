@@ -266,13 +266,11 @@ h1, h2, h3, p, span, a, button {
     justify-content: center;
 }
 
-.btn-secondary .btn-complete-all {
+.btn-secondary.btn-complete-all {
     background: #ff000d;
-
 }
-.btn-secondary .btn-show-completed {
+.btn-secondary.btn-show-completed {
     background: #ffee00;
-
 }
 
 
