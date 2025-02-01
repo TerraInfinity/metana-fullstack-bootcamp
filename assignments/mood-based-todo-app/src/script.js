@@ -262,14 +262,29 @@ function handleTaskActions(taskCard) {
 
     // Complete task
     completeButton.addEventListener('click', () => {
+        // Remove the task from yourTasks array
+        yourTasks = yourTasks.filter(task => task !== taskCard);
+        
+        // Add the task to completedTasks array
         completedTasks.push(taskCard);
+        
+        // Remove the task card from the DOM
         taskCard.remove();
-        renderTasks(completedTasks, document.querySelector('.tasks-section .task-cards'));
+        
+        // Optionally, you can refresh the UI for yourTasks if needed
+        renderTasks(yourTasks, document.querySelector('.tasks-section .task-cards'));
     });
 
     // Delete task
     deleteButton.addEventListener('click', () => {
+        // Remove the task card from the DOM
         taskCard.remove();
+
+        // Remove the task from yourTasks array
+        yourTasks = yourTasks.filter(task => task !== taskCard);
+        
+        // Optionally, you can also refresh the UI if needed
+        renderTasks(yourTasks, document.querySelector('.tasks-section .task-cards'));
     });
 }
 
