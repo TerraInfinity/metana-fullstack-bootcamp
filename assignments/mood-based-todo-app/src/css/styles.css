@@ -271,16 +271,3 @@ h1, h2, h3, p, span, a, button {
     gap: 10px; /* Optional: Adjusts the space between the buttons */
 }
 
-.bordered {
-    border: 2px solid; /* Default border style */
-    padding: 10px; /* Add some padding */
-    border-radius: 5px; /* Optional: rounded corners */
-}
-
-.bordered.white {
-    border-color: white; /* White border for light theme */
-}
-
-.bordered.dark {
-    border-color: dark; /* Dark border for dark theme */
-}
