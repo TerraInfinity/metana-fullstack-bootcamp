@@ -252,6 +252,8 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    text-align: center;
+    justify-content: center;
 }
 
 .btn-primary:hover {
