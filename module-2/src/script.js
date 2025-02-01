@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to hide the overlay
     window.hideWarning = function() {
         document.querySelector('.warning-overlay').style.display = 'none';
+        document.querySelector('.warning-button').style.display = 'none';
+
         console.log('Twitter widget loaded successfully hide');
 
     };
