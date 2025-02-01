@@ -43,7 +43,7 @@ body::before {
     --secondary-text: #b3b3b3;
     --time-bg: #404040;
     --border-color: #404040;
-    --gif-fade-color: rgba(0, 0, 0, 0.8); /* Default for dark theme */
+    --gif-fade-color: rgba(0, 0, 0, 0.5); /* Default for dark theme */
 }
 
 [data-theme="light"] {
@@ -269,4 +269,18 @@ h1, h2, h3, p, span, a, button {
     display: grid;
     grid-template-columns: repeat(2, auto);
     gap: 10px; /* Optional: Adjusts the space between the buttons */
+}
+
+.bordered {
+    border: 2px solid; /* Default border style */
+    padding: 10px; /* Add some padding */
+    border-radius: 5px; /* Optional: rounded corners */
+}
+
+.bordered.white {
+    border-color: white; /* White border for light theme */
+}
+
+.bordered.dark {
+    border-color: dark; /* Dark border for dark theme */
 }
