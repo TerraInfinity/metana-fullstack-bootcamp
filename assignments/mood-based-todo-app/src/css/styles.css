@@ -37,7 +37,7 @@ body {
 
 :root {
     --bg-color: #1a1a1a;
-    --text-color: #ffffff;
+    --text-color: #ffffff; /* White text for dark mode */
     --card-bg: #2d2d2d;
     --accent-color: #4CAF50;
     --secondary-text: #b3b3b3;
@@ -47,7 +47,7 @@ body {
 
 [data-theme="light"] {
     --bg-color: #ffffff;
-    --text-color: #1a1a1a;
+    --text-color: #1a1a1a; /* Black text for light mode */
     --card-bg: #f5f5f5;
     --time-bg: #e0e0e0;
     --border-color: #e0e0e0;
@@ -55,8 +55,8 @@ body {
 
 body {
     background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: background-color 0.3s ease;
+    color: var(--text-color); /* Use the text color variable */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Add transition for color */
     font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
