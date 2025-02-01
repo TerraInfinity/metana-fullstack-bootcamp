@@ -10,10 +10,19 @@
         <input type="number" min="1" step="1" placeholder="Duration (in minutes)" required>
     </div>
     <div class="form-group">
-        <input type="date" required id="dateInput">
+        <input type="date" required id="dateInput" min="">
     </div>
     <button type="submit" class="btn-create">Create Task</button>
 </form>
 <script>
-    document.getElementById('dateInput').valueAsDate = new Date();
+    // Get today's date
+    const today = new Date();
+    const dateInput = document.getElementById('dateInput');
+    
+    // Format today's date as YYYY-MM-DD for the input
+    const formattedDate = today.toISOString().split('T')[0];
+    
+    // Set default value and minimum date to today
+    dateInput.value = formattedDate;
+    dateInput.min = formattedDate;
 </script>
