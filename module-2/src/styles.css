@@ -285,3 +285,20 @@ button:hover {
 .disclaimer-text-death p:nth-child(5) { font-size: 0.8em; }
 .disclaimer-text-death p:nth-child(6) { font-size: 0.7em; }
 .disclaimer-text-death p:nth-child(7) { font-size: 0.6em; }
+
+/* Simple footer styling */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the footer */
+.footer:hover {
+    background-color: #555; /* Change to a lighter color on hover */
+}
