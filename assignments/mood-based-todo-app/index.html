@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Mood Todo</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+    <link rel="stylesheet" href="src/css/components.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">🌤️ MoodTodo</div>
+            <!-- Mood Selector Component -->
+            <div data-component="mood-selector"></div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Weather Section -->
+        <aside class="weather-section">
+            <h2>Weather Suggestions</h2>
+            <div class="weather-placeholder">
+                <p>Sunny day! Perfect for outdoor tasks</p>
+            </div>
+        </aside>
+
+        <!-- Task Form Component -->
+        <div data-component="task-form"></div>
+
+        <!-- Task List -->
+        <section class="task-list">
+            <h2>Your Tasks</h2>
+            <div class="tasks-container">
+                <!-- Task Component -->
+                <div data-component="task">
+                    <h3 class="task-title">Sample Task</h3>
+                    <p class="task-desc">Example description</p>
+                    <div class="task-due">Due: 2023-08-20</div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
