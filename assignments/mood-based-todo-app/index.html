@@ -46,7 +46,7 @@
             <!-- Your Tasks Section -->
             <section class="tasks-section">
                 <div class="section-header">
-                    <h2>Your Tasks</h2>
+                    <h2 class="text-bordered">Your Tasks</h2>
                     <div class="controls">
                         <button id="complete-all" class="btn-secondary btn-complete-all" style="text-align: center">Complete All</button>
                         <button id="show-completed" class="btn-secondary btn-show-completed" style="text-align: center">Show Completed</button>
@@ -58,46 +58,55 @@
                     <!-- Run Task -->
                     <article class="task-card run-task">
                         <div class="task-content">
-                            <div class="task-header">
-                                <h3>Run!</h3>
-                                <div class="task-meta">
-                                    <span class="task-time">4 mins</span>
-                                    <span class="task-time">1:21 PM</span>
-                                </div>
+                            <h3 class="task-title">Run!</h3>
+                            <p class="task-description">Duration: 4 mins</p>
+                            <div class="task-meta">
+                                <span class="due-date">Due: 1:21 PM</span>
+                                <span class="task-status">Pending</span>
                             </div>
-                            <div class="task-actions">
-                                <button class="btn-complete">✓</button>
-                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn-action edit">✏️</button>
+                            <button class="btn-action complete">✅</button>
+                            <button class="btn-action delete">🗑️</button>
                         </div>
                     </article>
 
                     <!-- Bake Brownies -->
                     <article class="task-card cooking-task">
                         <div class="task-content">
-                            <div class="task-header">
-                                <h3>Bake Brownies</h3>
-                                <span class="task-time">809 mins</span>
+                            <h3 class="task-title">Bake Brownies</h3>
+                            <p class="task-description">Duration: 809 mins</p>
+                            <div class="task-meta">
+                                <span class="due-date">Due: 12:09 PM</span>
+                                <span class="task-status">Pending</span>
                             </div>
-                            <p class="task-timestamp">12:09 PM</p>
                         </div>
-                        <button class="btn-complete">✓</button>
+                        <div class="task-actions">
+                            <button class="btn-action edit">✏️</button>
+                            <button class="btn-action complete">✅</button>
+                            <button class="btn-action delete">🗑️</button>
+                        </div>
                     </article>
 
                     <!-- Don't Run -->
                     <article class="task-card alert-task">
                         <div class="task-content">
-                            <div class="task-header">
-                                <h3>Don't Run</h3>
-                                <span class="task-time">34 mins</span>
+                            <h3 class="task-title">Don't Run</h3>
+                            <p class="task-description">Duration: 34 mins</p>
+                            <div class="task-meta">
+                                <span class="due-date">Due: 12:34 AM</span>
+                                <span class="task-status">Pending</span>
                             </div>
-                            <p class="task-timestamp">12:34 AM</p>
                         </div>
-                        <button class="btn-complete">✓</button>
+                        <div class="task-actions">
+                            <button class="btn-action edit">✏️</button>
+                            <button class="btn-action complete">✅</button>
+                            <button class="btn-action delete">🗑️</button>
+                        </div>
                     </article>
                 </div>
             </section>
-
-
 
             <!-- Suggested Tasks -->
             <section class="suggested-tasks" id="suggested-tasks-section">

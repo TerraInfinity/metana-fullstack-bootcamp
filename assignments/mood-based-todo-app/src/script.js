@@ -26,57 +26,58 @@ function renderTasks(tasks, container) {
     });
 }
 
-// Toggle between "Your Tasks" and "Completed Tasks"
-document.getElementById('show-completed').addEventListener('click', function() {
-    const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-    const sectionHeader = document.querySelector('.tasks-section .section-header h2');
-    const isShowingCompleted = this.textContent.includes('Hide');
-    
-    if (isShowingCompleted) {
-        // Show "Your Tasks"
-        renderTasks(yourTasks, yourTasksSection);
-        sectionHeader.textContent = 'Your Tasks';
-        this.textContent = 'Show Completed';
-    } else {
-        // Show "Completed Tasks"
-        renderTasks(completedTasks, yourTasksSection);
-        sectionHeader.textContent = 'Completed Tasks';
-        this.textContent = 'Hide Completed';
-    }
-});
-
-// Complete all tasks in the current view
-document.getElementById('complete-all').addEventListener('click', function() {
-    const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-    const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-    
-    if (isShowingCompleted) {
-        // Clear completed tasks
-        completedTasks = [];
-        renderTasks(completedTasks, yourTasksSection); // Refresh the UI
-    } else {
-        // Move all tasks to completed
-        completedTasks = Array.from(yourTasksSection.children);
-        yourTasksSection.innerHTML = '';
-    }
-});
-
-// Select the Add Task button and the modal
-const addTaskBtn = document.querySelector('.btn-add-task');
-const taskFormModal = document.querySelector('#task-form-modal');
-const closeModalBtn = document.getElementById('close-modal');
-const taskForm = document.getElementById('task-form');
-
-// Open modal
+// Initialize tasks on page load
 document.addEventListener('DOMContentLoaded', () => {
+    const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+
+    // Add default tasks to yourTasks array
+    yourTasks = Array.from(yourTasksSection.children);
+
+    // Render initial tasks
+    renderTasks(yourTasks, yourTasksSection);
+
+    // Toggle between "Your Tasks" and "Completed Tasks"
+    document.getElementById('show-completed').addEventListener('click', function() {
+        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+        const sectionHeader = document.querySelector('.tasks-section .section-header h2');
+        const isShowingCompleted = this.textContent.includes('Hide');
+        
+        if (isShowingCompleted) {
+            // Show "Your Tasks"
+            renderTasks(yourTasks, yourTasksSection);
+            sectionHeader.textContent = 'Your Tasks';
+            this.textContent = 'Show Completed';
+        } else {
+            // Show "Completed Tasks"
+            renderTasks(completedTasks, yourTasksSection);
+            sectionHeader.textContent = 'Completed Tasks';
+            this.textContent = 'Hide Completed';
+        }
+    });
+
+    // Complete all tasks in the current view
+    document.getElementById('complete-all').addEventListener('click', function() {
+        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+        
+        if (isShowingCompleted) {
+            // Clear completed tasks
+            completedTasks = [];
+            renderTasks(completedTasks, yourTasksSection); // Refresh the UI
+        } else {
+            // Move all tasks to completed
+            completedTasks = Array.from(yourTasksSection.children);
+            yourTasksSection.innerHTML = '';
+        }
+    });
+
+    // Select the Add Task button and the modal
     const addTaskBtn = document.querySelector('.btn-add-task');
-    const body = document.body;
+    const taskFormModal = document.querySelector('#task-form-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const taskForm = document.getElementById('task-form');
 
-    if (!addTaskBtn) {
-        console.error('Button .btn-add-task not found');
-        return;
-    }
-
+    // Open modal
     addTaskBtn.addEventListener('click', async () => {
         try {
             // Fetch both the task form and task component HTML
