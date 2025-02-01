@@ -3,41 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Mood Todo</title>
+    <title>MoodTodo - Home</title>
     <link rel="stylesheet" href="src/css/styles.css">
     <link rel="stylesheet" href="src/css/components.css">
 </head>
 <body>
-    <header class="main-header">
-        <div class="header-content">
-            <div class="logo">🌤️ MoodTodo</div>
-            <!-- Mood Selector Component -->
-            <div data-component="mood-selector"></div>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🌤️ MoodTodo</a>
+            <div class="nav-links">
+                <a href="login.html" class="nav-link">Login</a>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <main class="main-content">
+    <main class="container">
+        <!-- Mood Selector -->
+        <div class="mood-selector-container">
+            <select class="mood-selector">
+                <option value="happy">😊 Happy</option>
+                <option value="neutral">😐 Neutral</option>
+                <option value="sad">😢 Sad</option>
+            </select>
+        </div>
+
         <!-- Weather Section -->
-        <aside class="weather-section">
+        <section class="weather-card">
             <h2>Weather Suggestions</h2>
-            <div class="weather-placeholder">
+            <div class="weather-content">
                 <p>Sunny day! Perfect for outdoor tasks</p>
             </div>
-        </aside>
+        </section>
 
-        <!-- Task Form Component -->
-        <div data-component="task-form"></div>
+        <!-- Task Form -->
+        <form class="task-form">
+            <h2>Create New Task</h2>
+            <div class="form-group">
+                <input type="text" placeholder="Task Title" required>
+            </div>
+            <div class="form-group">
+                <textarea placeholder="Task Description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Due Date:</label>
+                <input type="date" required>
+            </div>
+            <button type="submit" class="btn-primary">Add Task</button>
+        </form>
 
         <!-- Task List -->
         <section class="task-list">
             <h2>Your Tasks</h2>
             <div class="tasks-container">
                 <!-- Task Component -->
-                <div data-component="task">
-                    <h3 class="task-title">Sample Task</h3>
-                    <p class="task-desc">Example description</p>
-                    <div class="task-due">Due: 2023-08-20</div>
-                </div>
+                <article class="task-card">
+                    <div class="task-content">
+                        <h3>Sample Task</h3>
+                        <p>Example description</p>
+                        <div class="task-meta">
+                            <span class="due-date">Due: 2023-08-20</span>
+                            <span class="task-status">Pending</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-icon edit">✏️</button>
+                        <button class="btn-icon complete">✅</button>
+                        <button class="btn-icon delete">🗑️</button>
+                    </div>
+                </article>
             </div>
         </section>
     </main>
