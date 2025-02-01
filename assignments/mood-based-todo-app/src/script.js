@@ -40,12 +40,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addTaskBtn.addEventListener('click', async () => {
         try {
-            // Fetch the task form HTML
-            const response = await fetch('src/components/task-form.html');
-            if (!response.ok) throw new Error('Failed to load form');
+            // Fetch both the task form and task component HTML
+            const [formResponse, componentResponse] = await Promise.all([
+                fetch('src/components/task-form.html'),
+                fetch('src/components/task-component.html')
+            ]);
             
-            // Insert form into a modal-like container
-            const formHtml = await response.text();
+            if (!formResponse.ok || !componentResponse.ok) 
+                throw new Error('Failed to load resources');
+            
+            const [formHtml, componentHtml] = await Promise.all([
+                formResponse.text(),
+                componentResponse.text()
+            ]);
+
+            // Create and append modal
             const modalContainer = document.createElement('div');
             modalContainer.id = 'taskFormModal';
             modalContainer.classList.add('modal');
@@ -56,15 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             
-            // Append modal to body
             body.appendChild(modalContainer);
 
-            // Close modal on button click
+            // Close modal handler
             document.querySelector('.close-modal').addEventListener('click', () => {
                 modalContainer.remove();
             });
 
-            // Prevent form submission from refreshing the page
+            // Form submission handler
             const taskForm = modalContainer.querySelector('.task-form');
             taskForm.addEventListener('submit', (event) => {
                 event.preventDefault();
@@ -72,23 +80,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Get task details
                 const taskName = taskForm.querySelector('input[placeholder="Task name"]').value;
                 const taskDuration = taskForm.querySelector('input[placeholder="Duration (in minutes)"]').value;
+                const taskDate = taskForm.querySelector('input[type="date"]').value;
 
-                // Add task to the "Your Tasks" section
+                // Create temporary container to parse component HTML
+                const template = document.createElement('template');
+                template.innerHTML = componentHtml;
+                const newTask = template.content.querySelector('.task-card');
+
+                // Update task component with form data
+                newTask.querySelector('.task-title').textContent = taskName;
+                newTask.querySelector('.task-description').textContent = `Duration: ${taskDuration} minutes`;
+                newTask.querySelector('.due-date').textContent = `Due: ${taskDate}`;
+                
+                // Add to tasks section
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-                const newTask = document.createElement('article');
-                newTask.classList.add('task-card');
-                newTask.innerHTML = `
-                    <div class="task-content">
-                        <div class="task-header">
-                            <h3>${taskName}</h3>
-                            <span class="task-time">${taskDuration} mins</span>
-                        </div>
-                        <button class="btn-complete">✓</button>
-                    </div>
-                `;
                 yourTasksSection.appendChild(newTask);
 
-                // Close the modal
+                // Close modal
                 modalContainer.remove();
             });
         } catch (error) {
