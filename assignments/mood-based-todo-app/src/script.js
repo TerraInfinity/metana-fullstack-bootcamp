@@ -174,18 +174,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle input mode toggle
     const inputToggle = document.getElementById('input-toggle');
     const inputModeLabel = document.getElementById('input-mode-label');
-    const durationInputs = document.querySelectorAll('.duration-inputs');
+    const durationInputs = document.querySelector('.duration-inputs');
     const dateTimeInputs = document.querySelector('.date-time-inputs');
 
-    inputToggle.addEventListener('change', () => {
-        if (inputToggle.checked) {
-            inputModeLabel.textContent = 'Date & Time';
-            durationInputs.forEach(input => input.style.display = 'none');
-            dateTimeInputs.style.display = 'block';
-        } else {
-            inputModeLabel.textContent = 'Duration';
-            durationInputs.forEach(input => input.style.display = 'block');
+    inputToggle.addEventListener('click', () => {
+        if (durationInputs.style.display === 'none') {
+            // Switch to Duration mode
+            durationInputs.style.display = 'block';
             dateTimeInputs.style.display = 'none';
+            inputModeLabel.textContent = 'Duration';
+        } else {
+            // Switch to Date & Time mode
+            durationInputs.style.display = 'none';
+            dateTimeInputs.style.display = 'block';
+            inputModeLabel.textContent = 'Date & Time';
+            // Set default date & time to now
+            const now = new Date();
+            const datetimeInput = document.getElementById('datetime-input');
+            datetimeInput.value = now.toISOString().slice(0, 16);
         }
     });
 
