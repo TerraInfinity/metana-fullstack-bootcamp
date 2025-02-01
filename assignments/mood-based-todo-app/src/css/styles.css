@@ -25,7 +25,7 @@ body::before {
     pointer-events: none;
     mix-blend-mode: overlay; /* You can experiment with 'multiply', 'screen', or 'soft-light' */
     z-index: 1; /* Ensure it's above the background but below other content */
-    transition: background-color 0.3s ease; /* Add transition for smooth blending */
+    transition: background-color 1.3s ease; /* Add transition for smooth blending */
 }
 
 /* Base Styles */
@@ -43,8 +43,7 @@ body::before {
     --secondary-text: #b3b3b3;
     --time-bg: #404040;
     --border-color: #404040;
-    --overlay-color: rgba(0, 0, 0, 0.3); /* Default for dark theme */
-    --gif-fade-color: rgba(0, 0, 0, 0.3); /* Default for dark theme */
+    --gif-fade-color: rgba(0, 0, 0, 0.8); /* Default for dark theme */
 }
 
 [data-theme="light"] {
@@ -53,8 +52,7 @@ body::before {
     --card-bg: #f5f5f5;
     --time-bg: #e0e0e0;
     --border-color: #e0e0e0;
-    --overlay-color: rgba(255, 255, 255, 0.3); /* 30% transparent white for light theme */
-    --gif-fade-color: rgba(255, 255, 255, 0.3); /* For light theme */
+    --gif-fade-color: rgba(255, 255, 255, 0.8); /* For light theme */
 }
 
 body {
