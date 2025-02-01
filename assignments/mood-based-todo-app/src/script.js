@@ -8,7 +8,7 @@ body.setAttribute('data-theme', savedTheme);
 themeToggle.addEventListener('click', () => {
     const currentTheme = body.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
+    console.log(`Switching theme to: ${newTheme}`);
     body.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
     themeToggle.textContent = newTheme === 'dark' ? '🌓' : '🌞';
