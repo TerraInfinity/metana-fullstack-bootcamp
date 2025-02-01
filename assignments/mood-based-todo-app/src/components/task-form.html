@@ -7,7 +7,13 @@
         <input type="text" placeholder="Task name" required>
     </div>
     <div class="form-group">
-        <input type="text" placeholder="Duration (in minutes)" required>
+        <input type="number" min="1" step="1" placeholder="Duration (in minutes)" required>
+    </div>
+    <div class="form-group">
+        <input type="date" required id="dateInput">
     </div>
     <button type="submit" class="btn-create">Create Task</button>
 </form>
+<script>
+    document.getElementById('dateInput').valueAsDate = new Date();
+</script>
