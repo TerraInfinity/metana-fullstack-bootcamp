@@ -345,3 +345,52 @@ button:hover {
 .footer:hover {
     background-color: transparent; /* Change to a lighter color on hover */
 }
+
+
+
+
+/* Your existing CSS remains the same */
+/* ... all your previous styles ... */
+
+/* Add these Bootstrap overrides at the end */
+.container {
+    max-width: 800px;
+    padding: 30px;
+}
+
+/* Bootstrap compatibility overrides */
+.form-control {
+    font-family: 'Patrick Hand', cursive !important;
+    border: 2px solid rgba(255, 107, 107, 0.5) !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control:focus {
+    border-color: rgba(255, 71, 87, 0.8) !important;
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.3) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+}
+
+.btn {
+    font-family: 'Patrick Hand', cursive !important;
+    border-radius: 25px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Keep your original button style */
+button:not(.warning-button) {
+    background: #ff6b6b !important;
+    color: white !important;
+    border: none !important;
+    padding: 15px 30px !important;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 768px) {
+    .energy-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
