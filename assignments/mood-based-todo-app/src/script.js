@@ -28,15 +28,18 @@ function renderTasks(tasks, container) {
 // Toggle between "Your Tasks" and "Completed Tasks"
 document.getElementById('show-completed').addEventListener('click', function() {
     const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+    const sectionHeader = document.querySelector('.tasks-section .section-header h2');
     const isShowingCompleted = this.textContent.includes('Hide');
     
     if (isShowingCompleted) {
         // Show "Your Tasks"
         renderTasks(yourTasks, yourTasksSection);
+        sectionHeader.textContent = 'Your Tasks';
         this.textContent = 'Show Completed';
     } else {
         // Show "Completed Tasks"
         renderTasks(completedTasks, yourTasksSection);
+        sectionHeader.textContent = 'Completed Tasks';
         this.textContent = 'Hide Completed';
     }
 });
