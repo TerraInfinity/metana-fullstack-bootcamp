@@ -240,6 +240,16 @@ h1, h2, h3, p, span, a, button {
     color: var(--text-color);
 }
 
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: inherit;
+}
+
 .btn-primary {
     background-color: var(--accent-color);
     color: white;
