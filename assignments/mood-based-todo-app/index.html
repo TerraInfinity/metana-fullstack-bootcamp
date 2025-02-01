@@ -10,8 +10,9 @@
 <body>
     <nav class="main-nav">
         <div class="nav-container">
-            <a href="index.html" class="logo">🌤️ MoodTodo</a>
+            <a href="index.html" class="logo">🌑 MoodTodo</a>
             <div class="nav-links">
+                <button id="theme-toggle" class="theme-toggle">🌓</button>
                 <a href="login.html" class="nav-link">Login</a>
             </div>
         </div>
@@ -54,11 +55,15 @@
                         <div class="task-content">
                             <div class="task-header">
                                 <h3>Run!</h3>
-                                <span class="task-time">4 mins</span>
+                                <div class="task-meta">
+                                    <span class="task-time">4 mins</span>
+                                    <span class="task-time">1:21 PM</span>
+                                </div>
                             </div>
-                            <p class="task-timestamp">1:21 PM</p>
+                            <div class="task-actions">
+                                <button class="btn-complete">✓</button>
+                            </div>
                         </div>
-                        <button class="btn-complete">✓</button>
                     </article>
 
                     <!-- Bake Brownies -->

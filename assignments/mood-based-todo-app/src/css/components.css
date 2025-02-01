@@ -1,6 +1,8 @@
 /* Task Cards */
 .task-card {
-    background: white;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: 1.5rem;
     margin-bottom: 1rem;
     border-radius: 12px;
@@ -23,11 +25,18 @@
 }
 
 .task-time {
-    background: #f0f2f5;
+    background: var(--time-bg);
+    color: var(--text-color);
     padding: 0.3rem 0.8rem;
     border-radius: 15px;
     font-weight: 500;
     font-size: 0.9rem;
+}
+
+/* Navigation */
+.main-nav {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .task-timestamp {
@@ -80,6 +89,17 @@
     font-size: 1.5rem;
 }
 
+/* Theme Toggle */
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-right: 1rem;
+}
+
 /* Complete Button */
 .btn-complete {
     background: #4CAF50;
@@ -96,8 +116,9 @@
 
 /* Weather Card */
 .weather-card {
-    background: white;
+    background: var(--card-bg);
     padding: 1rem;
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
