@@ -16,6 +16,7 @@ themeToggle.addEventListener('click', () => {
 
 // Array to store completed tasks
 let completedTasks = [];
+let yourTasks = []; // Ensure this is initialized
 
 // Function to render tasks
 function renderTasks(tasks, container) {
