@@ -300,5 +300,5 @@ button:hover {
 
 /* Hover effect for the footer */
 .footer:hover {
-    background-color: #555; /* Change to a lighter color on hover */
+    background-color: transparent; /* Change to a lighter color on hover */
 }
