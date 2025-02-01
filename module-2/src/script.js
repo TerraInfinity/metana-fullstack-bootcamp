@@ -1,8 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('.video-wrapper .warning-button').addEventListener('click', function() {
-        console.log('Warning button clicked!');
+    // Function to hide the overlay
+    window.hideWarning = function() {
         document.querySelector('.warning-overlay').style.display = 'none';
-    });
+    };
+
+    // Function to ensure the Twitter widget loads correctly
+    window.onTwitterLoad = function() {
+        // Force a resize event to make sure the Twitter widget adjusts to the container
+        window.dispatchEvent(new Event('resize'));
+    };
 });
 
 document.getElementById("integrationForm").addEventListener("submit", function(event) {

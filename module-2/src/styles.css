@@ -24,7 +24,7 @@ body {
 
 /* Video Wrapper */
 .video-wrapper {
-    position: relative; /* Ensures absolute positioning works within this container */
+    position: relative;
 }
 
 /* Warning overlay */
