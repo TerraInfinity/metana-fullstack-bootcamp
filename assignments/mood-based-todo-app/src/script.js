@@ -63,6 +63,34 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.close-modal').addEventListener('click', () => {
                 modalContainer.remove();
             });
+
+            // Prevent form submission from refreshing the page
+            const taskForm = modalContainer.querySelector('.task-form');
+            taskForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                
+                // Get task details
+                const taskName = taskForm.querySelector('input[placeholder="Task name"]').value;
+                const taskDuration = taskForm.querySelector('input[placeholder="Duration (in minutes)"]').value;
+
+                // Add task to the "Your Tasks" section
+                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                const newTask = document.createElement('article');
+                newTask.classList.add('task-card');
+                newTask.innerHTML = `
+                    <div class="task-content">
+                        <div class="task-header">
+                            <h3>${taskName}</h3>
+                            <span class="task-time">${taskDuration} mins</span>
+                        </div>
+                        <button class="btn-complete">✓</button>
+                    </div>
+                `;
+                yourTasksSection.appendChild(newTask);
+
+                // Close the modal
+                modalContainer.remove();
+            });
         } catch (error) {
             console.error(error.message);
         }
