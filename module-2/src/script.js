@@ -1,3 +1,10 @@
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.video-wrapper .warning-button').addEventListener('click', function() {
+        console.log('Warning button clicked!');
+        document.querySelector('.video-wrapper .warning-overlay').classList.add('hidden');
+    });
+});
+
 document.getElementById("integrationForm").addEventListener("submit", function(event) {
     event.preventDefault();
     const form = event.target;
@@ -47,12 +54,6 @@ document.getElementById("integrationForm").addEventListener("submit", function(e
             element.closest('fieldset')?.classList.remove('validation-error');
         }
     });
-
-    document.querySelector('.warning-button').addEventListener('click', function() {
-        // Hide the overlay when the button is clicked
-        document.querySelector('.warning-overlay').classList.add('hidden');
-    });
-
 
     // Special validation for energy selection
     const energySelected = [...form.querySelectorAll('input[name="energy[]"]:checked')].length > 0;
