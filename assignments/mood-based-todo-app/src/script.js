@@ -29,8 +29,10 @@ const closeModalBtn = document.getElementById('close-modal');
 const taskForm = document.getElementById('task-form');
 
 // Open modal
-addTaskBtn.addEventListener('click', () => {
-    taskFormModal.style.display = 'block';
+document.addEventListener('DOMContentLoaded', () => {
+    addTaskBtn.addEventListener('click', () => {
+        taskFormModal.style.display = 'block';
+    });
 });
 
 // Close modal
