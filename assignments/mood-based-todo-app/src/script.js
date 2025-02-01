@@ -159,6 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 yourTasks.push(newTask); // Add to your tasks array
                 yourTasksSection.appendChild(newTask);
 
+                // Initialize actions for the new task
+                handleTaskActions(newTask);
+
                 // Close modal
                 modalContainer.remove();
             });
@@ -174,3 +177,73 @@ window.addEventListener('click', (e) => {
         taskFormModal.style.display = 'none';
     }
 });
+
+// Function to handle task actions
+function handleTaskActions(taskCard) {
+    const editButton = taskCard.querySelector('.btn-action.edit');
+    const completeButton = taskCard.querySelector('.btn-action.complete');
+    const deleteButton = taskCard.querySelector('.btn-action.delete');
+
+    // Edit task
+    editButton.addEventListener('click', async () => {
+        try {
+            const formResponse = await fetch('src/components/task-form.html');
+            if (!formResponse.ok) throw new Error('Failed to load form');
+
+            const formHtml = await formResponse.text();
+            const modalContainer = document.createElement('div');
+            modalContainer.id = 'taskFormModal';
+            modalContainer.classList.add('modal');
+            modalContainer.innerHTML = `
+                <div class="modal-content">
+                    <button class="close-modal">✖</button>
+                    ${formHtml}
+                </div>
+            `;
+            document.body.appendChild(modalContainer);
+
+            // Pre-fill form with current task details
+            const taskForm = modalContainer.querySelector('.task-form');
+            taskForm.querySelector('input[placeholder="Task name"]').value = taskCard.querySelector('.task-title').textContent;
+            const durationText = taskCard.querySelector('.task-description').textContent.split(' ');
+            taskForm.querySelector('#duration-input').value = durationText[1];
+            taskForm.querySelector('#datepicker').value = taskCard.querySelector('.due-date').textContent.split(': ')[1];
+
+            // Handle form submission
+            taskForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const taskName = taskForm.querySelector('input[placeholder="Task name"]').value;
+                const taskDuration = taskForm.querySelector('#duration-input').value;
+                const taskDate = taskForm.querySelector('#datepicker').value;
+
+                taskCard.querySelector('.task-title').textContent = taskName;
+                taskCard.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationText[2]}`;
+                taskCard.querySelector('.due-date').textContent = `Due: ${taskDate}`;
+
+                modalContainer.remove();
+            });
+
+            // Close modal handler
+            modalContainer.querySelector('.close-modal').addEventListener('click', () => {
+                modalContainer.remove();
+            });
+        } catch (error) {
+            console.error(error.message);
+        }
+    });
+
+    // Complete task
+    completeButton.addEventListener('click', () => {
+        completedTasks.push(taskCard);
+        taskCard.remove();
+        renderTasks(completedTasks, document.querySelector('.tasks-section .task-cards'));
+    });
+
+    // Delete task
+    deleteButton.addEventListener('click', () => {
+        taskCard.remove();
+    });
+}
+
+// Initialize task actions for existing tasks
+document.querySelectorAll('.task-card').forEach(handleTaskActions);
