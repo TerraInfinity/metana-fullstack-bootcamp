@@ -1,7 +1,10 @@
-<head>
+<!DOCTYPE html>
+<html lang="en">
+</body>
+    <head>
     <link rel="stylesheet" href="src/css/styles.css">
-    <!-- Add Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Add jQuery and jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <form class="task-form">
     <h2>Add a new task</h2>
@@ -12,21 +15,16 @@
         <input type="number" min="1" step="1" placeholder="Duration (in minutes)" required>
     </div>
     <div class="form-group">
-        <input type="text" id="dateInput" placeholder="Select date" required>
+        <input type="text" id="datepicker" placeholder="Select date" required>
     </div>
     <button type="submit" class="btn-create">Create Task</button>
 </form>
-<!-- Add Flatpickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<!-- Add jQuery and jQuery UI JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script>
-    // Initialize Flatpickr
-    const dateInput = document.getElementById('dateInput');
-    flatpickr(dateInput, {
-        dateFormat: "Y-m-d",
-        minDate: "today",
-        defaultDate: "today",
-        altInput: true,
-        altFormat: "F j, Y", // Will display date as "March 14, 2024"
-        disableMobile: false // Set to true if you want to disable native mobile datepicker
-    });
+    // Initialize jQuery UI Datepicker
+    $( "#datepicker" ).datepicker();
 </script>
+</body>
+</html>
