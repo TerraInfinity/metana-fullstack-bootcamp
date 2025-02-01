@@ -138,8 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Get task details
                 const taskName = taskForm.querySelector('input[placeholder="Task name"]').value;
-                const taskDuration = taskForm.querySelector('input[placeholder="Duration (in minutes)"]').value;
-                const taskDate = taskForm.querySelector('#datepicker').value; // Correct selector
+                const taskDuration = taskForm.querySelector('#duration-input').value;
+                const taskDate = taskForm.querySelector('#datepicker').value;
 
                 // Create temporary container to parse component HTML
                 const template = document.createElement('template');
