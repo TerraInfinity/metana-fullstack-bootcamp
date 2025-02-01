@@ -40,8 +40,23 @@ taskForm.addEventListener('submit', (e) => {
     const taskName = document.getElementById('task-name').value;
     const taskDuration = document.getElementById('task-duration').value;
 
-    // Add task logic here
-    console.log(`Task Added: ${taskName}, Duration: ${taskDuration} mins`);
+    // Create a new task card
+    const newTaskCard = document.createElement('article');
+    newTaskCard.classList.add('task-card');
+
+    newTaskCard.innerHTML = `
+        <div class="task-content">
+            <div class="task-header">
+                <h3>${taskName}</h3>
+                <span class="task-time">${taskDuration} mins</span>
+            </div>
+            <button class="btn-complete">✓</button>
+        </div>
+    `;
+
+    // Append the new task card to the task list
+    const taskCardsContainer = document.querySelector('.tasks-section .task-cards');
+    taskCardsContainer.appendChild(newTaskCard);
 
     // Close modal after submission
     taskFormModal.style.display = 'none';
