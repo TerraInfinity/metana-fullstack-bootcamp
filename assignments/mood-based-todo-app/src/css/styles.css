@@ -84,7 +84,7 @@ h1, h2, h3, p, span, a, button {
 .logo {
     font-size: 1.5rem;
     text-decoration: none;
-    color: #333;
+    color: var(--text-color); /* Updated to use the theme variable */
 }
 
 .nav-links {
@@ -99,7 +99,7 @@ h1, h2, h3, p, span, a, button {
 }
 
 .nav-link:hover {
-    color: #333;
+    color: #00ff95;
 }
 
 /* Main Container */
