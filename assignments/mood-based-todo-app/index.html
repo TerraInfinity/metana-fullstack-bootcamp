@@ -18,61 +18,109 @@
     </nav>
 
     <main class="container">
-        <!-- Mood Selector -->
-        <div class="mood-selector-container">
-            <select class="mood-selector">
-                <option value="happy">😊 Happy</option>
-                <option value="neutral">😐 Neutral</option>
-                <option value="sad">😢 Sad</option>
-            </select>
+        <!-- Header Section -->
+        <header class="dashboard-header">
+            <div class="greeting">
+                <h1>Welcome, Guest.</h1>
+                <p class="task-count">Ready for today? You have 3 tasks planned</p>
+            </div>
+            <div class="weather-card">
+                <div class="weather-info">
+                    <span class="weather-icon">⛅</span>
+                    <div class="weather-details">
+                        <p class="weather-status">Mostly Cloudy</p>
+                        <p class="weather-time">12:43 PM</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="dashboard-grid">
+            <!-- Your Tasks Section -->
+            <section class="tasks-section">
+                <div class="section-header">
+                    <h2>Your Tasks</h2>
+                    <div class="controls">
+                        <button class="btn-secondary">Complete All</button>
+                        <button class="btn-secondary">Show Completed</button>
+                    </div>
+                </div>
+
+                <!-- Task Cards -->
+                <div class="task-cards">
+                    <!-- Run Task -->
+                    <article class="task-card run-task">
+                        <div class="task-content">
+                            <div class="task-header">
+                                <h3>Run!</h3>
+                                <span class="task-time">4 mins</span>
+                            </div>
+                            <p class="task-timestamp">1:21 PM</p>
+                        </div>
+                        <button class="btn-complete">✓</button>
+                    </article>
+
+                    <!-- Bake Brownies -->
+                    <article class="task-card cooking-task">
+                        <div class="task-content">
+                            <div class="task-header">
+                                <h3>Bake Brownies</h3>
+                                <span class="task-time">809 mins</span>
+                            </div>
+                            <p class="task-timestamp">12:09 PM</p>
+                        </div>
+                        <button class="btn-complete">✓</button>
+                    </article>
+
+                    <!-- Don't Run -->
+                    <article class="task-card alert-task">
+                        <div class="task-content">
+                            <div class="task-header">
+                                <h3>Don't Run</h3>
+                                <span class="task-time">34 mins</span>
+                            </div>
+                            <p class="task-timestamp">12:34 AM</p>
+                        </div>
+                        <button class="btn-complete">✓</button>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Suggested Tasks -->
+            <section class="suggested-tasks">
+                <h2>Suggested Tasks</h2>
+                <div class="task-cards">
+                    <!-- Read a Book -->
+                    <article class="task-card suggested">
+                        <div class="task-content">
+                            <div class="task-header">
+                                <h3>Read a Book</h3>
+                                <span class="task-time">45 mins</span>
+                            </div>
+                            <p class="task-timestamp">12:43 PM</p>
+                        </div>
+                    </article>
+
+                    <!-- Meditation -->
+                    <article class="task-card meditation-task suggested">
+                        <div class="task-content">
+                            <div class="task-header">
+                                <h3>Meditation</h3>
+                                <span class="task-time">15 mins</span>
+                            </div>
+                            <p class="task-timestamp">12:43 PM</p>
+                        </div>
+                        <button class="btn-complete">✓</button>
+                    </article>
+                </div>
+            </section>
         </div>
 
-        <!-- Weather Section -->
-        <section class="weather-card">
-            <h2>Weather Suggestions</h2>
-            <div class="weather-content">
-                <p>Sunny day! Perfect for outdoor tasks</p>
-            </div>
-        </section>
-
-        <!-- Task Form -->
-        <form class="task-form">
-            <h2>Create New Task</h2>
-            <div class="form-group">
-                <input type="text" placeholder="Task Title" required>
-            </div>
-            <div class="form-group">
-                <textarea placeholder="Task Description" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Due Date:</label>
-                <input type="date" required>
-            </div>
-            <button type="submit" class="btn-primary">Add Task</button>
-        </form>
-
-        <!-- Task List -->
-        <section class="task-list">
-            <h2>Your Tasks</h2>
-            <div class="tasks-container">
-                <!-- Task Component -->
-                <article class="task-card">
-                    <div class="task-content">
-                        <h3>Sample Task</h3>
-                        <p>Example description</p>
-                        <div class="task-meta">
-                            <span class="due-date">Due: 2023-08-20</span>
-                            <span class="task-status">Pending</span>
-                        </div>
-                    </div>
-                    <div class="task-actions">
-                        <button class="btn-icon edit">✏️</button>
-                        <button class="btn-icon complete">✅</button>
-                        <button class="btn-icon delete">🗑️</button>
-                    </div>
-                </article>
-            </div>
-        </section>
+        <!-- Add Task Button -->
+        <button class="btn-add-task">
+            <span>+</span> Add Task
+        </button>
     </main>
 </body>
 </html>
