@@ -171,52 +171,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle input mode toggle
+    // Ensure all elements are selected after the DOM is fully loaded
     const inputToggle = document.getElementById('input-toggle');
     const inputModeLabel = document.getElementById('input-mode-label');
     const durationInputs = document.querySelector('.duration-inputs');
     const dateTimeInputs = document.querySelector('.date-time-inputs');
-
-    inputToggle.addEventListener('click', () => {
-        if (durationInputs.style.display === 'none') {
-            // Switch to Duration mode
-            durationInputs.style.display = 'block';
-            dateTimeInputs.style.display = 'none';
-            inputModeLabel.textContent = 'Duration';
-        } else {
-            // Switch to Date & Time mode
-            durationInputs.style.display = 'none';
-            dateTimeInputs.style.display = 'block';
-            inputModeLabel.textContent = 'Date & Time';
-            // Set default date & time to now
-            const now = new Date();
-            const datetimeInput = document.getElementById('datetime-input');
-            datetimeInput.value = now.toISOString().slice(0, 16);
-        }
-    });
-
-    // Handle increment and decrement time buttons
     const datetimeInput = document.getElementById('datetime-input');
     const incrementTimeBtn = document.getElementById('increment-time');
     const decrementTimeBtn = document.getElementById('decrement-time');
 
-    incrementTimeBtn.addEventListener('click', () => adjustTime(15));
-    decrementTimeBtn.addEventListener('click', () => adjustTime(-15));
-
-    function adjustTime(minutes) {
-        const currentDateTime = new Date(datetimeInput.value);
-        currentDateTime.setMinutes(currentDateTime.getMinutes() + minutes);
-        datetimeInput.value = currentDateTime.toISOString().slice(0, 16);
+    if (inputToggle && inputModeLabel && durationInputs && dateTimeInputs) {
+        inputToggle.addEventListener('click', () => {
+            if (durationInputs.style.display === 'none') {
+                // Switch to Duration mode
+                durationInputs.style.display = 'block';
+                dateTimeInputs.style.display = 'none';
+                inputModeLabel.textContent = 'Duration';
+            } else {
+                // Switch to Date & Time mode
+                durationInputs.style.display = 'none';
+                dateTimeInputs.style.display = 'block';
+                inputModeLabel.textContent = 'Date & Time';
+                // Set default date & time to now
+                const now = new Date();
+                datetimeInput.value = now.toISOString().slice(0, 16);
+            }
+        });
     }
 
-    // Set default date & time to now
-    datetimeInput.value = new Date().toISOString().slice(0, 16);
-});
+    if (datetimeInput && incrementTimeBtn && decrementTimeBtn) {
+        incrementTimeBtn.addEventListener('click', () => adjustTime(15));
+        decrementTimeBtn.addEventListener('click', () => adjustTime(-15));
 
-// Close modal when clicking outside of it
-window.addEventListener('click', (e) => {
-    if (e.target === taskFormModal) {
-        taskFormModal.style.display = 'none';
+        function adjustTime(minutes) {
+            const currentDateTime = new Date(datetimeInput.value);
+            currentDateTime.setMinutes(currentDateTime.getMinutes() + minutes);
+            datetimeInput.value = currentDateTime.toISOString().slice(0, 16);
+        }
+
+        // Set default date & time to now
+        datetimeInput.value = new Date().toISOString().slice(0, 16);
+    }
+
+    // Ensure taskFormModal is defined before using it
+    const taskFormModal = document.getElementById('taskFormModal');
+    if (taskFormModal) {
+        window.addEventListener('click', (e) => {
+            if (e.target === taskFormModal) {
+                taskFormModal.style.display = 'none';
+            }
+        });
     }
 });
 
