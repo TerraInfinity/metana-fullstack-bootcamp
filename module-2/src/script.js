@@ -48,6 +48,12 @@ document.getElementById("integrationForm").addEventListener("submit", function(e
         }
     });
 
+    document.querySelector('.warning-button').addEventListener('click', function() {
+        // Hide the overlay when the button is clicked
+        document.querySelector('.warning-overlay').classList.add('hidden');
+    });
+
+
     // Special validation for energy selection
     const energySelected = [...form.querySelectorAll('input[name="energy[]"]:checked')].length > 0;
     if (!energySelected) {
