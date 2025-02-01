@@ -2,12 +2,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to hide the overlay
     window.hideWarning = function() {
         document.querySelector('.warning-overlay').style.display = 'none';
+        console.log('Twitter widget loaded successfully hide');
+
     };
 
     // Function to ensure the Twitter widget loads correctly
     window.onTwitterLoad = function() {
         // Force a resize event to make sure the Twitter widget adjusts to the container
         window.dispatchEvent(new Event('resize'));
+        // Log that Twitter widget has loaded
+        console.log('Twitter widget loaded successfully resize');
     };
 });
 
