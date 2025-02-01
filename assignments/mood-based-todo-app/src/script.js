@@ -75,6 +75,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 defaultDate: new Date() // Set default to today
             });
 
+            // Initialize duration toggle
+            const durationInput = modalContainer.querySelector('#duration-input');
+            const durationToggle = modalContainer.querySelector('#duration-toggle');
+            const durationUnits = ['Minutes', 'Hours', 'Days'];
+            let currentUnitIndex = 0;
+
+            durationToggle.addEventListener('click', () => {
+                currentUnitIndex = (currentUnitIndex + 1) % durationUnits.length;
+                durationToggle.textContent = durationUnits[currentUnitIndex];
+                durationInput.placeholder = `Duration (${durationUnits[currentUnitIndex]})`;
+            });
+
             // Close modal handler
             document.querySelector('.close-modal').addEventListener('click', () => {
                 modalContainer.remove();
