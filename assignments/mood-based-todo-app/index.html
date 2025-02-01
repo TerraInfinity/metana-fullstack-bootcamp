@@ -123,9 +123,31 @@
         </div>
 
         <!-- Add Task Button -->
-        <button class="btn-add-task">
+        <button class="btn-add-task" id="add-task-btn">
             <span>+</span> Add Task
         </button>
+
+        <!-- Task Form Modal -->
+        <div id="task-form-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="close-modal">&times;</span>
+                <!-- Include the task form here -->
+                <form class="task-form" id="task-form">
+                    <h2>Create New Task</h2>
+                    <div class="form-group">
+                        <input type="text" id="task-title" placeholder="Task Title" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="task-desc" placeholder="Task Description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date:</label>
+                        <input type="date" id="task-date" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Add Task</button>
+                </form>
+            </div>
+        </div>
     </main>
     <script src="src/script.js"></script>
 </body>
