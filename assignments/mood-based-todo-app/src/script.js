@@ -13,3 +13,8 @@ themeToggle.addEventListener('click', () => {
     localStorage.setItem('theme', newTheme);
     themeToggle.textContent = newTheme === 'dark' ? '🌓' : '🌞';
 });
+
+document.getElementById('complete-all').addEventListener('click', function() {
+    const taskCards = document.querySelectorAll('.task-card');
+    taskCards.forEach(task => task.remove());
+});
