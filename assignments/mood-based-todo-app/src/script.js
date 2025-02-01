@@ -14,11 +14,45 @@ themeToggle.addEventListener('click', () => {
     themeToggle.textContent = newTheme === 'dark' ? '🌓' : '🌞';
 });
 
-document.getElementById('complete-all').addEventListener('click', function() {
-    // Select all task cards within the "Your Tasks" section
+// Array to store completed tasks
+let completedTasks = [];
+
+// Function to render tasks
+function renderTasks(tasks, container) {
+    container.innerHTML = '';
+    tasks.forEach(task => {
+        container.appendChild(task);
+    });
+}
+
+// Toggle between "Your Tasks" and "Completed Tasks"
+document.getElementById('show-completed').addEventListener('click', function() {
     const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-    if (yourTasksSection) {
-        yourTasksSection.innerHTML = ''; // Clear only the "Your Tasks" section
+    const isShowingCompleted = this.textContent.includes('Hide');
+    
+    if (isShowingCompleted) {
+        // Show "Your Tasks"
+        renderTasks(yourTasks, yourTasksSection);
+        this.textContent = 'Show Completed';
+    } else {
+        // Show "Completed Tasks"
+        renderTasks(completedTasks, yourTasksSection);
+        this.textContent = 'Hide Completed';
+    }
+});
+
+// Complete all tasks in the current view
+document.getElementById('complete-all').addEventListener('click', function() {
+    const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+    const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+    
+    if (isShowingCompleted) {
+        // Clear completed tasks
+        completedTasks = [];
+    } else {
+        // Move all tasks to completed
+        completedTasks = Array.from(yourTasksSection.children);
+        yourTasksSection.innerHTML = '';
     }
 });
 
@@ -114,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Add to tasks section
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                yourTasks.push(newTask); // Add to your tasks array
                 yourTasksSection.appendChild(newTask);
 
                 // Close modal
