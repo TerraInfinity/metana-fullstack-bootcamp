@@ -133,7 +133,7 @@ body {
 
 /* Modal styles */
 .modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -141,7 +141,6 @@ body {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.4);
 }
 
@@ -151,6 +150,8 @@ body {
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    max-width: 400px;
+    border-radius: 8px;
 }
 
 .close-button {
@@ -165,6 +166,24 @@ body {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+[data-theme="dark"] .modal-content {
+    background-color: #333;
+    color: #fff;
+}
+
+.btn-create {
+    background-color: #39e600;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-create:hover {
+    background-color: #33cc00;
 }
 
 /* Form Styles */
