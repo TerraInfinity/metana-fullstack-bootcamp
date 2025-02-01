@@ -43,7 +43,7 @@
                 <div class="section-header">
                     <h2>Your Tasks</h2>
                     <div class="controls">
-                        <button id="complete-all" class="btn-secondary btn-add-task">Complete All</button>
+                        <button class="btn-secondary">Complete All</button>
                         <button class="btn-secondary">Show Completed</button>
                     </div>
                 </div>
@@ -123,26 +123,9 @@
         </div>
 
         <!-- Add Task Button -->
-        <button class="btn-add-task" id="add-task-btn">
+        <button class="btn-add-task">
             <span>+</span> Add Task
         </button>
-
-        <!-- Task Form Modal -->
-        <div id="task-form-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-button" id="close-modal">&times;</span>
-                <form class="task-form" id="task-form">
-                    <h2>Add a new task</h2>
-                    <div class="form-group">
-                        <input type="text" id="task-name" placeholder="Task name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="number" id="task-duration" placeholder="Duration (in minutes)" required>
-                    </div>
-                    <button type="submit" class="btn-create">Create Task</button>
-                </form>
-            </div>
-        </div>
     </main>
     <script src="src/script.js"></script>
 </body>
