@@ -234,3 +234,7 @@ body {
 .btn-primary:hover {
     opacity: 0.9;
 }
+
+#complete-all {
+    display: block !important;
+}
