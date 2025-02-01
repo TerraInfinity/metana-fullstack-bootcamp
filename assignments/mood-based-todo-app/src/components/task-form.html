@@ -1,5 +1,7 @@
 <head>
     <link rel="stylesheet" href="src/css/styles.css">
+    <!-- Add Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <form class="task-form">
     <h2>Add a new task</h2>
@@ -10,19 +12,21 @@
         <input type="number" min="1" step="1" placeholder="Duration (in minutes)" required>
     </div>
     <div class="form-group">
-        <input type="date" required id="dateInput" min="">
+        <input type="text" id="dateInput" placeholder="Select date" required>
     </div>
     <button type="submit" class="btn-create">Create Task</button>
 </form>
+<!-- Add Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    // Get today's date
-    const today = new Date();
+    // Initialize Flatpickr
     const dateInput = document.getElementById('dateInput');
-    
-    // Format today's date as YYYY-MM-DD for the input
-    const formattedDate = today.toISOString().split('T')[0];
-    
-    // Set default value and minimum date to today
-    dateInput.value = formattedDate;
-    dateInput.min = formattedDate;
+    flatpickr(dateInput, {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        defaultDate: "today",
+        altInput: true,
+        altFormat: "F j, Y", // Will display date as "March 14, 2024"
+        disableMobile: false // Set to true if you want to disable native mobile datepicker
+    });
 </script>
