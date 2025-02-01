@@ -203,8 +203,12 @@ function handleTaskActions(taskCard) {
             `;
             document.body.appendChild(modalContainer);
 
-            // Pre-fill form with current task details
+            // Update form title and button text for editing
             const taskForm = modalContainer.querySelector('.task-form');
+            taskForm.querySelector('h2').textContent = 'Edit Task';
+            taskForm.querySelector('.btn-create').textContent = 'Save';
+
+            // Pre-fill form with current task details
             taskForm.querySelector('input[placeholder="Task name"]').value = taskCard.querySelector('.task-title').textContent;
             const durationText = taskCard.querySelector('.task-description').textContent.split(' ');
             taskForm.querySelector('#duration-input').value = durationText[1];
