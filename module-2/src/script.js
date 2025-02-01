@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.video-wrapper .warning-button').addEventListener('click', function() {
         console.log('Warning button clicked!');
-        document.querySelector('.video-wrapper .warning-overlay').classList.add('hidden');
+        document.querySelector('.warning-overlay').style.display = 'none';
     });
 });
 
