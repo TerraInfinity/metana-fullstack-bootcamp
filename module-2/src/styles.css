@@ -13,18 +13,17 @@ body {
     position: relative;
     color: #2c3e50;
 }
-
 /* Warning overlay */
 .warning-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    /* position: absolute; */ /* Removed as it's handled by Bootstrap class position-absolute */
+    /* top: 0; */ /* Removed as it's handled by Bootstrap class top-0 */
+    /* left: 0; */ /* Removed as it's handled by Bootstrap class start-0 */
+    /* width: 100%; */ /* Removed as it's handled by Bootstrap class w-100 */
+    /* height: 100%; */ /* Removed as it's handled by Bootstrap class h-100 */
     background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* display: flex; */ /* Removed as it's handled by Bootstrap class d-flex */
+    /* justify-content: center; */ /* Removed as it's handled by Bootstrap class justify-content-center */
+    /* align-items: center; */ /* Removed as it's handled by Bootstrap class align-items-center */
     z-index: 10; /* Ensure it's on top of the video */
 }
 
@@ -48,6 +47,13 @@ body {
 /* Hide the overlay when the button is clicked */
 .warning-overlay.hidden {
     display: none;
+}
+
+@media (max-width: 768px) {
+    .warning-button {
+        font-size: 14px; /* Smaller font size on mobile */
+        padding: 8px 16px; /* Adjust padding for smaller screens */
+    }
 }
 
 /* Wrapper to position the overlay relative to the video */
