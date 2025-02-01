@@ -30,42 +30,43 @@ const taskForm = document.getElementById('task-form');
 
 // Open modal
 document.addEventListener('DOMContentLoaded', () => {
-    addTaskBtn.addEventListener('click', () => {
-        taskFormModal.style.display = 'block';
+    const addTaskBtn = document.querySelector('.btn-add-task');
+    const body = document.body;
+
+    if (!addTaskBtn) {
+        console.error('Button .btn-add-task not found');
+        return;
+    }
+
+    addTaskBtn.addEventListener('click', async () => {
+        try {
+            // Fetch the task form HTML
+            const response = await fetch('src/components/task-form.html');
+            if (!response.ok) throw new Error('Failed to load form');
+            
+            // Insert form into a modal-like container
+            const formHtml = await response.text();
+            const modalContainer = document.createElement('div');
+            modalContainer.id = 'taskFormModal';
+            modalContainer.classList.add('modal');
+            modalContainer.innerHTML = `
+                <div class="modal-content">
+                    <button class="close-modal">✖</button>
+                    ${formHtml}
+                </div>
+            `;
+            
+            // Append modal to body
+            body.appendChild(modalContainer);
+
+            // Close modal on button click
+            document.querySelector('.close-modal').addEventListener('click', () => {
+                modalContainer.remove();
+            });
+        } catch (error) {
+            console.error(error.message);
+        }
     });
-});
-
-// Close modal
-closeModalBtn.addEventListener('click', () => {
-    taskFormModal.style.display = 'none';
-});
-
-// Handle form submission
-taskForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const taskName = document.getElementById('task-name').value;
-    const taskDuration = document.getElementById('task-duration').value;
-
-    // Create a new task card
-    const newTaskCard = document.createElement('article');
-    newTaskCard.classList.add('task-card');
-
-    newTaskCard.innerHTML = `
-        <div class="task-content">
-            <div class="task-header">
-                <h3>${taskName}</h3>
-                <span class="task-time">${taskDuration} mins</span>
-            </div>
-            <button class="btn-complete">✓</button>
-        </div>
-    `;
-
-    // Append the new task card to the task list
-    const taskCardsContainer = document.querySelector('.tasks-section .task-cards');
-    taskCardsContainer.appendChild(newTaskCard);
-
-    // Close modal after submission
-    taskFormModal.style.display = 'none';
 });
 
 // Close modal when clicking outside of it
