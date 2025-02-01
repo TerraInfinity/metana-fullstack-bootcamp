@@ -210,6 +210,29 @@ function handleTaskActions(taskCard) {
             taskForm.querySelector('#duration-input').value = durationText[1];
             taskForm.querySelector('#datepicker').value = taskCard.querySelector('.due-date').textContent.split(': ')[1];
 
+            // Initialize Datepicker with restrictions
+            const datepickerEl = modalContainer.querySelector('#datepicker');
+            $(datepickerEl).datepicker({
+                minDate: 0,          // Disable past dates
+                dateFormat: 'yy-mm-dd', // Format: YYYY-MM-DD
+                defaultDate: new Date() // Set default to today
+            });
+
+            // Initialize duration toggle
+            const durationInput = modalContainer.querySelector('#duration-input');
+            const durationToggle = modalContainer.querySelector('#duration-toggle');
+            const durationUnits = ['Minutes', 'Hours', 'Days'];
+            let currentUnitIndex = durationUnits.indexOf(durationText[2]);
+
+            durationToggle.addEventListener('click', () => {
+                currentUnitIndex = (currentUnitIndex + 1) % durationUnits.length;
+                durationToggle.textContent = durationUnits[currentUnitIndex];
+                durationInput.placeholder = `Duration (${durationUnits[currentUnitIndex]})`;
+            });
+
+            // Set initial duration unit
+            durationToggle.textContent = durationUnits[currentUnitIndex];
+
             // Handle form submission
             taskForm.addEventListener('submit', (event) => {
                 event.preventDefault();
@@ -218,7 +241,7 @@ function handleTaskActions(taskCard) {
                 const taskDate = taskForm.querySelector('#datepicker').value;
 
                 taskCard.querySelector('.task-title').textContent = taskName;
-                taskCard.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationText[2]}`;
+                taskCard.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationUnits[currentUnitIndex]}`;
                 taskCard.querySelector('.due-date').textContent = `Due: ${taskDate}`;
 
                 modalContainer.remove();
