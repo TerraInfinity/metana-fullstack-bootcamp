@@ -257,3 +257,9 @@ body {
 .btn-primary:hover {
     opacity: 0.9;
 }
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 10px; /* Optional: Adjusts the space between the buttons */
+}

@@ -67,6 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             body.appendChild(modalContainer);
 
+            // Initialize Datepicker with restrictions
+            const datepickerEl = modalContainer.querySelector('#datepicker');
+            $(datepickerEl).datepicker({
+                minDate: 0,          // Disable past dates
+                dateFormat: 'yy-mm-dd', // Format: YYYY-MM-DD
+                defaultDate: new Date() // Set default to today
+            });
+
             // Close modal handler
             document.querySelector('.close-modal').addEventListener('click', () => {
                 modalContainer.remove();
@@ -80,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Get task details
                 const taskName = taskForm.querySelector('input[placeholder="Task name"]').value;
                 const taskDuration = taskForm.querySelector('input[placeholder="Duration (in minutes)"]').value;
-                const taskDate = taskForm.querySelector('input[type="date"]').value;
+                const taskDate = taskForm.querySelector('#datepicker').value; // Correct selector
 
                 // Create temporary container to parse component HTML
                 const template = document.createElement('template');
