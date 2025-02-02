@@ -106,8 +106,14 @@ function handleTaskActions(taskCard) {
 
                 // Append buttons to the new task actions div
                 newTaskActions.append(editButton, completeButton, deleteButton);
+                
                 // Append the new task actions div to the new task card
                 newTaskCard.appendChild(newTaskActions);
+                
+                // Ensure the new task card is wrapped in an article element
+                const article = document.createElement('article');
+                article.className = 'task-card run-task';
+                article.appendChild(newTaskCard); // Wrap the new task card
 
                 // Extract details from suggested task
                 const title = taskCard.querySelector('.task-title').textContent;
@@ -120,7 +126,7 @@ function handleTaskActions(taskCard) {
                 newTaskCard.querySelector('.due-date').textContent = dueDate;
 
                 // Add to your tasks
-                yourTasks.push(newTaskCard);
+                yourTasks.push(article);
 
                 // Update UI
                 const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
@@ -137,7 +143,7 @@ function handleTaskActions(taskCard) {
                 }
 
                 // Initialize task actions and update count
-                handleTaskActions(newTaskCard);
+                handleTaskActions(article);
                 updateTaskCount();
             } catch (error) {
                 console.error('Error adding suggested task:', error);
