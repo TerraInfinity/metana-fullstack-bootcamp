@@ -134,37 +134,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Form submission handler
             const taskForm = modalContainer.querySelector('.task-form');
-            taskForm.addEventListener('submit', (event) => {
-                event.preventDefault();
+            taskForm.addEventListener('submit', (e) => {
+                e.preventDefault();
                 
-                // Get task details
-                const taskName = taskForm.querySelector('input[placeholder="Task name"]').value;
-                const taskDuration = taskForm.querySelector('#duration-input').value;
-                const taskDate = taskForm.querySelector('#datepicker').value;
-
-                // Get the current duration unit
-                const durationUnit = durationToggle.textContent;
-
-                // Create temporary container to parse component HTML
-                const template = document.createElement('template');
-                template.innerHTML = componentHtml;
-                const newTask = template.content.querySelector('.task-card');
-
-                // Update task component with form data
-                newTask.querySelector('.task-title').textContent = taskName;
-                newTask.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationUnit}`;
-                newTask.querySelector('.due-date').textContent = `Due: ${taskDate}`;
+                const taskName = document.querySelector('input[placeholder="Task name"]').value;
+                const isDurationMode = document.querySelector('.duration-inputs').style.display !== 'none';
                 
-                // Add to tasks section
-                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-                yourTasks.push(newTask); // Add to your tasks array
-                yourTasksSection.appendChild(newTask);
-
-                // Initialize actions for the new task
-                handleTaskActions(newTask);
-
-                // Close modal
-                modalContainer.remove();
+                if (isDurationMode) {
+                    const duration = document.getElementById('duration-input').value;
+                    const unit = document.getElementById('duration-toggle').textContent;
+                    console.log(`Created task with ${duration} ${unit}`);
+                } else {
+                    const dueDate = document.getElementById('datetime-input').value;
+                    console.log(`Created task for ${dueDate}`);
+                }
+                
+                // Reset form
+                e.target.reset();
             });
         } catch (error) {
             console.error(error.message);
@@ -182,19 +168,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (inputToggle && inputModeLabel && durationInputs && dateTimeInputs) {
         inputToggle.addEventListener('click', () => {
-            if (durationInputs.style.display === 'none') {
-                // Switch to Duration mode
-                durationInputs.style.display = 'block';
-                dateTimeInputs.style.display = 'none';
-                inputModeLabel.textContent = 'Duration';
+            const durationFields = document.querySelector('.duration-inputs');
+            const timeFields = document.querySelector('.date-time-inputs');
+            const modeLabel = document.getElementById('input-mode-label');
+            
+            if (durationFields.style.display === 'none') {
+                durationFields.style.display = 'block';
+                timeFields.style.display = 'none';
+                modeLabel.textContent = 'Duration';
             } else {
-                // Switch to Date & Time mode
-                durationInputs.style.display = 'none';
-                dateTimeInputs.style.display = 'block';
-                inputModeLabel.textContent = 'Date & Time';
-                // Set default date & time to now
+                durationFields.style.display = 'none';
+                timeFields.style.display = 'block';
+                modeLabel.textContent = 'Date & Time';
+                
+                // Set default datetime to now (rounded to nearest 15 minutes)
                 const now = new Date();
-                datetimeInput.value = now.toISOString().slice(0, 16);
+                const roundedMinutes = Math.round(now.getMinutes() / 15) * 15;
+                now.setMinutes(roundedMinutes);
+                
+                document.getElementById('datetime-date').value = 
+                    now.toISOString().slice(0, 10);
+                document.getElementById('datetime-time').value = 
+                    `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
             }
         });
     }
