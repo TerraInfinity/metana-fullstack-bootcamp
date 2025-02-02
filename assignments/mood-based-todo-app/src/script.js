@@ -18,11 +18,23 @@ themeToggle.addEventListener('click', () => {
 let completedTasks = [];
 let yourTasks = []; // Ensure this is initialized
 
+// Array to store suggested tasks
+let suggestedTasks = [];
+
 // Function to render tasks
 function renderTasks(tasks, container) {
     container.innerHTML = '';
     tasks.forEach(task => {
-        container.appendChild(task);
+        const isSuggested = task.dataset.suggested === 'true';
+        if (isSuggested) {
+            // Render suggested task with only a delete button
+            const deleteButton = task.querySelector('.btn-action.delete');
+            deleteButton.classList.remove('hidden');
+            task.querySelector('.btn-action.edit').classList.add('hidden');
+            task.querySelector('.btn-action.complete').classList.add('hidden');
+        } else {
+            container.appendChild(task);
+        }
     });
 }
 
@@ -289,9 +301,39 @@ document.addEventListener('input', (event) => {
 
 // Function to handle task actions
 function handleTaskActions(taskCard) {
+    const isSuggested = taskCard.classList.contains('suggested');
+    const addButton = taskCard.querySelector('.btn-action.add');
+    const deleteButton = taskCard.querySelector('.btn-action.delete');
+
+    if (addButton) {
+        addButton.addEventListener('click', () => {
+            if (isSuggested) {
+                // Move task to yourTasks array
+                suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
+                yourTasks.push(taskCard);
+
+                // Refresh the UI
+                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                renderTasks(yourTasks, yourTasksSection);
+            }
+        });
+    }
+
+    if (deleteButton) {
+        deleteButton.addEventListener('click', () => {
+            if (isSuggested) {
+                // Remove the task from suggestedTasks array
+                suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
+            }
+
+            // Refresh the UI
+            const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
+            renderTasks(suggestedTasks, suggestedTasksSection);
+        });
+    }
+
     const editButton = taskCard.querySelector('.btn-action.edit');
     const completeButton = taskCard.querySelector('.btn-action.complete');
-    const deleteButton = taskCard.querySelector('.btn-action.delete');
 
     if (editButton) {
         editButton.addEventListener('click', async () => {
@@ -394,24 +436,6 @@ function handleTaskActions(taskCard) {
             }
 
             // No action needed if in completed tasks view
-        });
-    }
-
-    if (deleteButton) {
-        deleteButton.addEventListener('click', () => {
-            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-
-            if (isShowingCompleted) {
-                // Remove the task from completedTasks array
-                completedTasks = completedTasks.filter(task => task !== taskCard);
-            } else {
-                // Remove the task from yourTasks array
-                yourTasks = yourTasks.filter(task => task !== taskCard);
-            }
-
-            // Refresh the UI based on the current view
-            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-            renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
         });
     }
 }
