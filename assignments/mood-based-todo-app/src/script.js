@@ -82,6 +82,26 @@ function handleTaskActions(taskCard) {
                 template.innerHTML = componentHtml;
                 const newTaskCard = template.content.querySelector('.task-card');
 
+                // Remove suggested class and buttons
+                newTaskCard.classList.remove('suggested');
+                const taskActions = newTaskCard.querySelector('.task-actions');
+                taskActions.innerHTML = ''; // Clear existing buttons
+
+                // Add regular task buttons
+                const editButton = document.createElement('button');
+                editButton.className = 'btn-action edit';
+                editButton.innerHTML = '✏️';
+
+                const completeButton = document.createElement('button');
+                completeButton.className = 'btn-action complete';
+                completeButton.innerHTML = '✅';
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'btn-action delete';
+                deleteButton.innerHTML = '🗑️';
+
+                taskActions.append(editButton, completeButton, deleteButton);
+
                 // Extract details from suggested task
                 const title = taskCard.querySelector('.task-title').textContent;
                 const description = taskCard.querySelector('.task-description').textContent;
