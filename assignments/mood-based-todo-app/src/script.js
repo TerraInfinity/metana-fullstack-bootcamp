@@ -32,6 +32,8 @@ function handleTaskActions(taskCard) {
     const isSuggested = taskCard.classList.contains('suggested');
     const addButton = taskCard.querySelector('.btn-action.add');
     const deleteButton = taskCard.querySelector('.btn-action.delete');
+    const editButton = taskCard.querySelector('.btn-action.edit');
+    const completeButton = taskCard.querySelector('.btn-action.complete');
 
     // Add Button (for suggested tasks)
     if (addButton && isSuggested) {
@@ -48,44 +50,121 @@ function handleTaskActions(taskCard) {
         });
     }
 
-    // Delete Button (for suggested tasks)
-    if (deleteButton && isSuggested) {
+    // Delete Button
+    if (deleteButton) {
         deleteButton.addEventListener('click', () => {
-            // Remove task from suggestedTasks
-            suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
-
-            // Re-render suggested tasks section
-            const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
-            renderTasks(suggestedTasks, suggestedTasksSection);
-
-            // Remove the task from the DOM
-            taskCard.remove();
+            if (isSuggested) {
+                // Remove task from suggestedTasks
+                suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
+                const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
+                renderTasks(suggestedTasks, suggestedTasksSection);
+            } else {
+                const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+                if (isShowingCompleted) {
+                    completedTasks = completedTasks.filter(task => task !== taskCard);
+                } else {
+                    yourTasks = yourTasks.filter(task => task !== taskCard);
+                }
+                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+            }
+            taskCard.remove(); // Remove the task from the DOM
         });
     }
 
-    // Edit and Complete Buttons (for yourTasks and completedTasks)
-    const editButton = taskCard.querySelector('.btn-action.edit');
-    const completeButton = taskCard.querySelector('.btn-action.complete');
-
+    // Edit Button
     if (editButton && !isSuggested) {
-        editButton.addEventListener('click', () => {
-            // Handle edit logic for yourTasks and completedTasks
+        editButton.addEventListener('click', async () => {
+            try {
+                const formResponse = await fetch('src/components/task-form.html');
+                if (!formResponse.ok) throw new Error('Failed to load form');
+
+                const formHtml = await formResponse.text();
+
+                const modalContainer = document.createElement('div');
+                modalContainer.id = 'taskFormModal';
+                modalContainer.classList.add('modal');
+                modalContainer.innerHTML = `
+                    <div class="modal-content">
+                        <button class="close-modal">✖</button>
+                        ${formHtml}
+                    </div>
+                `;
+                document.body.appendChild(modalContainer);
+
+                const taskForm = modalContainer.querySelector('.task-form');
+                taskForm.querySelector('input[placeholder="Task name"]').value = taskCard.querySelector('.task-title').textContent;
+
+                const durationText = taskCard.querySelector('.task-description').textContent.split(' ');
+                taskForm.querySelector('#duration-input').value = durationText[1];
+                taskForm.querySelector('#datepicker').value = taskCard.querySelector('.due-date').textContent.split(': ')[1];
+
+                const datepickerEl = modalContainer.querySelector('#datepicker');
+                $(datepickerEl).datepicker({
+                    minDate: 0,
+                    dateFormat: 'yy-mm-dd',
+                    defaultDate: new Date()
+                });
+
+                const durationInput = modalContainer.querySelector('#duration-input');
+                const durationToggle = modalContainer.querySelector('#duration-toggle');
+                const durationUnits = ['Minutes', 'Hours', 'Days'];
+                let currentUnitIndex = durationUnits.indexOf(durationText[2]);
+
+                durationToggle.addEventListener('click', () => {
+                    currentUnitIndex = (currentUnitIndex + 1) % durationUnits.length;
+                    durationToggle.textContent = durationUnits[currentUnitIndex];
+                    durationInput.placeholder = `Duration (${durationUnits[currentUnitIndex]})`;
+                });
+
+                durationToggle.textContent = durationUnits[currentUnitIndex];
+
+                taskForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+
+                    const taskName = taskForm.querySelector('input[placeholder="Task name"]').value;
+                    const taskDuration = taskForm.querySelector('#duration-input').value;
+                    const taskDate = taskForm.querySelector('#datepicker').value;
+
+                    taskCard.querySelector('.task-title').textContent = taskName;
+                    taskCard.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationUnits[currentUnitIndex]}`;
+                    taskCard.querySelector('.due-date').textContent = `Due: ${taskDate}`;
+
+                    modalContainer.remove();
+                });
+
+                modalContainer.querySelector('.close-modal').addEventListener('click', () => {
+                    modalContainer.remove();
+                });
+            } catch (error) {
+                console.error(error.message);
+            }
         });
     }
 
+    // Complete Button
     if (completeButton && !isSuggested) {
         completeButton.addEventListener('click', () => {
-            // Handle complete logic for yourTasks and completedTasks
+            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+
+            if (!isShowingCompleted) {
+                yourTasks = yourTasks.filter(task => task !== taskCard);
+                completedTasks.push(taskCard);
+            } else {
+                completedTasks = completedTasks.filter(task => task !== taskCard);
+                yourTasks.push(taskCard);
+            }
+
+            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+            renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
         });
     }
 }
 
 // Initialize task actions on page load
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize task actions for all tasks
     document.querySelectorAll('.task-card').forEach(handleTaskActions);
 
-    // Initialize task arrays
     yourTasks = Array.from(document.querySelector('.tasks-section .task-cards').children);
     suggestedTasks = Array.from(document.querySelector('#suggested-tasks-section .task-cards').children);
 
