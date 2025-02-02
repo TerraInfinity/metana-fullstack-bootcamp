@@ -87,6 +87,10 @@ function handleTaskActions(taskCard) {
                 const taskActions = newTaskCard.querySelector('.task-actions');
                 taskActions.innerHTML = ''; // Clear existing buttons
 
+                // Create a new task actions div
+                const newTaskActions = document.createElement('div');
+                newTaskActions.className = 'task-actions';
+
                 // Add regular task buttons
                 const editButton = document.createElement('button');
                 editButton.className = 'btn-action edit';
@@ -100,7 +104,10 @@ function handleTaskActions(taskCard) {
                 deleteButton.className = 'btn-action delete';
                 deleteButton.innerHTML = '🗑️';
 
-                taskActions.append(editButton, completeButton, deleteButton);
+                // Append buttons to the new task actions div
+                newTaskActions.append(editButton, completeButton, deleteButton);
+                // Append the new task actions div to the new task card
+                newTaskCard.appendChild(newTaskActions);
 
                 // Extract details from suggested task
                 const title = taskCard.querySelector('.task-title').textContent;
