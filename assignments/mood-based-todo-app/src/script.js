@@ -189,6 +189,38 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error.message);
         }
     });
+
+    // Weather icon hover effect
+    const weatherIcon = document.getElementById('weather-icon');
+    weatherIcon.addEventListener('mouseenter', () => {
+        // Fetch and display current weather information
+        // Placeholder: Display alert with weather info
+        alert('Current weather: Mostly Cloudy, 22°C');
+    });
+
+    // Mood icon toggle
+    const moodIcon = document.getElementById('mood-icon');
+    const moodSelector = document.getElementById('mood-selector');
+
+    moodIcon.addEventListener('click', () => {
+        if (moodSelector) {
+            moodSelector.classList.toggle('hidden');
+        }
+    });
+
+    // Optional: Add event listener to update mood based on slider value
+    const moodRange = document.getElementById('mood-range');
+    moodRange.addEventListener('input', (event) => {
+        const moodValue = event.target.value;
+        console.log(`Mood value: ${moodValue}`); // You can use this value to update the UI or perform other actions
+    });
+
+    // User icon click event
+    const userIcon = document.getElementById('user-icon');
+    userIcon.addEventListener('click', () => {
+        // Open login form (placeholder)
+        alert('Open login form');
+    });
 });
 
 // Function to handle task actions
