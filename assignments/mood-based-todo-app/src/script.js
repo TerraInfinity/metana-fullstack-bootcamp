@@ -37,59 +37,53 @@ function handleTaskActions(taskCard) {
 
     // Add Button (for suggested tasks)
     if (addButton && isSuggested) {
-        addButton.addEventListener('click', () => {
-            // Remove task from suggestedTasks
+        addButton.addEventListener('click', async () => {
             suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
 
-            // Create a new task card for "Your Tasks"
-            const newTaskCard = document.createElement('div');
-            newTaskCard.classList.add('task-card');
+            try {
+                // Fetch task component HTML
+                const componentResponse = await fetch('src/components/task-component.html');
+                if (!componentResponse.ok) throw new Error('Failed to load task component');
+                const componentHtml = await componentResponse.text();
 
-            // Copy details from the suggested task
-            newTaskCard.innerHTML = `
-                <div class="task-header">
-                    <span class="task-title">${taskCard.querySelector('.task-title').textContent}</span>
-                </div>
-                <div class="task-time">
-                    ${taskCard.querySelector('.task-description').textContent}
-                </div>
-                <div class="task-timestamp">
-                    ${taskCard.querySelector('.due-date').textContent}
-                </div>
-                <div class="task-actions">
-                    <button class="btn-action edit">✏️</button>
-                    <button class="btn-action complete">✅</button>
-                    <button class="btn-action delete">🗑️</button>
-                </div>
-            `;
+                // Create new task card from template
+                const template = document.createElement('template');
+                template.innerHTML = componentHtml;
+                const newTaskCard = template.content.querySelector('.task-card');
 
-            // Add the new task to yourTasks
-            yourTasks.push(newTaskCard);
+                // Extract details from suggested task
+                const title = taskCard.querySelector('.task-title').textContent;
+                const description = taskCard.querySelector('.task-description').textContent;
+                const dueDate = taskCard.querySelector('.due-date').textContent;
 
-            // Re-render both sections
-            const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
-            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-            renderTasks(suggestedTasks, suggestedTasksSection);
-            renderTasks(yourTasks, yourTasksSection);
+                // Populate new task card
+                newTaskCard.querySelector('.task-title').textContent = title;
+                newTaskCard.querySelector('.task-description').textContent = description;
+                newTaskCard.querySelector('.due-date').textContent = dueDate;
 
-            // Refresh the suggested tasks list
-            renderTasks(suggestedTasks, suggestedTasksSection);
+                // Add to your tasks
+                yourTasks.push(newTaskCard);
 
-            // Switch to "Your Tasks" display if currently showing "Completed Tasks"
-            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-            if (isShowingCompleted) {
-                // Update the button text and section header
-                document.getElementById('show-completed').textContent = 'Show Completed';
-                document.querySelector('.tasks-section .section-header h2').textContent = 'Your Tasks';
-
-                // Render "Your Tasks" section
+                // Update UI
+                const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
+                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                renderTasks(suggestedTasks, suggestedTasksSection);
                 renderTasks(yourTasks, yourTasksSection);
-            }
 
-            // Update task count
-            updateTaskCount();
-            // Reinitialize task actions for the moved task
-            handleTaskActions(taskCard);
+                // Switch to "Your Tasks" if needed
+                const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+                if (isShowingCompleted) {
+                    document.getElementById('show-completed').textContent = 'Show Completed';
+                    document.querySelector('.tasks-section .section-header h2').textContent = 'Your Tasks';
+                    renderTasks(yourTasks, yourTasksSection);
+                }
+
+                // Initialize task actions and update count
+                handleTaskActions(newTaskCard);
+                updateTaskCount();
+            } catch (error) {
+                console.error('Error adding suggested task:', error);
+            }
         });
     }
 
