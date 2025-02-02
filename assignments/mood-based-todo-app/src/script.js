@@ -402,7 +402,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Get weather data
         const weatherResponse = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=YOUR_API_KEY&units=metric`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=d831d14d034ddd7b613be6874cedd1f0
+&units=metric`
         );
         const data = await weatherResponse.json();
         
