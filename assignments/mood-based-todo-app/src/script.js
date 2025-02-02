@@ -378,175 +378,133 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Weather icon click effect
+    // Weather icon click effect - Random Weather Generator
     const weatherIcon = document.getElementById('weather-icon');
-    let currentWeather = 'clear';
-    let weatherDataCache = null;
+    let currentWeather = generateRandomWeather(); // Initialize with random weather
+
     // Initialize weather on app load
-    (async function initWeather() {
-        try {
-        weatherDataCache = await getWeatherData();
-        currentWeather = weatherDataCache.condition.toLowerCase();
-        updateWeatherIcon(weatherDataCache);
-        } catch (error) {
-        console.error('Error initializing weather:', error);
-        }
-    })();
-        
-    // Enhanced weather data function
-    async function getWeatherData() {
-        try {
-        // Get location
-        const ipResponse = await fetch('https://ipapi.co/json/');
-        const { latitude, longitude } = await ipResponse.json();
-    
-        // Get weather data
-        const weatherResponse = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=d831d14d034ddd7b613be6874cedd1f0
-&units=metric`
-        );
-        const data = await weatherResponse.json();
+    updateWeatherIcon(currentWeather); // Update icon with random weather
+
+    function generateRandomWeather() {
+        const conditions = ['Clear', 'Clouds', 'Rain', 'Snow', 'Thunderstorm', 'Mist'];
+        const icons = ['01d', '02d', '03d', '04d', '09d', '10d', '11d', '13d', '50d'];
         
         return {
-            condition: data.weather[0].main,
-            temperature: data.main.temp,
-            humidity: data.main.humidity,
-            wind: data.wind.speed,
-            icon: data.weather[0].icon
+            condition: conditions[Math.floor(Math.random() * conditions.length)],
+            temperature: Math.floor(Math.random() * 35) - 5, // Range from -5°C to 30°C
+            humidity: Math.floor(Math.random() * 100),
+            wind: (Math.random() * 15).toFixed(1),
+            icon: icons[Math.floor(Math.random() * icons.length)]
         };
-        } catch (error) {
-        console.error('Error getting weather:', error);
-        return {
-            condition: 'Clear',
-            temperature: 22,
-            humidity: 50,
-            wind: 5,
-            icon: '01d'
-        };
-        }
     }
-    
+
     // Update weather icon click handler
-    weatherIcon.addEventListener('click', async () => {
-        try {
-        // Refresh weather data on click
-        weatherDataCache = await getWeatherData();
-        
-        // Format the weather information
-        const weatherInfo = `
-            Current Weather:
-            - Condition: ${weatherDataCache.condition}
-            - Temperature: ${Math.round(weatherDataCache.temperature)}°C
-            - Humidity: ${weatherDataCache.humidity}%
-            - Wind: ${weatherDataCache.wind} m/s
-        `;
+    weatherIcon.addEventListener('click', () => {
+        currentWeather = generateRandomWeather(); // Generate new random weather
+        const weatherInfo = `Current Weather:
+            - Condition: ${currentWeather.condition}
+            - Temperature: ${currentWeather.temperature}°C
+            - Humidity: ${currentWeather.humidity}%
+            - Wind: ${currentWeather.wind} m/s`;
         
         alert(weatherInfo);
-        updateWeatherIcon(weatherDataCache);
-        } catch (error) {
-        console.error('Error handling weather click:', error);
-        alert('Unable to fetch current weather. Please try again later.');
-        }
+        updateWeatherIcon(currentWeather); // Update icon with new random weather
     });
-    
+
     // Function to update weather icon display
     function updateWeatherIcon(weatherData) {
         const iconMap = {
-        '01': '☀️', // Clear sky
-        '02': '⛅', // Few clouds
-        '03': '☁️', // Scattered clouds
-        '04': '☁️', // Broken clouds
-        '09': '🌧️', // Shower rain
-        '10': '🌦️', // Rain
-        '11': '⛈️', // Thunderstorm
-        '13': '❄️', // Snow
-        '50': '🌫️'  // Mist
+            '01': '☀️', // Clear sky
+            '02': '⛅', // Few clouds
+            '03': '☁️', // Scattered clouds
+            '04': '☁️', // Broken clouds
+            '09': '🌧️', // Shower rain
+            '10': '🌦️', // Rain
+            '11': '⛈️', // Thunderstorm
+            '13': '❄️', // Snow
+            '50': '🌫️'  // Mist
         };
-    
+
         const iconCode = weatherData.icon.slice(0, 2);
         weatherIcon.textContent = iconMap[iconCode] || '🌍';
-        
-        // Optional: Add tooltip
-        weatherIcon.title = `Current weather: ${weatherData.condition}, ${Math.round(weatherData.temperature)}°C`;
+        weatherIcon.title = `Current weather: ${weatherData.condition}, ${weatherData.temperature}°C`;
     }
 
-    
+    // Mood icon toggle
+    const moodIcon = document.getElementById('mood-icon');
+    let moodSelector = null; // Start as null since it's not in the DOM initially
 
-// Mood icon toggle
-const moodIcon = document.getElementById('mood-icon');
-let moodSelector = null; // Start as null since it's not in the DOM initially
+    console.log("Mood icon element:", moodIcon); // Debug: Check if moodIcon exists
 
-console.log("Mood icon element:", moodIcon); // Debug: Check if moodIcon exists
+    moodIcon.addEventListener('click', toggleMoodSelector);
 
-moodIcon.addEventListener('click', toggleMoodSelector);
-
-function toggleMoodSelector() {
-    console.log("toggleMoodSelector called"); // Debug: Function call check
-    if (!moodSelector) {
-        console.log("Fetching mood selector..."); // Debug: Fetching mood selector
-        fetchMoodSelector();
-    } else {
-        console.log("Toggling mood selector visibility..."); // Debug: Toggling visibility
-        moodSelector.classList.toggle('hidden');
-    }
-}
-async function fetchMoodSelector() {
-    try {
-        console.log("Starting fetch for mood selector..."); // Debug: Fetch start
-        const response = await fetch('src/components/mood-selector.html');
-        if (!response.ok) {
-            console.error('Failed to load mood selector'); // Debug: Fetch failed
-            throw new Error('Failed to load mood selector');
-        }
-
-        const moodHtml = await response.text();
-        console.log("Mood HTML fetched:", moodHtml); // Debug: Log fetched HTML
-
-        // Parse the HTML to get the mood-selector element
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = moodHtml;
-        moodSelector = tempDiv.querySelector('#mood-selector');
-
+    function toggleMoodSelector() {
+        console.log("toggleMoodSelector called"); // Debug: Function call check
         if (!moodSelector) {
-            console.error('Mood selector element not found in fetched HTML'); // Debug: Element not found
-            throw new Error('Mood selector element not found');
-        }
-
-        console.log("Mood selector found:", moodSelector); // Debug: Element found
-
-        // Insert into the DOM
-        const mainContainer = document.querySelector('main.container');
-        if (mainContainer) {
-            mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
-            console.log("Mood selector inserted into DOM"); // Debug: Insertion confirmation
+            console.log("Fetching mood selector..."); // Debug: Fetching mood selector
+            fetchMoodSelector();
         } else {
-            console.error('Main container not found'); // Debug: Container not found
+            console.log("Toggling mood selector visibility..."); // Debug: Toggling visibility
+            moodSelector.classList.toggle('hidden');
         }
+    }
+    async function fetchMoodSelector() {
+        try {
+            console.log("Starting fetch for mood selector..."); // Debug: Fetch start
+            const response = await fetch('src/components/mood-selector.html');
+            if (!response.ok) {
+                console.error('Failed to load mood selector'); // Debug: Fetch failed
+                throw new Error('Failed to load mood selector');
+            }
 
-        // Remove 'hidden' class to show the selector immediately
-        moodSelector.classList.remove('hidden');
-        console.log("Mood selector now visible"); // Debug: Visibility change
+            const moodHtml = await response.text();
+            console.log("Mood HTML fetched:", moodHtml); // Debug: Log fetched HTML
 
-        // Add event listener to the close button
-        const closeButton = moodSelector.querySelector('.close-button');
-        if (closeButton) {
-            closeButton.addEventListener('click', toggleMoodSelector);
-            console.log("Close button listener added"); // Debug: Event listener added
-        } else {
-            console.error('Close button not found'); // Debug: Button not found
+            // Parse the HTML to get the mood-selector element
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = moodHtml;
+            moodSelector = tempDiv.querySelector('#mood-selector');
+
+            if (!moodSelector) {
+                console.error('Mood selector element not found in fetched HTML'); // Debug: Element not found
+                throw new Error('Mood selector element not found');
+            }
+
+            console.log("Mood selector found:", moodSelector); // Debug: Element found
+
+            // Insert into the DOM
+            const mainContainer = document.querySelector('main.container');
+            if (mainContainer) {
+                mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
+                console.log("Mood selector inserted into DOM"); // Debug: Insertion confirmation
+            } else {
+                console.error('Main container not found'); // Debug: Container not found
+            }
+
+            // Remove 'hidden' class to show the selector immediately
+            moodSelector.classList.remove('hidden');
+            console.log("Mood selector now visible"); // Debug: Visibility change
+
+            // Add event listener to the close button
+            const closeButton = moodSelector.querySelector('.close-button');
+            if (closeButton) {
+                closeButton.addEventListener('click', toggleMoodSelector);
+                console.log("Close button listener added"); // Debug: Event listener added
+            } else {
+                console.error('Close button not found'); // Debug: Button not found
+            }
+        } catch (error) {
+            console.error("Error in fetchMoodSelector:", error.message); // Debug: Catch errors
         }
-    } catch (error) {
-        console.error("Error in fetchMoodSelector:", error.message); // Debug: Catch errors
     }
-}
 
-// Slider event listener remains the same with added debug
-document.addEventListener('input', (event) => {
-    if (event.target.id === 'mood-range') {
-        const moodValue = event.target.value;
-        console.log(`Mood value changed to: ${moodValue}`); // Debug: Log mood value change
-    }
-});
+    // Slider event listener remains the same with added debug
+    document.addEventListener('input', (event) => {
+        if (event.target.id === 'mood-range') {
+            const moodValue = event.target.value;
+            console.log(`Mood value changed to: ${moodValue}`); // Debug: Log mood value change
+        }
+    });
 
     // User icon click event
     const userIcon = document.getElementById('user-icon');
