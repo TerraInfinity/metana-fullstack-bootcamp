@@ -262,24 +262,38 @@ function handleTaskActions(taskCard) {
 
     // Complete task
     completeButton.addEventListener('click', () => {
-        completedTasks.push(taskCard);
-        taskCard.remove();
-        renderTasks(completedTasks, document.querySelector('.tasks-section .task-cards'));
+        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+
+        if (isShowingCompleted) {
+            // If in completed view, move task back to yourTasks
+            completedTasks = completedTasks.filter(task => task !== taskCard);
+            yourTasks.push(taskCard);
+        } else {
+            // If in your tasks view, move task to completedTasks
+            yourTasks = yourTasks.filter(task => task !== taskCard);
+            completedTasks.push(taskCard);
+        }
+
+        // Refresh the UI based on the current view
+        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+        renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
     });
 
     // Delete task
     deleteButton.addEventListener('click', () => {
-        // Remove the task card from the DOM
-        taskCard.remove();
+        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
 
-        // Remove the task from yourTasks array
-        yourTasks = yourTasks.filter(task => task !== taskCard);
+        if (isShowingCompleted) {
+            // Remove the task from completedTasks array
+            completedTasks = completedTasks.filter(task => task !== taskCard);
+        } else {
+            // Remove the task from yourTasks array
+            yourTasks = yourTasks.filter(task => task !== taskCard);
+        }
 
-        // Remove the task from completedTasks array
-        completedTasks = completedTasks.filter(task => task !== taskCard);
-
-        // Optionally, you can also refresh the UI if needed
-        renderTasks(yourTasks, document.querySelector('.tasks-section .task-cards'));
+        // Refresh the UI based on the current view
+        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+        renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
     });
 }
 
