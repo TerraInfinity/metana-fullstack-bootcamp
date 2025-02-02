@@ -48,6 +48,7 @@ function handleTaskActions(taskCard) {
             // Create the edit and complete buttons if they don't exist
             let editButton = taskCard.querySelector('.btn-action.edit');
             let completeButton = taskCard.querySelector('.btn-action.complete');
+            const deleteButton = taskCard.querySelector('.btn-action.delete');
 
             if (!editButton) {
                 editButton = document.createElement('button');
@@ -63,12 +64,13 @@ function handleTaskActions(taskCard) {
                 taskCard.querySelector('.task-actions').appendChild(completeButton);
             }
 
+            // Ensure buttons are in the correct order
+            taskCard.querySelector('.task-actions').appendChild(editButton);
+            taskCard.querySelector('.task-actions').appendChild(completeButton);
+            taskCard.querySelector('.task-actions').appendChild(deleteButton);
+
             // Hide the add button
             taskCard.querySelector('.btn-action.add').classList.add('hidden');
-
-            // Ensure the delete button is visible and positioned correctly
-            const deleteButton = taskCard.querySelector('.btn-action.delete');
-            deleteButton.classList.remove('hidden'); // Show the delete button
 
             // Re-render both sections
             const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
@@ -92,6 +94,8 @@ function handleTaskActions(taskCard) {
 
             // Update task count
             updateTaskCount();
+            // Reinitialize task actions for the moved task
+            handleTaskActions(taskCard);
         });
     }
 
