@@ -281,14 +281,15 @@ function handleTaskActions(taskCard) {
             } else {
                 // Remove the task from completedTasks array
                 completedTasks = completedTasks.filter(task => task !== taskCard);
+                // Refresh the UI to show updated "Completed Tasks"
+                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                renderTasks(completedTasks, yourTasksSection);
                 //print log
                 console.log('task removed from completedTasks array');
             }
 
             // No action needed if in completed tasks view
         });
-
-
     }
 
     if (deleteButton) {
