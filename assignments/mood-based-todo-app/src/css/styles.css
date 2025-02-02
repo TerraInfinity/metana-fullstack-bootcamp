@@ -121,11 +121,17 @@ h1, h2, h3, p, span, a, button {
 /* Responsive Layout */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    max-width: 800px;
+    grid-template-columns: 2fr 1fr; /* Two columns: tasks-section and suggested-tasks */
+    gap: 3rem;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
+}
+
+.suggested-tasks .task-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns per row */
+    gap: 1rem; /* Adjust the gap between task cards */
 }
 
 @media (min-width: 768px) {
