@@ -148,13 +148,16 @@ function handleTaskActions(taskCard) {
             const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
 
             if (!isShowingCompleted) {
+                // Move task from "Your Tasks" to "Completed Tasks"
                 yourTasks = yourTasks.filter(task => task !== taskCard);
                 completedTasks.push(taskCard);
             } else {
+                // Remove task from "Completed Tasks"
                 completedTasks = completedTasks.filter(task => task !== taskCard);
-                yourTasks.push(taskCard);
+                taskCard.remove(); // Remove the task from the DOM
             }
 
+            // Re-render the appropriate section
             const yourTasksSection = document.querySelector('.tasks-section .task-cards');
             renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
         });
