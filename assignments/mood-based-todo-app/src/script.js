@@ -42,6 +42,12 @@ function handleTaskActions(taskCard) {
             suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
             yourTasks.push(taskCard);
 
+            // Update the task card to include edit, complete, and delete buttons
+            taskCard.classList.remove('suggested'); // Remove the suggested class
+            taskCard.querySelector('.btn-action.add').classList.add('hidden'); // Hide the add button
+            taskCard.querySelector('.btn-action.edit').classList.remove('hidden'); // Show the edit button
+            taskCard.querySelector('.btn-action.complete').classList.remove('hidden'); // Show the complete button
+
             // Re-render both sections
             const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
             const yourTasksSection = document.querySelector('.tasks-section .task-cards');
