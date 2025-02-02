@@ -220,7 +220,6 @@ function toggleMoodSelector() {
         moodSelector.classList.toggle('hidden');
     }
 }
-
 async function fetchMoodSelector() {
     try {
         console.log("Starting fetch for mood selector..."); // Debug: Fetch start
@@ -277,6 +276,15 @@ document.addEventListener('input', (event) => {
         const moodValue = event.target.value;
         console.log(`Mood value changed to: ${moodValue}`); // Debug: Log mood value change
     }
+});
+
+    // User icon click event
+    const userIcon = document.getElementById('user-icon');
+    userIcon.addEventListener('click', () => {
+        // Open login form (placeholder)
+        
+        alert('Open login form');
+    });
 });
 
 // Function to handle task actions

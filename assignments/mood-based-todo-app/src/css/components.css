@@ -171,3 +171,7 @@
 .mood-icons span {
     font-size: 20px;
 }
+
+.hidden {
+    display: none;
+}
