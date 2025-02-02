@@ -38,35 +38,33 @@ function handleTaskActions(taskCard) {
     // Add Button (for suggested tasks)
     if (addButton && isSuggested) {
         addButton.addEventListener('click', () => {
-            // Move task from suggestedTasks to yourTasks
+            // Remove task from suggestedTasks
             suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
-            yourTasks.push(taskCard);
 
-            // Update the task card to include edit, complete, and delete buttons
-            taskCard.classList.remove('suggested'); // Remove the suggested class
+            // Create a new task card for "Your Tasks"
+            const newTaskCard = document.createElement('div');
+            newTaskCard.classList.add('task-card');
 
-            // Ensure the task-actions div has the correct buttons
-            const taskActions = taskCard.querySelector('.task-actions');
+            // Copy details from the suggested task
+            newTaskCard.innerHTML = `
+                <div class="task-header">
+                    <span class="task-title">${taskCard.querySelector('.task-title').textContent}</span>
+                </div>
+                <div class="task-time">
+                    ${taskCard.querySelector('.task-description').textContent}
+                </div>
+                <div class="task-timestamp">
+                    ${taskCard.querySelector('.due-date').textContent}
+                </div>
+                <div class="task-actions">
+                    <button class="btn-action edit">✏️</button>
+                    <button class="btn-action complete">✅</button>
+                    <button class="btn-action delete">🗑️</button>
+                </div>
+            `;
 
-            // Create the edit button if it doesn't exist
-            if (!taskCard.querySelector('.btn-action.edit')) {
-                const editButton = document.createElement('button');
-                editButton.classList.add('btn-action', 'edit');
-                editButton.textContent = '✏️';
-                taskActions.appendChild(editButton);
-            }
-
-            // Create the complete button if it doesn't exist
-            if (!taskCard.querySelector('.btn-action.complete')) {
-                const completeButton = document.createElement('button');
-                completeButton.classList.add('btn-action', 'complete');
-                completeButton.textContent = '✅';
-                taskActions.appendChild(completeButton);
-            }
-
-            // Ensure the delete button is visible
-            const deleteButton = taskCard.querySelector('.btn-action.delete');
-            deleteButton.classList.remove('hidden');
+            // Add the new task to yourTasks
+            yourTasks.push(newTaskCard);
 
             // Re-render both sections
             const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
