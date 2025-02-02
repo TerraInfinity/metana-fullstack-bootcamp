@@ -129,3 +129,44 @@
     color: #666;
     font-size: 0.9rem;
 }
+
+.mood-selector {
+    background-color: #2c2f33;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 300px;
+}
+
+.mood-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#mood-range {
+    width: 100%;
+    margin: 10px 0;
+    accent-color: #00ff00; /* Green color for the slider */
+}
+
+.mood-icons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.mood-icons span {
+    font-size: 20px;
+}

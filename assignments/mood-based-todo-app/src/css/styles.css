@@ -330,23 +330,3 @@ h1, h2, h3, p, span, a, button {
     transform: scale(1.1); /* Scale up the button slightly */
     color: #00ff95; /* Change color on hover */
 }
-
-.mood-selector {
-    position: absolute;
-    top: 60px; /* Adjust based on your header height */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: white;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
-
-.mood-icons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 5px;
-}
-
