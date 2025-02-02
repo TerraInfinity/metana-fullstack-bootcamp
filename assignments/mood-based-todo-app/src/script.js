@@ -194,9 +194,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Weather icon hover effect
+    // Weather icon click effect
     const weatherIcon = document.getElementById('weather-icon');
-    weatherIcon.addEventListener('mouseenter', () => {
+    weatherIcon.addEventListener('click', () => {
         // Fetch and display current weather information
         // Placeholder: Display alert with weather info
         alert('Current weather: Mostly Cloudy, 22°C');
@@ -204,19 +204,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mood icon toggle
     const moodIcon = document.getElementById('mood-icon');
-    const moodSelector = document.getElementById('mood-selector');
+    let moodSelector = document.getElementById('mood-selector');
 
-    moodIcon.addEventListener('click', () => {
-        if (moodSelector) {
+    moodIcon.addEventListener('click', async () => {
+        if (!moodSelector) {
+            try {
+                // Fetch the mood selector HTML
+                const response = await fetch('src/components/mood-selector.html');
+                if (!response.ok) throw new Error('Failed to load mood selector');
+
+                const moodHtml = await response.text();
+
+                // Create mood selector element
+                moodSelector = document.createElement('div');
+                moodSelector.id = 'mood-selector';
+                moodSelector.classList.add('mood-selector');
+                moodSelector.innerHTML = moodHtml;
+
+                // Insert mood selector into the DOM
+                const mainContainer = document.querySelector('main.container');
+                mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
+            } catch (error) {
+                console.error(error.message);
+            }
+        } else {
+            // Toggle visibility if it already exists
             moodSelector.classList.toggle('hidden');
         }
     });
 
     // Optional: Add event listener to update mood based on slider value
-    const moodRange = document.getElementById('mood-range');
-    moodRange.addEventListener('input', (event) => {
-        const moodValue = event.target.value;
-        console.log(`Mood value: ${moodValue}`); // You can use this value to update the UI or perform other actions
+    document.addEventListener('input', (event) => {
+        if (event.target.id === 'mood-range') {
+            const moodValue = event.target.value;
+            console.log(`Mood value: ${moodValue}`); // Use this value to update the UI or perform other actions
+        }
     });
 
     // User icon click event
