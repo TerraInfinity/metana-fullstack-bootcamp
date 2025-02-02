@@ -202,49 +202,57 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Current weather: Mostly Cloudy, 22°C');
     });
 
-    // Mood icon toggle
-    const moodIcon = document.getElementById('mood-icon');
-    let moodSelector = document.getElementById('mood-selector');
+ // Mood icon toggle
+const moodIcon = document.getElementById('mood-icon');
+let moodSelector = null; // Start as null since it's not in the DOM initially
 
-    moodIcon.addEventListener('click', toggleMoodSelector);
+moodIcon.addEventListener('click', toggleMoodSelector);
 
-    function toggleMoodSelector() {
+function toggleMoodSelector() {
+    if (!moodSelector) {
+        fetchMoodSelector();
+    } else {
+        moodSelector.classList.toggle('hidden');
+    }
+}
+
+async function fetchMoodSelector() {
+    try {
+        const response = await fetch('src/components/mood-selector.html');
+        if (!response.ok) throw new Error('Failed to load mood selector');
+
+        const moodHtml = await response.text();
+
+        // Parse the HTML to get the mood-selector element
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = moodHtml;
+        moodSelector = tempDiv.querySelector('#mood-selector');
+
         if (!moodSelector) {
-            fetchMoodSelector();
-        } else {
-            moodSelector.classList.toggle('hidden');
+            throw new Error('Mood selector element not found');
         }
+
+        // Insert into the DOM
+        const mainContainer = document.querySelector('main.container');
+        mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
+
+        // Remove 'hidden' class to show the selector immediately
+        moodSelector.classList.remove('hidden');
+
+        // Add event listener to the close button
+        moodSelector.querySelector('.close-button').addEventListener('click', toggleMoodSelector);
+    } catch (error) {
+        console.error(error.message);
     }
+}
 
-    async function fetchMoodSelector() {
-        try {
-            const response = await fetch('src/components/mood-selector.html');
-            if (!response.ok) throw new Error('Failed to load mood selector');
-
-            const moodHtml = await response.text();
-
-            moodSelector = document.createElement('div');
-            moodSelector.id = 'mood-selector';
-            moodSelector.classList.add('mood-selector');
-            moodSelector.innerHTML = moodHtml;
-
-            const mainContainer = document.querySelector('main.container');
-            mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
-
-            // Add event listener for close button
-            moodSelector.querySelector('.close-button').addEventListener('click', toggleMoodSelector);
-        } catch (error) {
-            console.error(error.message);
-        }
+// Slider event listener remains the same
+document.addEventListener('input', (event) => {
+    if (event.target.id === 'mood-range') {
+        const moodValue = event.target.value;
+        console.log(`Mood value: ${moodValue}`);
     }
-
-    // Optional: Add event listener to update mood based on slider value
-    document.addEventListener('input', (event) => {
-        if (event.target.id === 'mood-range') {
-            const moodValue = event.target.value;
-            console.log(`Mood value: ${moodValue}`); // Use this value to update the UI or perform other actions
-        }
-    });
+});
 
     // User icon click event
     const userIcon = document.getElementById('user-icon');
