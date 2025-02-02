@@ -66,8 +66,9 @@ function handleTaskActions(taskCard) {
             // Hide the add button
             taskCard.querySelector('.btn-action.add').classList.add('hidden');
 
-            // Show the delete button
-            taskCard.querySelector('.btn-action.delete').classList.remove('hidden');
+            // Ensure the delete button is visible and positioned correctly
+            const deleteButton = taskCard.querySelector('.btn-action.delete');
+            deleteButton.classList.remove('hidden'); // Show the delete button
 
             // Re-render both sections
             const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
