@@ -44,9 +44,30 @@ function handleTaskActions(taskCard) {
 
             // Update the task card to include edit, complete, and delete buttons
             taskCard.classList.remove('suggested'); // Remove the suggested class
-            taskCard.querySelector('.btn-action.add').classList.add('hidden'); // Hide the add button
-            taskCard.querySelector('.btn-action.edit').classList.remove('hidden'); // Show the edit button
-            taskCard.querySelector('.btn-action.complete').classList.remove('hidden'); // Show the complete button
+
+            // Create the edit and complete buttons if they don't exist
+            let editButton = taskCard.querySelector('.btn-action.edit');
+            let completeButton = taskCard.querySelector('.btn-action.complete');
+
+            if (!editButton) {
+                editButton = document.createElement('button');
+                editButton.classList.add('btn-action', 'edit');
+                editButton.textContent = '✏️';
+                taskCard.querySelector('.task-actions').appendChild(editButton);
+            }
+
+            if (!completeButton) {
+                completeButton = document.createElement('button');
+                completeButton.classList.add('btn-action', 'complete');
+                completeButton.textContent = '✅';
+                taskCard.querySelector('.task-actions').appendChild(completeButton);
+            }
+
+            // Hide the add button
+            taskCard.querySelector('.btn-action.add').classList.add('hidden');
+
+            // Show the delete button
+            taskCard.querySelector('.btn-action.delete').classList.remove('hidden');
 
             // Re-render both sections
             const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
