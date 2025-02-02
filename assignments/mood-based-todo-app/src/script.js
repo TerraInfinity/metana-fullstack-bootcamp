@@ -27,26 +27,27 @@ let completedTasks = [];
 let suggestedTasks = Array.from(document.querySelector('#suggested-tasks-section .task-cards').children);
 
 
-// Add this:
 async function updateSuggestedTasks() {
     try {
-      const filteredTasks = await MoodTaskService.getFilteredTasks(
-        currentMood, 
-        currentWeather.condition.toLowerCase()
-      );
-      
-      suggestedTasks = await MoodTaskService.renderSuggestedTasks(
-        filteredTasks,
-        '#suggested-tasks-section .task-cards'
-      );
-      
-      // Initialize actions for new tasks
-      suggestedTasks.forEach(task => handleTaskActions(task));
+        // Ensure currentWeather.condition is defined before accessing it
+        const condition = currentWeather && currentWeather.condition ? currentWeather.condition.toLowerCase() : 'unknown';
+        
+        const filteredTasks = await MoodTaskService.getFilteredTasks(
+            currentMood, 
+            condition
+        );
+        
+        suggestedTasks = await MoodTaskService.renderSuggestedTasks(
+            filteredTasks,
+            '#suggested-tasks-section .task-cards'
+        );
+        
+        // Initialize actions for new tasks
+        suggestedTasks.forEach(task => handleTaskActions(task));
     } catch (error) {
-      console.error('Error updating suggestions:', error);
+        console.error('Error updating suggestions:', error);
     }
 }
-
 
 // Function to render tasks
 function renderTasks(tasks, container) {
