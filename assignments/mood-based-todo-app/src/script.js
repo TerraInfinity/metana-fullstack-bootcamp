@@ -64,6 +64,9 @@ function handleTaskActions(taskCard) {
                 // Render "Your Tasks" section
                 renderTasks(yourTasks, yourTasksSection);
             }
+
+            // Update task count
+            updateTaskCount();
         });
     }
 
@@ -86,6 +89,9 @@ function handleTaskActions(taskCard) {
                 renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
             }
             taskCard.remove(); // Remove the task from the DOM
+
+            // Update task count
+            updateTaskCount();
         });
     }
 
@@ -177,6 +183,9 @@ function handleTaskActions(taskCard) {
             // Re-render the appropriate section
             const yourTasksSection = document.querySelector('.tasks-section .task-cards');
             renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+
+            // Update task count
+            updateTaskCount();
         });
     }
 }
@@ -222,9 +231,11 @@ document.addEventListener('DOMContentLoaded', () => {
             yourTasks = [];
             console.log('All tasks moved to completedTasks array');
         }
-
+        // Update task count
+        updateTaskCount();
         // Refresh the UI based on the current view
         renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+
     });
 
     // Select the Add Task button and the modal
@@ -330,6 +341,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Close modal
                 modalContainer.remove();
+
+                // Update task count
+                updateTaskCount();
             });
 
             // Define taskFormModal after creating the modal
@@ -438,3 +452,9 @@ document.addEventListener('input', (event) => {
         alert('Open login form');
     });
 });
+
+// Function to update the task count display
+function updateTaskCount() {
+    const taskCountElement = document.getElementById('task-count-number');
+    taskCountElement.textContent = yourTasks.length; // Update with the current number of tasks
+}
