@@ -396,7 +396,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 newTask.querySelector('.task-title').textContent = taskName;
                 newTask.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationUnit}`;
                 newTask.querySelector('.due-date').textContent = `Due: ${taskDate}`;
-                
+
+                // Add action buttons to the task
+                const taskActions = newTask.querySelector('.task-actions') || document.createElement('div');
+                taskActions.className = 'task-actions';
+                taskActions.innerHTML = ''; // Clear any existing buttons if there are any
+
+                // Create action buttons
+                const editButton = document.createElement('button');
+                editButton.className = 'btn-action edit';
+                editButton.innerHTML = '✏️';
+                editButton.addEventListener('click', () => {
+                    // Implement edit functionality here
+                });
+
+                const completeButton = document.createElement('button');
+                completeButton.className = 'btn-action complete';
+                completeButton.innerHTML = '✅';
+                completeButton.addEventListener('click', () => {
+                    // Implement complete functionality here
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'btn-action delete';
+                deleteButton.innerHTML = '🗑️';
+                deleteButton.addEventListener('click', () => {
+                    // Implement delete functionality here
+                });
+
+                // Append buttons to task actions
+                taskActions.append(editButton, completeButton, deleteButton);
+                newTask.appendChild(taskActions);
+
                 // Add to tasks section
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
                 yourTasks.push(newTask); // Add to your tasks array
