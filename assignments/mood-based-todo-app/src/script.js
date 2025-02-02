@@ -163,6 +163,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Initialize actions for the new task
                 handleTaskActions(newTask);
 
+                // Check if currently showing completed tasks and switch to "Your Tasks"
+                const showCompletedButton = document.getElementById('show-completed');
+                const isShowingCompleted = showCompletedButton.textContent.includes('Hide');
+                if (isShowingCompleted) {
+                    renderTasks(yourTasks, yourTasksSection);
+                    document.querySelector('.tasks-section .section-header h2').textContent = 'Your Tasks';
+                    showCompletedButton.textContent = 'Show Completed';
+                }
+
                 // Close modal
                 modalContainer.remove();
             });
