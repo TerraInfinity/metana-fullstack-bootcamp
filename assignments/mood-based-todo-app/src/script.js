@@ -54,6 +54,9 @@ function handleTaskActions(taskCard) {
             renderTasks(suggestedTasks, suggestedTasksSection);
             renderTasks(yourTasks, yourTasksSection);
 
+            // Refresh the suggested tasks list
+            renderTasks(suggestedTasks, suggestedTasksSection);
+
             // Switch to "Your Tasks" display if currently showing "Completed Tasks"
             const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
             if (isShowingCompleted) {
