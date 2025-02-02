@@ -56,6 +56,21 @@ export class MoodTaskService {
           template.innerHTML = componentHtml;
           const newTask = template.content.querySelector('.task-card').cloneNode(true);
           
+          // Clear existing buttons
+          const taskActions = newTask.querySelector('.task-actions');
+          taskActions.innerHTML = '';
+
+          // Add buttons
+          const addButton = document.createElement('button');
+          addButton.className = 'btn-action add';
+          addButton.innerHTML = '➕';
+
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'btn-action delete';
+          deleteButton.innerHTML = '🗑️';
+
+          taskActions.append(addButton, deleteButton);
+
           newTask.querySelector('.task-title').textContent = task.name;
           newTask.querySelector('.task-description').textContent = `Duration: ${task.duration}`;
           newTask.querySelector('.due-date').textContent = `Due: ${new Date().toLocaleTimeString()}`;
