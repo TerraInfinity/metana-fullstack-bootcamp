@@ -202,26 +202,36 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Current weather: Mostly Cloudy, 22°C');
     });
 
- // Mood icon toggle
+// Mood icon toggle
 const moodIcon = document.getElementById('mood-icon');
 let moodSelector = null; // Start as null since it's not in the DOM initially
+
+console.log("Mood icon element:", moodIcon); // Debug: Check if moodIcon exists
 
 moodIcon.addEventListener('click', toggleMoodSelector);
 
 function toggleMoodSelector() {
+    console.log("toggleMoodSelector called"); // Debug: Function call check
     if (!moodSelector) {
+        console.log("Fetching mood selector..."); // Debug: Fetching mood selector
         fetchMoodSelector();
     } else {
+        console.log("Toggling mood selector visibility..."); // Debug: Toggling visibility
         moodSelector.classList.toggle('hidden');
     }
 }
 
 async function fetchMoodSelector() {
     try {
+        console.log("Starting fetch for mood selector..."); // Debug: Fetch start
         const response = await fetch('src/components/mood-selector.html');
-        if (!response.ok) throw new Error('Failed to load mood selector');
+        if (!response.ok) {
+            console.error('Failed to load mood selector'); // Debug: Fetch failed
+            throw new Error('Failed to load mood selector');
+        }
 
         const moodHtml = await response.text();
+        console.log("Mood HTML fetched:", moodHtml); // Debug: Log fetched HTML
 
         // Parse the HTML to get the mood-selector element
         const tempDiv = document.createElement('div');
@@ -229,37 +239,44 @@ async function fetchMoodSelector() {
         moodSelector = tempDiv.querySelector('#mood-selector');
 
         if (!moodSelector) {
+            console.error('Mood selector element not found in fetched HTML'); // Debug: Element not found
             throw new Error('Mood selector element not found');
         }
 
+        console.log("Mood selector found:", moodSelector); // Debug: Element found
+
         // Insert into the DOM
         const mainContainer = document.querySelector('main.container');
-        mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
+        if (mainContainer) {
+            mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
+            console.log("Mood selector inserted into DOM"); // Debug: Insertion confirmation
+        } else {
+            console.error('Main container not found'); // Debug: Container not found
+        }
 
         // Remove 'hidden' class to show the selector immediately
         moodSelector.classList.remove('hidden');
+        console.log("Mood selector now visible"); // Debug: Visibility change
 
         // Add event listener to the close button
-        moodSelector.querySelector('.close-button').addEventListener('click', toggleMoodSelector);
+        const closeButton = moodSelector.querySelector('.close-button');
+        if (closeButton) {
+            closeButton.addEventListener('click', toggleMoodSelector);
+            console.log("Close button listener added"); // Debug: Event listener added
+        } else {
+            console.error('Close button not found'); // Debug: Button not found
+        }
     } catch (error) {
-        console.error(error.message);
+        console.error("Error in fetchMoodSelector:", error.message); // Debug: Catch errors
     }
 }
 
-// Slider event listener remains the same
+// Slider event listener remains the same with added debug
 document.addEventListener('input', (event) => {
     if (event.target.id === 'mood-range') {
         const moodValue = event.target.value;
-        console.log(`Mood value: ${moodValue}`);
+        console.log(`Mood value changed to: ${moodValue}`); // Debug: Log mood value change
     }
-});
-
-    // User icon click event
-    const userIcon = document.getElementById('user-icon');
-    userIcon.addEventListener('click', () => {
-        // Open login form (placeholder)
-        alert('Open login form');
-    });
 });
 
 // Function to handle task actions
