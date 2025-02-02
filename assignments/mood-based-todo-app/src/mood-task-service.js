@@ -1,7 +1,7 @@
 export class MoodTaskService {
     static async loadTasks() {
       try {
-        const response = await fetch('data/suggested-tasks-pool.json');
+        const response = await fetch('/data/suggested-tasks-pool.json');
         if (!response.ok) throw new Error('Failed to load tasks');
         return await response.json();
       } catch (error) {
