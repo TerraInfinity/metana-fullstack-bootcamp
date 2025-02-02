@@ -264,19 +264,15 @@ function handleTaskActions(taskCard) {
     completeButton.addEventListener('click', () => {
         const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
 
-        if (isShowingCompleted) {
-            // If in completed view, move task back to yourTasks
-            completedTasks = completedTasks.filter(task => task !== taskCard);
-            yourTasks.push(taskCard);
-        } else {
+        if (!isShowingCompleted) {
             // If in your tasks view, move task to completedTasks
             yourTasks = yourTasks.filter(task => task !== taskCard);
             completedTasks.push(taskCard);
-        }
 
-        // Refresh the UI based on the current view
-        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-        renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+            // Refresh the UI to show updated "Your Tasks"
+            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+            renderTasks(yourTasks, yourTasksSection);
+        }
     });
 
     // Delete task
