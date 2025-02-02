@@ -1,5 +1,12 @@
+// Add at the top with other imports
+import { MoodTaskService } from './mood-task-service.js';
+
 const themeToggle = document.getElementById('theme-toggle');
 const body = document.body;
+
+// Add at the top of script.js (after theme setup)
+let currentMood = 50; // Default mood value
+let currentWeather = {}; // Will store our random weather data
 
 // Load saved theme
 const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -18,6 +25,28 @@ themeToggle.addEventListener('click', () => {
 let yourTasks = Array.from(document.querySelector('.tasks-section .task-cards').children);
 let completedTasks = [];
 let suggestedTasks = Array.from(document.querySelector('#suggested-tasks-section .task-cards').children);
+
+
+// Add this:
+async function updateSuggestedTasks() {
+    try {
+      const filteredTasks = await MoodTaskService.getFilteredTasks(
+        currentMood, 
+        currentWeather.condition.toLowerCase()
+      );
+      
+      suggestedTasks = await MoodTaskService.renderSuggestedTasks(
+        filteredTasks,
+        '#suggested-tasks-section .task-cards'
+      );
+      
+      // Initialize actions for new tasks
+      suggestedTasks.forEach(task => handleTaskActions(task));
+    } catch (error) {
+      console.error('Error updating suggestions:', error);
+    }
+}
+
 
 // Function to render tasks
 function renderTasks(tasks, container) {
@@ -410,7 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update weather icon click handler
     weatherIcon.addEventListener('click', () => {
-        currentWeather = generateRandomWeather(); // Generate new random weather
+        currentWeather = generateRandomWeather();
         const weatherInfo = `Current Weather:
             - Condition: ${currentWeather.condition}
             - Temperature: ${currentWeather.temperature}°C
@@ -418,11 +447,13 @@ document.addEventListener('DOMContentLoaded', () => {
             - Wind: ${currentWeather.wind} m/s`;
         
         alert(weatherInfo);
-        updateWeatherIcon(currentWeather); // Update icon with new random weather
+        updateWeatherIcon(currentWeather);
+        updateSuggestedTasks(); 
     });
 
     // Function to update weather icon display
     function updateWeatherIcon(weatherData) {
+        currentWeather = weatherData; // Store weather state
         const iconMap = {
             '01': '☀️', // Clear sky
             '02': '⛅', // Few clouds
@@ -440,6 +471,18 @@ document.addEventListener('DOMContentLoaded', () => {
         weatherIcon.title = `Current weather: ${weatherData.condition}, ${weatherData.temperature}°C`;
     }
 
+    // Inside DOMContentLoaded, after weather initialization:
+    document.addEventListener('DOMContentLoaded', () => {
+        // ... existing code ...
+        
+        // After weather initialization:
+        currentWeather = generateRandomWeather();
+        updateWeatherIcon(currentWeather);
+        
+        // Add this:
+        updateSuggestedTasks(); // Initial suggestions
+    });
+    
     // Mood icon toggle
     const moodIcon = document.getElementById('mood-icon');
     let moodSelector = null; // Start as null since it's not in the DOM initially
@@ -512,7 +555,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('input', (event) => {
         if (event.target.id === 'mood-range') {
             const moodValue = event.target.value;
-            console.log(`Mood value changed to: ${moodValue}`); // Debug: Log mood value change
+            console.log(`Mood value changed to: ${moodValue}`);
+        }
+    });
+
+    // Add these new listeners RIGHT HERE:
+    document.addEventListener('change', (event) => {
+        if (event.target.id === 'mood-range') {
+            currentMood = parseInt(event.target.value);
+            updateSuggestedTasks();
+        }
+    });
+
+    document.addEventListener('mouseup', (event) => {
+        if (event.target.id === 'mood-range') {
+            updateSuggestedTasks();
         }
     });
 

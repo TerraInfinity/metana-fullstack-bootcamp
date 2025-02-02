@@ -27,4 +27,32 @@ export class MoodTaskService {
       return task.weatherConditions.includes('any') || 
              task.weatherConditions.includes(currentWeather);
     }
+  
+    static async renderSuggestedTasks(tasks, containerSelector) {
+      const container = document.querySelector(containerSelector);
+      container.innerHTML = '';
+      
+      try {
+        const componentResponse = await fetch('src/components/task-component.html');
+        const componentHtml = await componentResponse.text();
+
+        tasks.forEach(task => {
+          const template = document.createElement('template');
+          template.innerHTML = componentHtml;
+          const newTask = template.content.querySelector('.task-card').cloneNode(true);
+          
+          newTask.querySelector('.task-title').textContent = task.name;
+          newTask.querySelector('.task-description').textContent = `Duration: ${task.duration}`;
+          newTask.querySelector('.due-date').textContent = `Due: ${new Date().toLocaleTimeString()}`;
+          newTask.classList.add('suggested');
+          
+          container.appendChild(newTask);
+        });
+        
+        return Array.from(container.children);
+      } catch (error) {
+        console.error('Error rendering tasks:', error);
+        return [];
+      }
+    }
   }
