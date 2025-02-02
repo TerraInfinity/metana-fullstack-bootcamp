@@ -136,8 +136,9 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-    width: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
 .mood-header {
@@ -158,7 +159,7 @@
 #mood-range {
     width: 100%;
     margin: 10px 0;
-    accent-color: #00ff00; /* Green color for the slider */
+    accent-color: #00ff00;
 }
 
 .mood-icons {
