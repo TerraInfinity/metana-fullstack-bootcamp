@@ -61,14 +61,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
         
         if (isShowingCompleted) {
-            // Clear completed tasks
+            // Remove all tasks from completedTasks
             completedTasks = [];
-            renderTasks(completedTasks, yourTasksSection); // Refresh the UI
+            console.log('All tasks removed from completedTasks array');
         } else {
-            // Move all tasks to completed
-            completedTasks = Array.from(yourTasksSection.children);
-            yourTasksSection.innerHTML = '';
+            // Move all tasks to completedTasks
+            yourTasks.forEach(task => completedTasks.push(task));
+            yourTasks = [];
+            console.log('All tasks moved to completedTasks array');
         }
+
+        // Refresh the UI based on the current view
+        renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
     });
 
     // Select the Add Task button and the modal
