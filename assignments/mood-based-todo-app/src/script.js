@@ -54,6 +54,7 @@ function handleTaskActions(taskCard) {
                 editButton = document.createElement('button');
                 editButton.classList.add('btn-action', 'edit');
                 editButton.textContent = '✏️';
+                editButton.style.marginLeft = '10px'; // Add margin for spacing
                 taskCard.querySelector('.task-actions').appendChild(editButton);
             }
 
@@ -61,6 +62,7 @@ function handleTaskActions(taskCard) {
                 completeButton = document.createElement('button');
                 completeButton.classList.add('btn-action', 'complete');
                 completeButton.textContent = '✅';
+                completeButton.style.marginLeft = '10px'; // Add margin for spacing
                 taskCard.querySelector('.task-actions').appendChild(completeButton);
             }
 
