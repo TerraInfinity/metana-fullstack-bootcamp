@@ -166,17 +166,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Close modal
                 modalContainer.remove();
             });
+
+            // Define taskFormModal after creating the modal
+            const taskFormModal = document.getElementById('taskFormModal');
+
+            // Close modal when clicking outside of it
+            window.addEventListener('click', (e) => {
+                if (e.target === taskFormModal) {
+                    taskFormModal.style.display = 'none';
+                }
+            });
         } catch (error) {
             console.error(error.message);
         }
     });
-});
-
-// Close modal when clicking outside of it
-window.addEventListener('click', (e) => {
-    if (e.target === taskFormModal) {
-        taskFormModal.style.display = 'none';
-    }
 });
 
 // Function to handle task actions
