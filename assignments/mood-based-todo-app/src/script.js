@@ -188,113 +188,118 @@ function handleTaskActions(taskCard) {
     const completeButton = taskCard.querySelector('.btn-action.complete');
     const deleteButton = taskCard.querySelector('.btn-action.delete');
 
-    // Edit task
-    editButton.addEventListener('click', async () => {
-        try {
-            const formResponse = await fetch('src/components/task-form.html');
-            if (!formResponse.ok) throw new Error('Failed to load form');
+    if (editButton) {
+        editButton.addEventListener('click', async () => {
+            try {
+                const formResponse = await fetch('src/components/task-form.html');
+                if (!formResponse.ok) throw new Error('Failed to load form');
 
-            const formHtml = await formResponse.text();
-            const modalContainer = document.createElement('div');
-            modalContainer.id = 'taskFormModal';
-            modalContainer.classList.add('modal');
-            modalContainer.innerHTML = `
-                <div class="modal-content">
-                    <button class="close-modal">✖</button>
-                    ${formHtml}
-                </div>
-            `;
-            document.body.appendChild(modalContainer);
+                const formHtml = await formResponse.text();
+                const modalContainer = document.createElement('div');
+                modalContainer.id = 'taskFormModal';
+                modalContainer.classList.add('modal');
+                modalContainer.innerHTML = `
+                    <div class="modal-content">
+                        <button class="close-modal">✖</button>
+                        ${formHtml}
+                    </div>
+                `;
+                document.body.appendChild(modalContainer);
 
-            // Update form title and button text for editing
-            const taskForm = modalContainer.querySelector('.task-form');
-            taskForm.querySelector('h2').textContent = 'Edit Task';
-            taskForm.querySelector('.btn-create').textContent = 'Save';
+                // Update form title and button text for editing
+                const taskForm = modalContainer.querySelector('.task-form');
+                taskForm.querySelector('h2').textContent = 'Edit Task';
+                taskForm.querySelector('.btn-create').textContent = 'Save';
 
-            // Pre-fill form with current task details
-            taskForm.querySelector('input[placeholder="Task name"]').value = taskCard.querySelector('.task-title').textContent;
-            const durationText = taskCard.querySelector('.task-description').textContent.split(' ');
-            taskForm.querySelector('#duration-input').value = durationText[1];
-            taskForm.querySelector('#datepicker').value = taskCard.querySelector('.due-date').textContent.split(': ')[1];
+                // Pre-fill form with current task details
+                taskForm.querySelector('input[placeholder="Task name"]').value = taskCard.querySelector('.task-title').textContent;
+                const durationText = taskCard.querySelector('.task-description').textContent.split(' ');
+                taskForm.querySelector('#duration-input').value = durationText[1];
+                taskForm.querySelector('#datepicker').value = taskCard.querySelector('.due-date').textContent.split(': ')[1];
 
-            // Initialize Datepicker with restrictions
-            const datepickerEl = modalContainer.querySelector('#datepicker');
-            $(datepickerEl).datepicker({
-                minDate: 0,          // Disable past dates
-                dateFormat: 'yy-mm-dd', // Format: YYYY-MM-DD
-                defaultDate: new Date() // Set default to today
-            });
+                // Initialize Datepicker with restrictions
+                const datepickerEl = modalContainer.querySelector('#datepicker');
+                $(datepickerEl).datepicker({
+                    minDate: 0,          // Disable past dates
+                    dateFormat: 'yy-mm-dd', // Format: YYYY-MM-DD
+                    defaultDate: new Date() // Set default to today
+                });
 
-            // Initialize duration toggle
-            const durationInput = modalContainer.querySelector('#duration-input');
-            const durationToggle = modalContainer.querySelector('#duration-toggle');
-            const durationUnits = ['Minutes', 'Hours', 'Days'];
-            let currentUnitIndex = durationUnits.indexOf(durationText[2]);
+                // Initialize duration toggle
+                const durationInput = modalContainer.querySelector('#duration-input');
+                const durationToggle = modalContainer.querySelector('#duration-toggle');
+                const durationUnits = ['Minutes', 'Hours', 'Days'];
+                let currentUnitIndex = durationUnits.indexOf(durationText[2]);
 
-            durationToggle.addEventListener('click', () => {
-                currentUnitIndex = (currentUnitIndex + 1) % durationUnits.length;
+                durationToggle.addEventListener('click', () => {
+                    currentUnitIndex = (currentUnitIndex + 1) % durationUnits.length;
+                    durationToggle.textContent = durationUnits[currentUnitIndex];
+                    durationInput.placeholder = `Duration (${durationUnits[currentUnitIndex]})`;
+                });
+
+                // Set initial duration unit
                 durationToggle.textContent = durationUnits[currentUnitIndex];
-                durationInput.placeholder = `Duration (${durationUnits[currentUnitIndex]})`;
-            });
 
-            // Set initial duration unit
-            durationToggle.textContent = durationUnits[currentUnitIndex];
+                // Handle form submission
+                taskForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const taskName = taskForm.querySelector('input[placeholder="Task name"]').value;
+                    const taskDuration = taskForm.querySelector('#duration-input').value;
+                    const taskDate = taskForm.querySelector('#datepicker').value;
 
-            // Handle form submission
-            taskForm.addEventListener('submit', (event) => {
-                event.preventDefault();
-                const taskName = taskForm.querySelector('input[placeholder="Task name"]').value;
-                const taskDuration = taskForm.querySelector('#duration-input').value;
-                const taskDate = taskForm.querySelector('#datepicker').value;
+                    taskCard.querySelector('.task-title').textContent = taskName;
+                    taskCard.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationUnits[currentUnitIndex]}`;
+                    taskCard.querySelector('.due-date').textContent = `Due: ${taskDate}`;
 
-                taskCard.querySelector('.task-title').textContent = taskName;
-                taskCard.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationUnits[currentUnitIndex]}`;
-                taskCard.querySelector('.due-date').textContent = `Due: ${taskDate}`;
+                    modalContainer.remove();
+                });
 
-                modalContainer.remove();
-            });
+                // Close modal handler
+                modalContainer.querySelector('.close-modal').addEventListener('click', () => {
+                    modalContainer.remove();
+                });
+            } catch (error) {
+                console.error(error.message);
+            }
+        });
+    }
 
-            // Close modal handler
-            modalContainer.querySelector('.close-modal').addEventListener('click', () => {
-                modalContainer.remove();
-            });
-        } catch (error) {
-            console.error(error.message);
-        }
-    });
+    if (completeButton) {
+        completeButton.addEventListener('click', () => {
+            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
 
-    // Complete task
-    completeButton.addEventListener('click', () => {
-        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+            if (!isShowingCompleted) {
+                // If in your tasks view, move task to completedTasks
+                yourTasks = yourTasks.filter(task => task !== taskCard);
+                completedTasks.push(taskCard);
 
-        if (!isShowingCompleted) {
-            // If in your tasks view, move task to completedTasks
-            yourTasks = yourTasks.filter(task => task !== taskCard);
-            completedTasks.push(taskCard);
+                // Refresh the UI to show updated "Your Tasks"
+                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                renderTasks(yourTasks, yourTasksSection);
+            }
+        });
+    }
 
-            // Refresh the UI to show updated "Your Tasks"
+    if (deleteButton) {
+        deleteButton.addEventListener('click', () => {
+            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+
+            if (isShowingCompleted) {
+                // Remove the task from completedTasks array
+                completedTasks = completedTasks.filter(task => task !== taskCard);
+            } else {
+                // Remove the task from yourTasks array
+                yourTasks = yourTasks.filter(task => task !== taskCard);
+            }
+
+            // Refresh the UI based on the current view
             const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-            renderTasks(yourTasks, yourTasksSection);
-        }
-    });
-
-    // Delete task
-    deleteButton.addEventListener('click', () => {
-        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-
-        if (isShowingCompleted) {
-            // Remove the task from completedTasks array
-            completedTasks = completedTasks.filter(task => task !== taskCard);
-        } else {
-            // Remove the task from yourTasks array
-            yourTasks = yourTasks.filter(task => task !== taskCard);
-        }
-
-        // Refresh the UI based on the current view
-        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-        renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
-    });
+            renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+        });
+    }
 }
 
 // Initialize task actions for existing tasks
-document.querySelectorAll('.task-card').forEach(handleTaskActions);
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.task-card').forEach(handleTaskActions);
+});
