@@ -387,14 +387,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateRandomWeather() {
         const conditions = ['Clear', 'Clouds', 'Rain', 'Snow', 'Thunderstorm', 'Mist'];
-        const icons = ['01d', '02d', '03d', '04d', '09d', '10d', '11d', '13d', '50d'];
-        
+        const icons = {
+            'Clear': '01d', // Clear sky
+            'Clouds': '02d', // Few clouds
+            'Rain': '10d', // Rain
+            'Snow': '13d', // Snow
+            'Thunderstorm': '11d', // Thunderstorm
+            'Mist': '50d' // Mist
+        };
+
+        const condition = conditions[Math.floor(Math.random() * conditions.length)];
+        const icon = icons[condition];
+
         return {
-            condition: conditions[Math.floor(Math.random() * conditions.length)],
+            condition: condition,
             temperature: Math.floor(Math.random() * 35) - 5, // Range from -5°C to 30°C
             humidity: Math.floor(Math.random() * 100),
             wind: (Math.random() * 15).toFixed(1),
-            icon: icons[Math.floor(Math.random() * icons.length)]
+            icon: icon
         };
     }
 
@@ -426,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const iconCode = weatherData.icon.slice(0, 2);
-        weatherIcon.textContent = iconMap[iconCode] || '🌍';
+        weatherIcon.textContent = iconMap[iconCode] || '🌍'; // Set the icon based on the weather data
         weatherIcon.title = `Current weather: ${weatherData.condition}, ${weatherData.temperature}°C`;
     }
 
