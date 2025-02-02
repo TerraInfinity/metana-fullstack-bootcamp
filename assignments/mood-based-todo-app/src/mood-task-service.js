@@ -12,10 +12,13 @@ export class MoodTaskService {
   
     static async getFilteredTasks(moodValue, weather) {
       const { tasks } = await this.loadTasks();
-      return tasks.filter(task => 
+      const filtered = tasks.filter(task => 
         this.matchesMood(task, moodValue) && 
         this.matchesWeather(task, weather)
       );
+
+      // Shuffle and pick 4
+      return this.shuffleArray(filtered).slice(0, 4);
     }
   
     static matchesMood(task, currentMood) {
@@ -28,15 +31,27 @@ export class MoodTaskService {
              task.weatherConditions.includes(currentWeather);
     }
   
+    static shuffleArray(array) {
+      // Fisher-Yates shuffle algorithm
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+  
     static async renderSuggestedTasks(tasks, containerSelector) {
       const container = document.querySelector(containerSelector);
       container.innerHTML = '';
+      
+      // Only process first 4 tasks
+      const limitedTasks = tasks.slice(0, 4);
       
       try {
         const componentResponse = await fetch('src/components/task-component.html');
         const componentHtml = await componentResponse.text();
 
-        tasks.forEach(task => {
+        limitedTasks.forEach(task => {
           const template = document.createElement('template');
           template.innerHTML = componentHtml;
           const newTask = template.content.querySelector('.task-card').cloneNode(true);
