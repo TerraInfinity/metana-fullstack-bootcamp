@@ -322,8 +322,9 @@ function handleTaskActions(taskCard) {
     if (deleteButton) {
         deleteButton.addEventListener('click', () => {
             if (isSuggested) {
-                // Remove the task from suggestedTasks array
+                // Remove the specific task from suggestedTasks array
                 suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
+                taskCard.remove(); // Remove the task from the DOM
             }
 
             // Refresh the UI
