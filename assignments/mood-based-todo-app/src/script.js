@@ -27,6 +27,7 @@ function renderTasks(tasks, container) {
     });
 }
 
+
 // Function to handle task actions
 function handleTaskActions(taskCard) {
     const isSuggested = taskCard.classList.contains('suggested');
@@ -379,11 +380,96 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Weather icon click effect
     const weatherIcon = document.getElementById('weather-icon');
-    weatherIcon.addEventListener('click', () => {
-        // Fetch and display current weather information
-        // Placeholder: Display alert with weather info
-        alert('Current weather: Mostly Cloudy, 22°C');
+    let currentWeather = 'clear';
+    let weatherDataCache = null;
+    // Initialize weather on app load
+    (async function initWeather() {
+        try {
+        weatherDataCache = await getWeatherData();
+        currentWeather = weatherDataCache.condition.toLowerCase();
+        updateWeatherIcon(weatherDataCache);
+        } catch (error) {
+        console.error('Error initializing weather:', error);
+        }
+    })();
+        
+    // Enhanced weather data function
+    async function getWeatherData() {
+        try {
+        // Get location
+        const ipResponse = await fetch('https://ipapi.co/json/');
+        const { latitude, longitude } = await ipResponse.json();
+    
+        // Get weather data
+        const weatherResponse = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=YOUR_API_KEY&units=metric`
+        );
+        const data = await weatherResponse.json();
+        
+        return {
+            condition: data.weather[0].main,
+            temperature: data.main.temp,
+            humidity: data.main.humidity,
+            wind: data.wind.speed,
+            icon: data.weather[0].icon
+        };
+        } catch (error) {
+        console.error('Error getting weather:', error);
+        return {
+            condition: 'Clear',
+            temperature: 22,
+            humidity: 50,
+            wind: 5,
+            icon: '01d'
+        };
+        }
+    }
+    
+    // Update weather icon click handler
+    weatherIcon.addEventListener('click', async () => {
+        try {
+        // Refresh weather data on click
+        weatherDataCache = await getWeatherData();
+        
+        // Format the weather information
+        const weatherInfo = `
+            Current Weather:
+            - Condition: ${weatherDataCache.condition}
+            - Temperature: ${Math.round(weatherDataCache.temperature)}°C
+            - Humidity: ${weatherDataCache.humidity}%
+            - Wind: ${weatherDataCache.wind} m/s
+        `;
+        
+        alert(weatherInfo);
+        updateWeatherIcon(weatherDataCache);
+        } catch (error) {
+        console.error('Error handling weather click:', error);
+        alert('Unable to fetch current weather. Please try again later.');
+        }
     });
+    
+    // Function to update weather icon display
+    function updateWeatherIcon(weatherData) {
+        const iconMap = {
+        '01': '☀️', // Clear sky
+        '02': '⛅', // Few clouds
+        '03': '☁️', // Scattered clouds
+        '04': '☁️', // Broken clouds
+        '09': '🌧️', // Shower rain
+        '10': '🌦️', // Rain
+        '11': '⛈️', // Thunderstorm
+        '13': '❄️', // Snow
+        '50': '🌫️'  // Mist
+        };
+    
+        const iconCode = weatherData.icon.slice(0, 2);
+        weatherIcon.textContent = iconMap[iconCode] || '🌍';
+        
+        // Optional: Add tooltip
+        weatherIcon.title = `Current weather: ${weatherData.condition}, ${Math.round(weatherData.temperature)}°C`;
+    }
+
+    
 
 // Mood icon toggle
 const moodIcon = document.getElementById('mood-icon');
