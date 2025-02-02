@@ -276,7 +276,11 @@ function handleTaskActions(taskCard) {
                 // Refresh the UI to show updated "Your Tasks"
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
                 renderTasks(yourTasks, yourTasksSection);
+            } else {
+                // Remove the task from completedTasks array
+                completedTasks = completedTasks.filter(task => task !== taskCard);
             }
+            // No action needed if in completed tasks view
         });
     }
 
