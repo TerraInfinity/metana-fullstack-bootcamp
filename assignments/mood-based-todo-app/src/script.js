@@ -47,6 +47,17 @@ function handleTaskActions(taskCard) {
             const yourTasksSection = document.querySelector('.tasks-section .task-cards');
             renderTasks(suggestedTasks, suggestedTasksSection);
             renderTasks(yourTasks, yourTasksSection);
+
+            // Switch to "Your Tasks" display if currently showing "Completed Tasks"
+            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+            if (isShowingCompleted) {
+                // Update the button text and section header
+                document.getElementById('show-completed').textContent = 'Show Completed';
+                document.querySelector('.tasks-section .section-header h2').textContent = 'Your Tasks';
+
+                // Render "Your Tasks" section
+                renderTasks(yourTasks, yourTasksSection);
+            }
         });
     }
 
