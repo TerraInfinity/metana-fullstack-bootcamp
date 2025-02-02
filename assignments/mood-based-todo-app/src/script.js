@@ -232,9 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
 
             // Add event listener for close button
-            moodSelector.querySelector('.close-button').addEventListener('click', () => {
-                moodSelector.classList.add('hidden');
-            });
+            moodSelector.querySelector('.close-button').addEventListener('click', toggleMoodSelector);
         } catch (error) {
             console.error(error.message);
         }
