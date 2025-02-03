@@ -1,4 +1,5 @@
-// Add at the top with other imports
+//Script.js
+// // Add at the top with other imports
 import { MoodTaskService } from './mood-task-service.js';
 import { 
     currentUser,
@@ -684,23 +685,25 @@ function updateTaskCount() {
     saveTasksToLocalStorage();
 }
 
-// Add this function to script.js or make sure it's accessible
+
 function loadUserData() {
     import('./auth.js').then(({ loadUserTasks, currentUser }) => {
         console.log("Current user before loading tasks:", currentUser); // Log currentUser
         if (currentUser) {
             loadUserTasks(currentUser); 
             console.log(`Loaded tasks for ${currentUser.email}:`, { yourTasks, completedTasks }); // Log the loaded tasks
+            
+            // After loading tasks from localStorage, update the UI
+            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+            renderTasks(yourTasks, yourTasksSection); // Render your tasks
+            
+            // Ensure completed tasks are also rendered if the user wants to see them
+            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+            if (isShowingCompleted) {
+                renderTasks(completedTasks, yourTasksSection); // Render completed tasks if needed
+            }
         } else {
             console.log("No user logged in to load tasks for");
-        }
-        // After loading tasks from localStorage, update the UI
-        renderTasks(yourTasks, document.querySelector('.tasks-section .task-cards'));
-        
-        // Ensure completed tasks are also rendered if the user wants to see them
-        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-        if (isShowingCompleted) {
-            renderTasks(completedTasks, document.querySelector('.tasks-section .task-cards'));
         }
         
         // Update task count or any other UI elements that depend on task lists
