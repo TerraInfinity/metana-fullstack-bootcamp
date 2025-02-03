@@ -4,8 +4,8 @@ import { MoodTaskService } from './mood-task-service.js'; // If needed
 export let currentUser = null;
 
 // Define yourTasks and completedTasks at a higher scope
-export let yourTasks = []; // Now export for script.js to see changes
-export let completedTasks = []; // Now export for script.js to see changes
+export let yourTasks = []; // Use let instead of const
+export let completedTasks = []; // Use let instead of const
 
 // User management
 export const UserService = {
