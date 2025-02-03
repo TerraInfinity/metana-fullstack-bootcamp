@@ -103,9 +103,13 @@ export function initializeAuth() {
 }
 
 export function handleLogout() {
-    saveCurrentUserData();
+    saveCurrentUserData(); // Ensure tasks are saved before logout
     SessionService.clearSession();
     updateAuthUI();
+    // Clear task arrays to reset state when logging out
+    yourTasks = [];
+    completedTasks = [];
+    // Reload page or update UI to reflect logged out state
     location.reload();
 }
 
@@ -242,4 +246,23 @@ export async function showLoginModal() {
     }
 
     document.body.appendChild(modal);
+}
+
+function loadUserTasks(user) {
+    const users = UserService.getUsers();
+    const foundUser = users.find(u => u.email === user.email);
+    if (foundUser && foundUser.tasks) {
+        // Reset yourTasks and completedTasks to ensure they're empty before populating
+        yourTasks = [];
+        completedTasks = [];
+        
+        // Populate tasks from localStorage
+        foundUser.tasks.forEach(task => {
+            if (task.completed) {
+                completedTasks.push(task);
+            } else {
+                yourTasks.push(task);
+            }
+        });
+    }
 }

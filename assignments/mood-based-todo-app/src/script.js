@@ -5,7 +5,8 @@ import {
     UserService,
     SessionService,
     updateAuthUI,
-    initializeAuth
+    initializeAuth,
+    loadUserTasks
 } from './auth.js';
 
 // Move the generateRandomWeather function to the top
@@ -303,10 +304,10 @@ function handleTaskActions(taskCard) {
 
 // Single DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', () => {
-    initializeAuth(); // Initialize authentication system
+    initializeAuth();
     
     if (currentUser) {
-        loadUserData(currentUser);
+        loadUserData();
     }
     
     // Log initial weather for debugging
@@ -667,4 +668,29 @@ document.addEventListener('DOMContentLoaded', () => {
 function updateTaskCount() {
     const taskCountElement = document.getElementById('task-count-number');
     taskCountElement.textContent = yourTasks.length; // Update with the current number of tasks
+}
+
+// Add this function to script.js or make sure it's accessible
+function loadUserData() {
+    import('./auth.js').then(({ loadUserTasks }) => {
+        loadUserTasks(currentUser);
+        // After loading tasks from localStorage, update the UI
+        renderTasks(yourTasks, document.querySelector('.tasks-section .task-cards'));
+        
+        // Ensure completed tasks are also rendered if the user wants to see them
+        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+        if (isShowingCompleted) {
+            renderTasks(completedTasks, document.querySelector('.tasks-section .task-cards'));
+        }
+        
+        // Update task count or any other UI elements that depend on task lists
+        updateTaskCount();
+        
+        // Handle task actions for both yourTasks and completedTasks if they are in the DOM
+        [...yourTasks, ...completedTasks].forEach(task => {
+            if (document.body.contains(task)) {
+                handleTaskActions(task);
+            }
+        });
+    });
 }
