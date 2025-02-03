@@ -163,6 +163,12 @@ export function handleAuthSubmit(e, isLogin) {
     const form = e.target;
     const formData = new FormData(form);
     handleAuth(formData, !isLogin); // Use !isLogin because we toggle in the UI
+
+    // Close the modal after successful authentication
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        modal.remove();
+    }
 }
 
 export function saveCurrentUserData() {
