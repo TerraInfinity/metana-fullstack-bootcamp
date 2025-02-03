@@ -1,4 +1,6 @@
 // auth.js
+import { MoodTaskService } from './mood-task-service.js'; // If needed
+
 export let currentUser = null;
 
 // User management
@@ -73,13 +75,13 @@ export function initializeAuth() {
     const userIcon = document.getElementById('user-icon');
     const loginBtn = document.getElementById('login-btn');
     
-    userIcon.addEventListener('click', showAuthModal);
+    userIcon.addEventListener('click', showLoginModal);
     loginBtn.addEventListener('click', (e) => {
         e.preventDefault();
         if (SessionService.getSession()) {
             handleLogout();
         } else {
-            showAuthModal();
+            showLoginModal();
         }
     });
     
@@ -164,4 +166,47 @@ export function saveCurrentUserData() {
     }
     
     localStorage.setItem('users', JSON.stringify(users));
+}
+
+export async function fetchLoginForm() {
+    try {
+        const response = await fetch('login.html');
+        if (!response.ok) throw new Error('Failed to load login form');
+        return await response.text();
+    } catch (error) {
+        console.error('Error fetching login form:', error);
+        return '<p>Error loading login form.</p>';
+    }
+}
+
+export async function showLoginModal() {
+    const loginContent = await fetchLoginForm();
+    
+    const modal = document.createElement('div');
+    modal.id = 'login-modal';
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close">×</span>
+            ${loginContent}
+        </div>
+    `;
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal || event.target.className === 'close') {
+            modal.remove();
+        }
+    });
+
+    modal.querySelector('.modal-content').addEventListener('click', (e) => e.stopPropagation());
+
+    const form = modal.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleLogin(new FormData(form));
+        });
+    }
+
+    document.body.appendChild(modal);
 }

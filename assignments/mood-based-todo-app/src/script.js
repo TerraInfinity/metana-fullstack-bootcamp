@@ -661,53 +661,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginBtn = document.getElementById('login-btn');
     const userIcon = document.getElementById('user-icon');
 
-    async function fetchLoginForm() {
-        try {
-            const response = await fetch('login.html');
-            if (!response.ok) throw new Error('Failed to load login form');
-            return await response.text();
-        } catch (error) {
-            console.error('Error fetching login form:', error);
-            return '<p>Error loading login form.</p>';
-        }
-    }
-
-    async function showLoginModal() {
-        const loginContent = await fetchLoginForm();
-        
-        const modal = document.createElement('div');
-        modal.id = 'login-modal';
-        modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <span class="close">×</span>
-                ${loginContent}
-            </div>
-        `;
-
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal || event.target.className === 'close') {
-                modal.remove();
-            }
-        });
-
-        modal.querySelector('.modal-content').addEventListener('click', (e) => e.stopPropagation());
-
-        const form = modal.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                import('./auth.js').then(({ handleLogin }) => {
-                    handleLogin(new FormData(form));
-                });
-            });
-        }
-
-        document.body.appendChild(modal);
-    }
-
-    loginBtn.addEventListener('click', showLoginModal);
-    userIcon.addEventListener('click', showLoginModal);
+    // Remove Modal Handling Functions
+    // function fetchLoginForm() { ... }
+    // function showLoginModal() { ... }
+    // ... other related code ...
 });
 
 // Function to update the task count display
