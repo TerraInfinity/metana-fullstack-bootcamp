@@ -221,23 +221,11 @@ export async function showLoginModal() {
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            handleLogin(new FormData(form));
+            const formData = new FormData(form);
+            const isLogin = !form.querySelector('#form-title').textContent.includes('Create Account');
+            handleAuth(formData, !isLogin); // Use handleAuth here, noting the '!' since we're toggling in the UI
         });
     }
 
     document.body.appendChild(modal);
-}
-
-export function handleLogin(formData) {
-    const email = formData.get('email');
-    const password = formData.get('password');
-    const user = UserService.validateUser(email, password);
-    
-    if (user) {
-        SessionService.setSession(user);
-        updateAuthUI();
-        console.log('Login successful');
-    } else {
-        alert('Invalid credentials');
-    }
 }
