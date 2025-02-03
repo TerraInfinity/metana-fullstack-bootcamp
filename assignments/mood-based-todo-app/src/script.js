@@ -691,7 +691,7 @@ function loadUserData() {
         console.log("Current user before loading tasks:", currentUser); // Log currentUser
         if (currentUser) {
             loadUserTasks(currentUser); 
-            console.log('Tasks loaded:', { yourTasks, completedTasks }); // Log the loaded tasks
+            console.log(`Loaded tasks for ${currentUser.email}:`, { yourTasks, completedTasks }); // Log the loaded tasks
         } else {
             console.log("No user logged in to load tasks for");
         }
@@ -723,6 +723,20 @@ function saveTasksToLocalStorage() {
             saveCurrentUserData(); // This function should be in auth.js
             console.log('Tasks saved to localStorage:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
             
+            console.log('Tasks to save:', [
+                ...yourTasks.map(task => ({
+                    title: task.querySelector('.task-title').textContent,
+                    description: task.querySelector('.task-description').textContent,
+                    dueDate: task.querySelector('.due-date').textContent,
+                    completed: false // Mark as incomplete
+                })),
+                ...completedTasks.map(task => ({
+                    title: task.querySelector('.task-title').textContent,
+                    description: task.querySelector('.task-description').textContent,
+                    dueDate: task.querySelector('.due-date').textContent,
+                    completed: true // Mark as complete
+                }))
+            ]);
         } else {
             console.log('No user logged in, cannot save tasks');
         }
