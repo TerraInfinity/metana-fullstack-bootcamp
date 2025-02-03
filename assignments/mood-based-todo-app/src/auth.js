@@ -219,12 +219,20 @@ export async function showLoginModal() {
 
     const form = modal.querySelector('form');
     if (form) {
+        let isLogin = !form.querySelector('#form-title').textContent.includes('Create Account');
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            const formData = new FormData(form);
-            const isLogin = !form.querySelector('#form-title').textContent.includes('Create Account');
-            handleAuth(formData, !isLogin); // Use handleAuth here, noting the '!' since we're toggling in the UI
+            handleAuthSubmit(e, isLogin);
         });
+
+        const toggleLink = form.querySelector('#toggle-form');
+        if (toggleLink) {
+            toggleLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                isLogin = !isLogin; // Toggle between login and register
+                toggleAuthForm(form, isLogin);
+            });
+        }
     }
 
     document.body.appendChild(modal);
