@@ -89,13 +89,48 @@ async function updateSuggestedTasks() {
 console.log("After update:", suggestedTasks.length);
 
 // Function to render tasks
-function renderTasks(tasks, container) {
-    container.innerHTML = ''; // Clear the container
-    tasks.forEach(task => {
-        container.appendChild(task); // Append each task to the container
-    });
+async function renderTasks(tasks, container, isSuggested = false) {
+    if (container) {
+        container.innerHTML = '';
+        try {
+            for (const task of tasks) {
+                console.log('Processing task:', task);
+                const taskCard = await createTaskCard(task, isSuggested);
+                container.appendChild(taskCard);
+            }
+        } catch (error) {
+            console.error('Error rendering tasks:', error);
+        }
+    } else {
+        console.error('Container not found for rendering tasks');
+    }
 }
 
+// New function to create a task card from task data
+async function createTaskCard(taskData, isSuggested) {
+    const componentResponse = await fetch('src/components/task-component.html');
+    if (!componentResponse.ok) {
+        throw new Error('Failed to load task component HTML');
+    }
+    const componentHtml = await componentResponse.text();
+    const template = document.createElement('template');
+    template.innerHTML = componentHtml;
+    const taskCard = template.content.querySelector('.task-card').cloneNode(true);
+    
+    taskCard.querySelector('.task-title').textContent = taskData.title;
+    taskCard.querySelector('.task-description').textContent = taskData.description;
+    taskCard.querySelector('.due-date').textContent = `Due: ${taskData.dueDate}`;
+
+    if (isSuggested) {
+        taskCard.classList.add('suggested');
+        // Add suggested task buttons
+    } else {
+        // Add regular task buttons
+    }
+
+    handleTaskActions(taskCard);
+    return taskCard;
+}
 
 // Function to handle task actions
 function handleTaskActions(taskCard) {
