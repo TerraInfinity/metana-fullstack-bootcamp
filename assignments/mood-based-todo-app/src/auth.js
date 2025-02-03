@@ -221,3 +221,17 @@ export async function showLoginModal() {
 
     document.body.appendChild(modal);
 }
+
+export function handleLogin(formData) {
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const user = UserService.validateUser(email, password);
+    
+    if (user) {
+        SessionService.setSession(user);
+        updateAuthUI();
+        console.log('Login successful');
+    } else {
+        alert('Invalid credentials');
+    }
+}
