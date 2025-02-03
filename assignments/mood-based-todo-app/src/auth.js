@@ -37,6 +37,21 @@ export const SessionService = {
     }
 };
 
+// New authentication logic
+export function handleLogin(formData) {
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    const user = UserService.validateUser(email, password);
+    if (user) {
+        SessionService.setSession(user);
+        updateAuthUI();
+        console.log('Login successful');
+    } else {
+        alert('Invalid credentials');
+    }
+}
+
 export function updateAuthUI() {
     const user = SessionService.getSession();
     const greeting = document.querySelector('#greeting-section h1');
@@ -127,29 +142,8 @@ function toggleAuthForm(form, isLogin) {
 export function handleAuthSubmit(e) {
     e.preventDefault();
     const form = e.target;
-    const email = form.querySelector('#email').value;
-    const password = form.querySelector('#password').value;
-    const isLogin = form.querySelector('#submit-btn').textContent === 'Login';
-
-    if (isLogin) {
-        const user = UserService.validateUser(email, password);
-        if (user) {
-            SessionService.setSession(user);
-            form.closest('.auth-modal').remove();
-            updateAuthUI();
-        } else {
-            alert('Invalid credentials');
-        }
-    } else {
-        const newUser = { email, password, tasks: [] };
-        if (UserService.saveUser(newUser)) {
-            SessionService.setSession(newUser);
-            form.closest('.auth-modal').remove();
-            updateAuthUI();
-        } else {
-            alert('User already exists');
-        }
-    }
+    const formData = new FormData(form);
+    handleLogin(formData);
 }
 
 export function saveCurrentUserData() {
