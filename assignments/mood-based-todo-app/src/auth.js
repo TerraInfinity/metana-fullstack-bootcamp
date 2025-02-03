@@ -39,18 +39,28 @@ export const SessionService = {
     }
 };
 
-// New authentication logic
-export function handleLogin(formData) {
+// Authentication logic
+export function handleAuth(formData, isRegister) {
     const email = formData.get('email');
     const password = formData.get('password');
 
-    const user = UserService.validateUser(email, password);
-    if (user) {
-        SessionService.setSession(user);
-        updateAuthUI();
-        console.log('Login successful');
+    if (isRegister) {
+        const user = { email, password };
+        const success = UserService.saveUser(user);
+        if (success) {
+            alert('Registration successful! You can now log in.');
+        } else {
+            alert('User already exists. Please use a different email.');
+        }
     } else {
-        alert('Invalid credentials');
+        const user = UserService.validateUser(email, password);
+        if (user) {
+            SessionService.setSession(user);
+            updateAuthUI();
+            console.log('Login successful');
+        } else {
+            alert('Invalid credentials');
+        }
     }
 }
 
@@ -145,7 +155,8 @@ export function handleAuthSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    handleLogin(formData);
+    const isRegister = form.querySelector('#form-title').textContent.includes('Create Account');
+    handleAuth(formData, isRegister);
 }
 
 export function saveCurrentUserData() {

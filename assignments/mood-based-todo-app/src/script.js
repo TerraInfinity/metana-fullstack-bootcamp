@@ -661,10 +661,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginBtn = document.getElementById('login-btn');
     const userIcon = document.getElementById('user-icon');
 
-    // Remove Modal Handling Functions
-    // function fetchLoginForm() { ... }
-    // function showLoginModal() { ... }
-    // ... other related code ...
 });
 
 // Function to update the task count display
