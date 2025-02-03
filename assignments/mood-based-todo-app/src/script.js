@@ -47,9 +47,9 @@ themeToggle.addEventListener('click', () => {
 // Initialize task arrays
 let yourTasks = Array.from(document.querySelector('.tasks-section .task-cards').children);
 let completedTasks = [];
-let suggestedTasks = Array.from(document.querySelector('#suggested-tasks-section .task-cards').children);
+let suggestedTasks = []; // Instead of initializing with existing DOM elements
 
-
+console.log("Before update:", suggestedTasks.length);
 async function updateSuggestedTasks() {
     try {
         if (!currentWeather || !currentWeather.condition) {
@@ -76,6 +76,7 @@ async function updateSuggestedTasks() {
         console.error('Error updating suggestions:', error);
     }
 }
+console.log("After update:", suggestedTasks.length);
 
 // Function to render tasks
 function renderTasks(tasks, container) {
@@ -628,6 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('change', (event) => {
         if (event.target.id === 'mood-range') {
             currentMood = parseInt(event.target.value);
+            // Consider wrapping updateSuggestedTasks in a debounce function if it's called too frequently
             updateSuggestedTasks();
         }
     });
