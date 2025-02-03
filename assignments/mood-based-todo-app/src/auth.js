@@ -61,9 +61,10 @@ export function handleAuth(formData, isRegister) {
     } else {
         const user = UserService.validateUser(email, password);
         if (user) {
-            SessionService.setSession(user);
+            SessionService.setSession(user); // Ensure this runs before loadUserTasks
+            currentUser = user; // Set currentUser to the logged-in user
             updateAuthUI();
-            loadUserTasks(user);
+            loadUserTasks(user); // Ensure user is not null here
             console.log('Login successful');
         } else {
             alert('Invalid credentials');
@@ -192,18 +193,17 @@ export function saveCurrentUserData() {
     if (userIndex !== -1) {
         users[userIndex].tasks = [
             ...yourTasks.map(task => ({
-                // Convert task to a JSON-serializable format
                 title: task.querySelector('.task-title').textContent,
                 description: task.querySelector('.task-description').textContent,
                 dueDate: task.querySelector('.due-date').textContent,
-                completed: false
+                completed: false // Mark as incomplete
             })),
             ...completedTasks.map(task => ({
                 // Convert task to a JSON-serializable format
                 title: task.querySelector('.task-title').textContent,
                 description: task.querySelector('.task-description').textContent,
                 dueDate: task.querySelector('.due-date').textContent,
-                completed: true
+                completed: true // Mark as complete
             }))
         ];
         
@@ -267,6 +267,11 @@ export async function showLoginModal() {
 }
 
 export function loadUserTasks(user) {
+    console.log("Attempting to load tasks for user:", user); // Debugging line
+    if (!user || !user.email) {
+        console.error("User object or email is undefined when loading tasks"); // Error log
+        return; // Exit if user is null or email is undefined
+    }
     const users = UserService.getUsers();
     const foundUser = users.find(u => u.email === user.email);
     if (foundUser && foundUser.tasks) {
@@ -284,6 +289,6 @@ export function loadUserTasks(user) {
         });
         console.log(`Loaded tasks for ${user.email}:`, { yourTasks, completedTasks });
     } else {
-        console.log(`No tasks found for ${user.email}`);
+        console.log(`No tasks found for ${user.email || 'unknown user'}`); // Updated log for unknown user
     }
 }

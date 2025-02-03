@@ -80,6 +80,7 @@ async function updateSuggestedTasks() {
         
         // Initialize actions for new tasks
         suggestedTasks.forEach(task => handleTaskActions(task));
+        saveTasksToLocalStorage(); // Save after updating suggested tasks
     } catch (error) {
         console.error('Error updating suggestions:', error);
     }
@@ -159,6 +160,7 @@ function handleTaskActions(taskCard) {
                 // Add to your tasks
                 yourTasks.push(newTaskCard);
                 console.log('Task added to yourTasks:', yourTasks);
+                saveTasksToLocalStorage(); // Save after adding a task
 
                 // Update UI
                 const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
@@ -202,6 +204,7 @@ function handleTaskActions(taskCard) {
                 }
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
                 renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+                saveTasksToLocalStorage(); // Save 
             }
             taskCard.remove(); // Remove the task from the DOM
 
@@ -306,6 +309,7 @@ function handleTaskActions(taskCard) {
 
             // Update task count
             updateTaskCount();
+            saveTasksToLocalStorage(); // Save after completing a task
         });
     }
 }
@@ -683,8 +687,14 @@ function updateTaskCount() {
 
 // Add this function to script.js or make sure it's accessible
 function loadUserData() {
-    import('./auth.js').then(({ loadUserTasks }) => {
-        loadUserTasks(currentUser);
+    import('./auth.js').then(({ loadUserTasks, currentUser }) => {
+        console.log("Current user before loading tasks:", currentUser); // Log currentUser
+        if (currentUser) {
+            loadUserTasks(currentUser); 
+            console.log('Tasks loaded:', { yourTasks, completedTasks }); // Log the loaded tasks
+        } else {
+            console.log("No user logged in to load tasks for");
+        }
         // After loading tasks from localStorage, update the UI
         renderTasks(yourTasks, document.querySelector('.tasks-section .task-cards'));
         
@@ -703,5 +713,17 @@ function loadUserData() {
                 handleTaskActions(task);
             }
         });
+    });
+}
+
+// Function to save tasks to localStorage
+function saveTasksToLocalStorage() {
+    import('./auth.js').then(({ saveCurrentUserData }) => {
+        if (currentUser) {
+            saveCurrentUserData(); // This function should be in auth.js
+            console.log('Tasks saved to localStorage:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
+        } else {
+            console.log('No user logged in, cannot save tasks');
+        }
     });
 }
