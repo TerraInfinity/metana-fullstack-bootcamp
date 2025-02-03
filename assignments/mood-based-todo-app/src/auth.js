@@ -203,6 +203,22 @@ export function saveCurrentUserData() {
     const userIndex = users.findIndex(u => u.email === currentUser.email);
     
     if (userIndex !== -1) {
+        // Log tasks before saving
+        console.log('Tasks to save:', [
+            ...yourTasks.map(task => ({
+                title: task.querySelector('.task-title').textContent,
+                description: task.querySelector('.task-description').textContent,
+                dueDate: task.querySelector('.due-date').textContent,
+                completed: false // Mark as incomplete
+            })),
+            ...completedTasks.map(task => ({
+                title: task.querySelector('.task-title').textContent,
+                description: task.querySelector('.task-description').textContent,
+                dueDate: task.querySelector('.due-date').textContent,
+                completed: true // Mark as complete
+            }))
+        ]);
+
         users[userIndex].tasks = [
             ...yourTasks.map(task => ({
                 title: task.querySelector('.task-title').textContent,
@@ -223,6 +239,9 @@ export function saveCurrentUserData() {
         localStorage.setItem('users', JSON.stringify(users));
         console.log('User data saved in localStorage:', localStorage.getItem('users'));
         console.log('Current user tasks:', users[userIndex].tasks); // Log the current user's tasks
+        console.log('All users:', users); // Log all users to check if the user exists
+        console.log('User index:', userIndex); // Log the index of the current user
+        console.log('Current user:', currentUser); // Log the current user object
     }
 }
 
@@ -287,6 +306,8 @@ export function loadUserTasks(user) {
     }
     const users = UserService.getUsers();
     const foundUser = users.find(u => u.email === user.email);
+    console.log('Found user:', foundUser); // Log the found user
+
     if (foundUser && foundUser.tasks) {
         // Reset yourTasks and completedTasks to ensure they're empty before populating
         yourTasks = [];
