@@ -27,10 +27,9 @@ function generateRandomWeather() {
 
 const themeToggle = document.getElementById('theme-toggle');
 const body = document.body;
-
-// Add at the top of script.js (after theme setup)
 let currentMood = 50; // Default mood value
 let currentWeather = generateRandomWeather(); // Initialize with random weather data
+const weatherIcon = document.getElementById('weather-icon'); // Move this here
 
 // Load saved theme
 const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -305,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Log after initialization for debugging
     console.log('After initialization weather:', currentWeather);
     
-    updateWeatherIcon(currentWeather);
+    updateWeatherIcon(currentWeather); // This is now after weatherIcon is defined
     updateSuggestedTasks(); // Now currentWeather should be set
 
     document.querySelectorAll('.task-card').forEach(handleTaskActions);
@@ -530,6 +529,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to update weather icon display
     function updateWeatherIcon(weatherData) {
+        if (!weatherIcon) {
+            console.warn("Weather icon element not found.");
+            return;
+        }
         currentWeather = weatherData; // Store weather state
         const iconMap = {
             '01': '☀️', // Clear sky
