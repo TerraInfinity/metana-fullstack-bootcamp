@@ -625,18 +625,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Add these new listeners RIGHT HERE:
-    document.addEventListener('change', (event) => {
-        if (event.target.id === 'mood-range') {
-            currentMood = parseInt(event.target.value);
-            // Consider wrapping updateSuggestedTasks in a debounce function if it's called too frequently
-            updateSuggestedTasks();
-        }
-    });
+    // Optional: Implement Debounce (if needed for further optimization)
+    function debounce(fn, delay) {
+        let debounceTimer;
+        return function (...args) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
+
+    // Modify the 'mouseup' event listener
+    const debouncedUpdate = debounce(updateSuggestedTasks, 300);
 
     document.addEventListener('mouseup', (event) => {
         if (event.target.id === 'mood-range') {
-            updateSuggestedTasks();
+            currentMood = parseInt(event.target.value);
+            debouncedUpdate();
         }
     });
 
