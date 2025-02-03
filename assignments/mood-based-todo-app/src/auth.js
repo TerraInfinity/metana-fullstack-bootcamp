@@ -14,6 +14,7 @@ export const UserService = {
     },
     
     saveUser(user) {
+        console.log('Saving user:', user); // Log user before saving
         const users = this.getUsers();
         const existing = users.find(u => u.email === user.email);
         if (existing) return false;
@@ -49,6 +50,10 @@ export function handleAuth(formData, isRegister) {
     const password = formData.get('password');
 
     if (isRegister) {
+        if (!email || !password) {
+            alert('Please provide both email and password for registration.');
+            return;
+        }
         const user = { email, password, tasks: [] }; // Include tasks for new users
         const success = UserService.saveUser(user);
         if (success) {
@@ -77,7 +82,7 @@ export function updateAuthUI() {
     const greeting = document.querySelector('#greeting-section h1');
     const loginBtn = document.querySelector('.nav-link.btn-secondary');
     
-    if (user) {
+    if (user && user.email) {
         greeting.textContent = `Welcome, ${user.email}.`;
         loginBtn.textContent = 'Logout';
         currentUser = user;
@@ -175,7 +180,10 @@ export function handleAuthSubmit(e, isLogin) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    handleAuth(formData, !isLogin); // Use !isLogin because we toggle in the UI
+    
+    // Log form data for debugging
+    console.log('Form data:', [...formData.entries()]); 
+    handleAuth(formData, !isLogin);
 
     // Close the modal after successful authentication
     const modal = document.getElementById('login-modal');

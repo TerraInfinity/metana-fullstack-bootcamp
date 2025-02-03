@@ -718,10 +718,11 @@ function loadUserData() {
 
 // Function to save tasks to localStorage
 function saveTasksToLocalStorage() {
-    import('./auth.js').then(({ saveCurrentUserData }) => {
+    import('./auth.js').then(({ saveCurrentUserData, currentUser }) => {
         if (currentUser) {
             saveCurrentUserData(); // This function should be in auth.js
             console.log('Tasks saved to localStorage:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
+            
         } else {
             console.log('No user logged in, cannot save tasks');
         }
