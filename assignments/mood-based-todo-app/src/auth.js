@@ -158,12 +158,16 @@ export function saveCurrentUserData() {
     const users = UserService.getUsers();
     const userIndex = users.findIndex(u => u.email === currentUser.email);
     
-    // You'll need to import your task arrays from script.js
-    // This might require some refactoring to properly separate concerns
-    users[userIndex].tasks = [
-        ...yourTasks.map(t => ({ ...t, completed: false })),
-        ...completedTasks.map(t => ({ ...t, completed: true }))
-    ];
+    // Check if yourTasks and completedTasks are defined before using them
+    if (typeof yourTasks !== 'undefined' && typeof completedTasks !== 'undefined') {
+        users[userIndex].tasks = [
+            ...yourTasks.map(t => ({ ...t, completed: false })),
+            ...completedTasks.map(t => ({ ...t, completed: true }))
+        ];
+    } else {
+        // Handle the case where yourTasks or completedTasks are not defined
+        users[userIndex].tasks = [];
+    }
     
     localStorage.setItem('users', JSON.stringify(users));
 }
