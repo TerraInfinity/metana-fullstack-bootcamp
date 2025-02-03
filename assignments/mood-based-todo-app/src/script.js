@@ -196,8 +196,8 @@ function handleTaskActions(taskCard) {
             } else {
                 const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
                 if (isShowingCompleted) {
-                    completedTasks = completedTasks.filter(task => task !== taskCard);
-                    console.log('Task removed from completedTasks:', completedTasks);
+                    completedTasks.splice(completedTasks.indexOf(taskCard), 1);
+                    console.log('Task removed from completedTasks (See Completed Tasks):', completedTasks);
                 } else {
                     yourTasks.splice(yourTasks.indexOf(taskCard), 1);
                     console.log('Task removed from yourTasks:', yourTasks);
@@ -294,10 +294,9 @@ function handleTaskActions(taskCard) {
                 completedTasks.push(taskCard);
                 console.log('Task moved to completedTasks (See Completed Tasks):', completedTasks);
                 console.log('Updated yourTasks (See Your Tasks):', yourTasks);
-
             } else {
                 // Remove task from "Completed Tasks"
-                completedTasks = completedTasks.filter(task => task !== taskCard);
+                completedTasks.splice(completedTasks.indexOf(taskCard), 1);
                 console.log('Task removed from completedTasks (See Completed Tasks):', completedTasks);
                 taskCard.remove(); // Remove the task from the DOM
             }
