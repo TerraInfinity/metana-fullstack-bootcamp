@@ -55,8 +55,6 @@ themeToggle.addEventListener('click', () => {
 });
 
 // Initialize task arrays
-let yourTasks = Array.from(document.querySelector('.tasks-section .task-cards').children);
-let completedTasks = [];
 let suggestedTasks = []; // Instead of initializing with existing DOM elements
 
 console.log("Before update:", suggestedTasks.length);
@@ -338,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.task-card').forEach(handleTaskActions);
 
-    yourTasks = Array.from(document.querySelector('.tasks-section .task-cards').children);
     suggestedTasks = Array.from(document.querySelector('#suggested-tasks-section .task-cards').children);
 
     // Toggle between "Your Tasks" and "Completed Tasks"
