@@ -684,7 +684,6 @@ function updateTaskCount() {
     const taskCountElement = document.getElementById('task-count-number');
     taskCountElement.textContent = yourTasks.length; // Update with the current number of tasks
     saveTasksToLocalStorage();
-    yourTasks.push(newTask);
 }
 
 // Add this function to script.js or make sure it's accessible
