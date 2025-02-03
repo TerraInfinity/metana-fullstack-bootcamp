@@ -1,6 +1,30 @@
 // Add at the top with other imports
 import { MoodTaskService } from './mood-task-service.js';
 
+// Move the generateRandomWeather function to the top
+function generateRandomWeather() {
+    const conditions = ['clear', 'clouds', 'rain', 'snow', 'thunderstorm', 'mist'];
+    const icons = {
+        'clear': '01d', // Clear sky
+        'clouds': '02d', // Few clouds
+        'rain': '10d', // Rain
+        'snow': '13d', // Snow
+        'thunderstorm': '11d', // Thunderstorm
+        'mist': '50d' // Mist
+    };
+
+    const condition = conditions[Math.floor(Math.random() * conditions.length)];
+    const icon = icons[condition];
+
+    return {
+        condition: condition,
+        temperature: Math.floor(Math.random() * 35) - 5, // Range from -5°C to 30°C
+        humidity: Math.floor(Math.random() * 100),
+        wind: (Math.random() * 15).toFixed(1),
+        icon: icon
+    };
+}
+
 const themeToggle = document.getElementById('theme-toggle');
 const body = document.body;
 
@@ -270,8 +294,20 @@ function handleTaskActions(taskCard) {
     }
 }
 
-// Initialize task actions on page load
+// Single DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', () => {
+    // Log initial weather for debugging
+    console.log('Initial weather:', currentWeather);
+    
+    // Ensure this is the first time currentWeather is set
+    currentWeather = generateRandomWeather(); 
+    
+    // Log after initialization for debugging
+    console.log('After initialization weather:', currentWeather);
+    
+    updateWeatherIcon(currentWeather);
+    updateSuggestedTasks(); // Now currentWeather should be set
+
     document.querySelectorAll('.task-card').forEach(handleTaskActions);
 
     yourTasks = Array.from(document.querySelector('.tasks-section .task-cards').children);
@@ -477,29 +513,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize weather on app load
     updateWeatherIcon(currentWeather); // Update icon with random weather
 
-    function generateRandomWeather() {
-        const conditions = ['clear', 'clouds', 'rain', 'snow', 'thunderstorm', 'mist'];
-        const icons = {
-            'clear': '01d', // Clear sky
-            'clouds': '02d', // Few clouds
-            'rain': '10d', // Rain
-            'snow': '13d', // Snow
-            'thunderstorm': '11d', // Thunderstorm
-            'mist': '50d' // Mist
-        };
-
-        const condition = conditions[Math.floor(Math.random() * conditions.length)];
-        const icon = icons[condition];
-
-        return {
-            condition: condition,
-            temperature: Math.floor(Math.random() * 35) - 5, // Range from -5°C to 30°C
-            humidity: Math.floor(Math.random() * 100),
-            wind: (Math.random() * 15).toFixed(1),
-            icon: icon
-        };
-    }
-
     // Update weather icon click handler
     weatherIcon.addEventListener('click', () => {
         currentWeather = generateRandomWeather();
@@ -535,23 +548,6 @@ document.addEventListener('DOMContentLoaded', () => {
         weatherIcon.title = `Current weather: ${weatherData.condition}, ${weatherData.temperature}°C`;
     }
 
-    // Inside DOMContentLoaded, after weather initialization:
-    document.addEventListener('DOMContentLoaded', () => {
-        // ... existing code ...
-        
-        // Log initial weather for debugging
-        console.log('Initial weather:', currentWeather);
-        
-        // Ensure this is the first time currentWeather is set
-        currentWeather = generateRandomWeather(); 
-        
-        // Log after initialization for debugging
-        console.log('After initialization weather:', currentWeather);
-        
-        updateWeatherIcon(currentWeather);
-        updateSuggestedTasks(); // Now currentWeather should be set
-    });
-    
     // Mood icon toggle
     const moodIcon = document.getElementById('mood-icon');
     let moodSelector = null; // Start as null since it's not in the DOM initially
