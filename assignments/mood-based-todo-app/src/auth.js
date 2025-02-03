@@ -184,28 +184,33 @@ export function handleAuthSubmit(e, isLogin) {
 }
 
 export function saveCurrentUserData() {
-    if (!currentUser) {
-        console.log('No user logged in to save data for');
-        return;
-    }
+    if (!currentUser) return;
     
     const users = UserService.getUsers();
     const userIndex = users.findIndex(u => u.email === currentUser.email);
     
-    // Check if yourTasks and completedTasks are defined before using them
-    if (typeof yourTasks !== 'undefined' && typeof completedTasks !== 'undefined') {
+    if (userIndex !== -1) {
         users[userIndex].tasks = [
-            ...yourTasks.map(t => ({ ...t, completed: false })),
-            ...completedTasks.map(t => ({ ...t, completed: true }))
+            ...yourTasks.map(task => ({
+                // Convert task to a JSON-serializable format
+                title: task.querySelector('.task-title').textContent,
+                description: task.querySelector('.task-description').textContent,
+                dueDate: task.querySelector('.due-date').textContent,
+                completed: false
+            })),
+            ...completedTasks.map(task => ({
+                // Convert task to a JSON-serializable format
+                title: task.querySelector('.task-title').textContent,
+                description: task.querySelector('.task-description').textContent,
+                dueDate: task.querySelector('.due-date').textContent,
+                completed: true
+            }))
         ];
-    } else {
-        // Handle the case where yourTasks or completedTasks are not defined
-        users[userIndex].tasks = [];
+        
+        console.log(`Saving tasks for ${currentUser.email}:`, users[userIndex].tasks);
+        localStorage.setItem('users', JSON.stringify(users));
+        console.log('User data saved in localStorage:', localStorage.getItem('users'));
     }
-    
-    console.log(`Saving tasks for ${currentUser.email}:`, users[userIndex].tasks);
-    localStorage.setItem('users', JSON.stringify(users));
-    console.log('User data saved in localStorage:', localStorage.getItem('users'));
 }
 
 export async function fetchLoginForm() {
