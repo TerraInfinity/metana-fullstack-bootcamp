@@ -102,4 +102,22 @@ export class MoodTaskService {
         return [];
       }
     }
-  }
+
+    static debounce(fn, delay) {
+        let debounceTimer;
+        return function (...args) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
+
+    static getDebouncedUpdateTasks(moodValue, weather) {
+        const debouncedUpdateTasks = this.debounce(() => {
+            this.getFilteredTasks(moodValue, weather).then(tasks => {
+                this.renderSuggestedTasks(tasks, '#task-container');
+            });
+        }, 300); // Adjust delay as needed
+
+        return debouncedUpdateTasks;
+    }
+}
