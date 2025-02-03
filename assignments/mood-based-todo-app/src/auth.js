@@ -222,6 +222,7 @@ export function saveCurrentUserData() {
         console.log(`Saving tasks for ${currentUser.email}:`, users[userIndex].tasks);
         localStorage.setItem('users', JSON.stringify(users));
         console.log('User data saved in localStorage:', localStorage.getItem('users'));
+        console.log('Current user tasks:', users[userIndex].tasks); // Log the current user's tasks
     }
 }
 
