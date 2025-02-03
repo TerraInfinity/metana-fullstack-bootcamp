@@ -1,5 +1,12 @@
 // Add at the top with other imports
 import { MoodTaskService } from './mood-task-service.js';
+import { 
+    currentUser,
+    UserService,
+    SessionService,
+    updateAuthUI,
+    initializeAuth
+} from './auth.js';
 
 // Move the generateRandomWeather function to the top
 function generateRandomWeather() {
@@ -296,6 +303,12 @@ function handleTaskActions(taskCard) {
 
 // Single DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', () => {
+    initializeAuth(); // Initialize authentication system
+    
+    if (currentUser) {
+        loadUserData(currentUser);
+    }
+    
     // Log initial weather for debugging
     console.log('Initial weather:', currentWeather);
     
