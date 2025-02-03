@@ -657,14 +657,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // User icon click event
-    const userIcon = document.getElementById('user-icon');
-    userIcon.addEventListener('click', () => {
-        // Open login form (placeholder)
-        
-        alert('Open login form');
-    });
-
     // Add modal functionality
     const loginBtn = document.getElementById('login-btn');
     const userIcon = document.getElementById('user-icon');
