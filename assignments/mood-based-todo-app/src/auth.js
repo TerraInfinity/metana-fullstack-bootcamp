@@ -185,7 +185,10 @@ export function handleAuthSubmit(e, isLogin) {
 }
 
 export function saveCurrentUserData() {
-    if (!currentUser) return;
+    if (!currentUser) {
+        console.log('No user logged in to save data for');
+        return;
+    }
     
     const users = UserService.getUsers();
     const userIndex = users.findIndex(u => u.email === currentUser.email);
