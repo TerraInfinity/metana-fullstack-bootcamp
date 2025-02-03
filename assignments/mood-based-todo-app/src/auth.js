@@ -56,7 +56,7 @@ export function updateAuthUI() {
 // Auth event handlers
 export function initializeAuth() {
     const userIcon = document.getElementById('user-icon');
-    const loginBtn = document.querySelector('.nav-link.btn-secondary');
+    const loginBtn = document.getElementById('login-btn');
     
     userIcon.addEventListener('click', showAuthModal);
     loginBtn.addEventListener('click', (e) => {
@@ -84,12 +84,12 @@ export function showAuthModal() {
     fetch('login.html')
         .then(response => response.text())
         .then(html => {
-            const modal = document.createElement('div');
-            modal.className = 'auth-modal';
-            modal.innerHTML = html;
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = html;
+            const modal = modalContainer.querySelector('.auth-modal');
             document.body.appendChild(modal);
 
-            const form = modal.querySelector('#auth-form');
+            const form = modal.querySelector('.auth-form');
             const toggleLink = modal.querySelector('#toggle-form');
             const isLogin = form.querySelector('#form-title').textContent.includes('Welcome Back');
 
@@ -97,6 +97,13 @@ export function showAuthModal() {
             toggleLink.addEventListener('click', (e) => {
                 e.preventDefault();
                 toggleAuthForm(form, isLogin);
+            });
+
+            // Add click event to close modal when clicking outside the form
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
             });
         });
 }

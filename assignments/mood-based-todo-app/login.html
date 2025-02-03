@@ -9,19 +9,21 @@
 <body>
 
     <div class="auth-container">
-        <form class="login-form" id="auth-form">
-            <h2 id="form-title">Welcome Back</h2>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="email" required>
+        <div id="auth-form-container">
+            <div class="auth-modal">
+                <form class="auth-form">
+                    <h2 id="form-title">Welcome Back</h2>
+                    <div class="form-group">
+                        <input type="email" id="email" required placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="password" required placeholder="Password">
+                    </div>
+                    <button type="submit" id="submit-btn" class="btn-create">Login</button>
+                    <p id="toggle-form">Don't have an account? <a href="#">Sign up</a></p>
+                </form>
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="password" required>
-            </div>
-            <button type="submit" class="btn-primary" id="submit-btn">Login</button>
-            <p class="register-link" id="toggle-form">Don't have an account? <a href="#">Sign up</a></p>
-        </form>
+        </div>
     </div>
 </body>
 </html>
