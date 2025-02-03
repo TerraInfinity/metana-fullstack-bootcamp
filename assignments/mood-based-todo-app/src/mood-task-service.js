@@ -12,6 +12,10 @@ export class MoodTaskService {
   
     static async getFilteredTasks(moodValue, weather) {
       const { tasks } = await this.loadTasks();
+
+      // Log current mood and weather before filtering
+      console.log(`Current Mood: ${moodValue}, Current Weather: ${weather}`);
+      
       const filtered = tasks.filter(task => 
         this.matchesMood(task, moodValue) && 
         this.matchesWeather(task, weather)

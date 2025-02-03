@@ -32,6 +32,8 @@ async function updateSuggestedTasks() {
         // Ensure currentWeather.condition is defined before accessing it
         const condition = currentWeather && currentWeather.condition ? currentWeather.condition.toLowerCase() : 'unknown';
         
+        console.log(`Updating suggested tasks with condition: ${condition}`);
+        
         const filteredTasks = await MoodTaskService.getFilteredTasks(
             currentMood, 
             condition
@@ -474,14 +476,14 @@ document.addEventListener('DOMContentLoaded', () => {
     updateWeatherIcon(currentWeather); // Update icon with random weather
 
     function generateRandomWeather() {
-        const conditions = ['Clear', 'Clouds', 'Rain', 'Snow', 'Thunderstorm', 'Mist'];
+        const conditions = ['clear', 'clouds', 'rain', 'snow', 'thunderstorm', 'mist'];
         const icons = {
-            'Clear': '01d', // Clear sky
-            'Clouds': '02d', // Few clouds
-            'Rain': '10d', // Rain
-            'Snow': '13d', // Snow
-            'Thunderstorm': '11d', // Thunderstorm
-            'Mist': '50d' // Mist
+            'clear': '01d', // Clear sky
+            'clouds': '02d', // Few clouds
+            'rain': '10d', // Rain
+            'snow': '13d', // Snow
+            'thunderstorm': '11d', // Thunderstorm
+            'mist': '50d' // Mist
         };
 
         const condition = conditions[Math.floor(Math.random() * conditions.length)];
