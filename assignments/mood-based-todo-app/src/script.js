@@ -6,7 +6,7 @@ const body = document.body;
 
 // Add at the top of script.js (after theme setup)
 let currentMood = 50; // Default mood value
-let currentWeather = {}; // Will store our random weather data
+let currentWeather = generateRandomWeather(); // Initialize with random weather data
 
 // Load saved theme
 const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -473,7 +473,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Weather icon click effect - Random Weather Generator
     const weatherIcon = document.getElementById('weather-icon');
-    let currentWeather = generateRandomWeather(); // Initialize with random weather
 
     // Initialize weather on app load
     updateWeatherIcon(currentWeather); // Update icon with random weather
@@ -504,6 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update weather icon click handler
     weatherIcon.addEventListener('click', () => {
         currentWeather = generateRandomWeather();
+        console.log('Weather updated to:', currentWeather); // For debugging
         const weatherInfo = `Current Weather:
             - Condition: ${currentWeather.condition}
             - Temperature: ${currentWeather.temperature}°C
@@ -539,10 +539,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('DOMContentLoaded', () => {
         // ... existing code ...
         
-        // After weather initialization:
-        currentWeather = generateRandomWeather();
+        // Log initial weather for debugging
+        console.log('Initial weather:', currentWeather);
+        
+        // Ensure this is the first time currentWeather is set
+        currentWeather = generateRandomWeather(); 
+        
+        // Log after initialization for debugging
+        console.log('After initialization weather:', currentWeather);
+        
         updateWeatherIcon(currentWeather);
-        updateSuggestedTasks(); // Initial suggestions
+        updateSuggestedTasks(); // Now currentWeather should be set
     });
     
     // Mood icon toggle
