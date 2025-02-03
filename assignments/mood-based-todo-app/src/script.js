@@ -29,8 +29,11 @@ let suggestedTasks = Array.from(document.querySelector('#suggested-tasks-section
 
 async function updateSuggestedTasks() {
     try {
-        // Ensure currentWeather.condition is defined before accessing it
-        const condition = currentWeather && currentWeather.condition ? currentWeather.condition.toLowerCase() : 'unknown';
+        if (!currentWeather || !currentWeather.condition) {
+            console.warn("Weather condition not set. Using 'clear' as default.");
+            currentWeather = generateRandomWeather(); // or set to default like 'clear'
+        }
+        const condition = currentWeather.condition.toLowerCase();
         
         console.log(`Updating suggested tasks with condition: ${condition}`);
         
@@ -509,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         alert(weatherInfo);
         updateWeatherIcon(currentWeather);
-        updateSuggestedTasks(); 
+        updateSuggestedTasks(); // Make sure this is called after updating currentWeather
     });
 
     // Function to update weather icon display
@@ -539,8 +542,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // After weather initialization:
         currentWeather = generateRandomWeather();
         updateWeatherIcon(currentWeather);
-        
-        // Add this:
         updateSuggestedTasks(); // Initial suggestions
     });
     
