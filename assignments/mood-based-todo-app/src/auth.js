@@ -301,28 +301,34 @@ export async function showLoginModal() {
 export function loadUserTasks(user) {
     console.log("Attempting to load tasks for user:", user); // Debugging line
     if (!user || !user.email) {
-        console.error("User object or email is undefined when loading tasks"); // Error log
+        console.error("User object or email is undefined when loading tasks");
         return; // Exit if user is null or email is undefined
     }
-    const users = UserService.getUsers();
-    const foundUser = users.find(u => u.email === user.email);
-    console.log('Found user:', foundUser); // Log the found user
 
+    // Retrieve all users from localStorage
+    const users = UserService.getUsers();
+    // Find the user in the users array
+    const foundUser = users.find(u => u.email === user.email);
+
+    // Check if the user was found and if they have tasks
     if (foundUser && foundUser.tasks) {
-        // Reset yourTasks and completedTasks to ensure they're empty before populating
+        // Clear existing tasks to avoid duplication
         yourTasks = [];
         completedTasks = [];
         
-        // Populate tasks from localStorage
+        // Populate yourTasks and completedTasks based on the found user's tasks
         foundUser.tasks.forEach(task => {
             if (task.completed) {
-                completedTasks.push(task);
+                completedTasks.push(task); // Add to completedTasks if completed
             } else {
-                yourTasks.push(task);
+                yourTasks.push(task); // Add to yourTasks if not completed
             }
         });
+
+        // Log the loaded tasks for debugging
         console.log(`Loaded tasks for ${user.email}:`, { yourTasks, completedTasks });
     } else {
-        console.log(`No tasks found for ${user.email || 'unknown user'}`); // Updated log for unknown user
+        // Log if no tasks were found for the user
+        console.log(`No tasks found for ${user.email || 'unknown user'}`);
     }
 }

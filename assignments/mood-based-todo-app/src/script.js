@@ -6,7 +6,9 @@ import {
     SessionService,
     updateAuthUI,
     initializeAuth,
-    loadUserTasks
+    loadUserTasks,
+    yourTasks,
+    completedTasks
 } from './auth.js';
 
 // Move the generateRandomWeather function to the top
