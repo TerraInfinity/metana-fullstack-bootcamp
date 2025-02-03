@@ -158,6 +158,7 @@ function handleTaskActions(taskCard) {
 
                 // Add to your tasks
                 yourTasks.push(newTaskCard);
+                console.log('Task added to yourTasks:', yourTasks);
 
                 // Update UI
                 const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
@@ -194,8 +195,10 @@ function handleTaskActions(taskCard) {
                 const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
                 if (isShowingCompleted) {
                     completedTasks = completedTasks.filter(task => task !== taskCard);
+                    console.log('Task removed from completedTasks:', completedTasks);
                 } else {
                     yourTasks = yourTasks.filter(task => task !== taskCard);
+                    console.log('Task removed from yourTasks:', yourTasks);
                 }
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
                 renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
@@ -286,11 +289,16 @@ function handleTaskActions(taskCard) {
                 // Move task from "Your Tasks" to "Completed Tasks"
                 yourTasks = yourTasks.filter(task => task !== taskCard);
                 completedTasks.push(taskCard);
+                console.log('Task moved to completedTasks (See Completed Tasks):', completedTasks);
+                console.log('Updated yourTasks (See Your Tasks):', yourTasks);
+
             } else {
                 // Remove task from "Completed Tasks"
                 completedTasks = completedTasks.filter(task => task !== taskCard);
+                console.log('Task removed from completedTasks (See Completed Tasks):', completedTasks);
                 taskCard.remove(); // Remove the task from the DOM
             }
+
 
             // Re-render the appropriate section
             const yourTasksSection = document.querySelector('.tasks-section .task-cards');
@@ -354,18 +362,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isShowingCompleted) {
             // Remove all tasks from completedTasks
             completedTasks = [];
-            console.log('All tasks removed from completedTasks array');
+            console.log('All tasks removed from completedTasks'); // Log when all tasks are removed
         } else {
             // Move all tasks to completedTasks
             yourTasks.forEach(task => completedTasks.push(task));
             yourTasks = [];
-            console.log('All tasks moved to completedTasks array');
+            console.log('All tasks moved to completedTasks: (see completed tasks)', completedTasks); // Log the updated completed tasks
+            console.log('yourTasks cleared:', yourTasks); // Log that yourTasks is now empty
         }
         // Update task count
         updateTaskCount();
         // Refresh the UI based on the current view
         renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
-
     });
 
     // Select the Add Task button and the modal
@@ -484,8 +492,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 newTask.appendChild(taskActions);
 
                 // Add to tasks section
-                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
                 yourTasks.push(newTask); // Add to your tasks array
+                console.log('New task added to yourTasks:', yourTasks); // Log the updated tasks array
+                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
                 yourTasksSection.appendChild(newTask);
 
                 // Initialize actions for the new task
@@ -662,6 +671,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginBtn = document.getElementById('login-btn');
     const userIcon = document.getElementById('user-icon');
 
+    console.log('Initial yourTasks:', yourTasks); // Log the initial state of yourTasks
+    console.log('Initial completedTasks:', completedTasks); // Log the initial state of completedTasks
 });
 
 // Function to update the task count display
