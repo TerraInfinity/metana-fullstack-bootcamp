@@ -17,8 +17,21 @@ export class MoodTaskService {
         this.matchesWeather(task, weather)
       );
 
+      // Log tasks that match the criteria
+      console.log("Tasks matching criteria:", filtered.map(task => task.name));
+
       // Shuffle and pick 4
-      return this.shuffleArray(filtered).slice(0, 4);
+      const shuffled = this.shuffleArray(filtered);
+      const selectedTasks = shuffled.slice(0, 4);
+
+      // Log selected tasks with reasoning
+      console.group("Selected Tasks");
+      selectedTasks.forEach(task => {
+        console.log(`Task: ${task.name}, Mood Range: ${task.moodRange.min}-${task.moodRange.max}, Weather: ${task.weatherConditions.join(', ')}`);
+      });
+      console.groupEnd();
+
+      return selectedTasks;
     }
   
     static matchesMood(task, currentMood) {
