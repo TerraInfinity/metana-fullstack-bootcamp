@@ -45,10 +45,12 @@ export function handleAuth(formData, isRegister) {
     const password = formData.get('password');
 
     if (isRegister) {
-        const user = { email, password };
+        const user = { email, password, tasks: [] }; // Include tasks for new users
         const success = UserService.saveUser(user);
         if (success) {
-            alert('Registration successful! You can now log in.');
+            SessionService.setSession(user); // Log in user after registration
+            updateAuthUI();
+            alert('Registration successful! You are now logged in.');
         } else {
             alert('User already exists. Please use a different email.');
         }
@@ -118,11 +120,16 @@ export function showAuthModal() {
 
             const form = modal.querySelector('.auth-form');
             const toggleLink = modal.querySelector('#toggle-form');
-            const isLogin = form.querySelector('#form-title').textContent.includes('Welcome Back');
+            let isLogin = !form.querySelector('#form-title').textContent.includes('Create Account'); // Set based on current title
 
-            form.addEventListener('submit', handleAuthSubmit);
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleAuthSubmit(e, isLogin);
+            });
+
             toggleLink.addEventListener('click', (e) => {
                 e.preventDefault();
+                isLogin = !isLogin; // Toggle between login and register
                 toggleAuthForm(form, isLogin);
             });
 
@@ -141,22 +148,21 @@ function toggleAuthForm(form, isLogin) {
     const toggleLink = form.querySelector('#toggle-form');
     
     if (isLogin) {
-        title.textContent = 'Create Account';
-        submitBtn.textContent = 'Sign Up';
-        toggleLink.innerHTML = 'Already have an account? <a href="#">Login</a>';
-    } else {
         title.textContent = 'Welcome Back';
         submitBtn.textContent = 'Login';
         toggleLink.innerHTML = 'Don\'t have an account? <a href="#">Sign up</a>';
+    } else {
+        title.textContent = 'Create Account';
+        submitBtn.textContent = 'Sign Up';
+        toggleLink.innerHTML = 'Already have an account? <a href="#">Login</a>';
     }
 }
 
-export function handleAuthSubmit(e) {
+export function handleAuthSubmit(e, isLogin) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const isRegister = form.querySelector('#form-title').textContent.includes('Create Account');
-    handleAuth(formData, isRegister);
+    handleAuth(formData, !isLogin); // Use !isLogin because we toggle in the UI
 }
 
 export function saveCurrentUserData() {
