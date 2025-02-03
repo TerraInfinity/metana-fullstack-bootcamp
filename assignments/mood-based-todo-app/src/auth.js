@@ -51,7 +51,8 @@ export function handleAuth(formData, isRegister) {
 
     if (isRegister) {
         if (!email || !password) {
-            alert('Please provide both email and password for registration.');
+            alert('Please provide both email and password for registration.' + { email, password });
+            console.log('Form data:', { email, password }); // Log form data
             return;
         }
         const user = { email, password, tasks: [] }; // Include tasks for new users
