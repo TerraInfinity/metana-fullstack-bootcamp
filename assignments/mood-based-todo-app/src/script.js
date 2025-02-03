@@ -506,9 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Weather icon click effect - Random Weather Generator
-    const weatherIcon = document.getElementById('weather-icon');
-
     // Initialize weather on app load
     updateWeatherIcon(currentWeather); // Update icon with random weather
 
