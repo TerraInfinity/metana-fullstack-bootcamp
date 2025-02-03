@@ -248,7 +248,7 @@ export async function showLoginModal() {
     document.body.appendChild(modal);
 }
 
-function loadUserTasks(user) {
+export function loadUserTasks(user) {
     const users = UserService.getUsers();
     const foundUser = users.find(u => u.email === user.email);
     if (foundUser && foundUser.tasks) {
