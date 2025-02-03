@@ -3,6 +3,10 @@ import { MoodTaskService } from './mood-task-service.js'; // If needed
 
 export let currentUser = null;
 
+// Define yourTasks and completedTasks at a higher scope
+let yourTasks = []; // Initialize yourTasks
+let completedTasks = []; // Initialize completedTasks
+
 // User management
 export const UserService = {
     getUsers() {
@@ -107,8 +111,8 @@ export function handleLogout() {
     SessionService.clearSession();
     updateAuthUI();
     // Clear task arrays to reset state when logging out
-    yourTasks = [];
-    completedTasks = [];
+    yourTasks = []; // Now defined
+    completedTasks = []; // Now defined
     // Reload page or update UI to reflect logged out state
     location.reload();
 }
