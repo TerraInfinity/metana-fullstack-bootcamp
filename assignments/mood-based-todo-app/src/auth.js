@@ -4,8 +4,8 @@ import { MoodTaskService } from './mood-task-service.js'; // If needed
 export let currentUser = null;
 
 // Define yourTasks and completedTasks at a higher scope
-let yourTasks = []; // Initialize yourTasks
-let completedTasks = []; // Initialize completedTasks
+export let yourTasks = []; // Now export for script.js to see changes
+export let completedTasks = []; // Now export for script.js to see changes
 
 // User management
 export const UserService = {
@@ -63,6 +63,7 @@ export function handleAuth(formData, isRegister) {
         if (user) {
             SessionService.setSession(user);
             updateAuthUI();
+            loadUserTasks(user);
             console.log('Login successful');
         } else {
             alert('Invalid credentials');
@@ -107,12 +108,15 @@ export function initializeAuth() {
 }
 
 export function handleLogout() {
-    saveCurrentUserData(); // Ensure tasks are saved before logout
+    console.log('Logging out');
+    console.log('Saving current user data:', { yourTasks, completedTasks });
+    saveCurrentUserData();
     SessionService.clearSession();
     updateAuthUI();
     // Clear task arrays to reset state when logging out
     yourTasks = []; // Now defined
     completedTasks = []; // Now defined
+    console.log('Tasks cleared:', { yourTasks, completedTasks });
     // Reload page or update UI to reflect logged out state
     location.reload();
 }
@@ -180,7 +184,10 @@ export function handleAuthSubmit(e, isLogin) {
 }
 
 export function saveCurrentUserData() {
-    if (!currentUser) return;
+    if (!currentUser) {
+        console.log('No user logged in to save data for');
+        return;
+    }
     
     const users = UserService.getUsers();
     const userIndex = users.findIndex(u => u.email === currentUser.email);
@@ -196,7 +203,9 @@ export function saveCurrentUserData() {
         users[userIndex].tasks = [];
     }
     
+    console.log(`Saving tasks for ${currentUser.email}:`, users[userIndex].tasks);
     localStorage.setItem('users', JSON.stringify(users));
+    console.log('User data saved in localStorage:', localStorage.getItem('users'));
 }
 
 export async function fetchLoginForm() {
@@ -268,5 +277,8 @@ export function loadUserTasks(user) {
                 yourTasks.push(task);
             }
         });
+        console.log(`Loaded tasks for ${user.email}:`, { yourTasks, completedTasks });
+    } else {
+        console.log(`No tasks found for ${user.email}`);
     }
 }
