@@ -90,19 +90,10 @@ console.log("After update:", suggestedTasks.length);
 
 // Function to render tasks
 async function renderTasks(tasks, container, isSuggested = false) {
-    if (container) {
-        container.innerHTML = '';
-        try {
-            for (const task of tasks) {
-                console.log('Processing task:', task);
-                const taskCard = await createTaskCard(task, isSuggested);
-                container.appendChild(taskCard);
-            }
-        } catch (error) {
-            console.error('Error rendering tasks:', error);
-        }
-    } else {
-        console.error('Container not found for rendering tasks');
+    container.innerHTML = ''; // Clear the container
+    for (const task of tasks) {
+        const taskCard = await createTaskCard(task, isSuggested);
+        container.appendChild(taskCard);
     }
 }
 
@@ -746,7 +737,7 @@ function loadUserData() {
         
         // Handle task actions for both yourTasks and completedTasks if they are in the DOM
         [...yourTasks, ...completedTasks].forEach(task => {
-            if (document.body.contains(task)) {
+            if (task.nodeType === Node.ELEMENT_NODE && document.body.contains(task)) {
                 handleTaskActions(task);
             }
         });
