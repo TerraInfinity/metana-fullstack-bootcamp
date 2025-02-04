@@ -145,6 +145,8 @@ async function createTaskCard(task, isSuggested) {
         
         // Ensure task properties are assigned from the data object
         taskCard.querySelector('.task-title').textContent = task.title;
+        console.log("Task title:", task.title);
+        
         if (!isSuggested) {
             taskCard.querySelector('.task-description').textContent = task.description;
         } else {
