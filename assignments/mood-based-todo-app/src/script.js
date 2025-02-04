@@ -145,7 +145,7 @@ async function createTaskCard(task, isSuggested) {
         
         // Ensure task properties are assigned from the data object
         taskCard.querySelector('.task-title').textContent = task.name;
-        console.log("Task title:", task.title);
+        console.log("Task title:", task.name);
         
         if (!isSuggested) {
             taskCard.querySelector('.task-description').textContent = task.description;
@@ -286,9 +286,9 @@ function handleTaskActions(taskCard) {
                 const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
                 // Update data structure before removing from DOM
                 if (isShowingCompleted) {
-                    completedTasks = completedTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
+                    completedTasks = completedTasks.filter(task => task.name !== taskCard.querySelector('.task-title').textContent);
                 } else {
-                    yourTasks = yourTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
+                    yourTasks = yourTasks.filter(task => task.name !== taskCard.querySelector('.task-title').textContent);
                 }
                 // Now remove from DOM and update UI
                 taskCard.remove();
@@ -851,7 +851,7 @@ function createTaskElement(task) {
     const taskElement = document.createElement('div');
     taskElement.className = 'task-card';
     taskElement.innerHTML = `
-        <h3 class="task-title">${task.title}</h3>
+        <h3 class="task-title">${task.name}</h3>
         <p class="task-description">${task.description}</p>
         <p class="due-date">Due: ${task.dueDate}</p>
     `;
