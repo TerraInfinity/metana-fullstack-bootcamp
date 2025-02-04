@@ -66,51 +66,7 @@ export class MoodTaskService {
       return array;
     }
   
-    static async renderSuggestedTasks(tasks, containerSelector) {
-      const container = document.querySelector(containerSelector);
-      container.innerHTML = '';
-      
-      // Only process first 4 tasks
-      const limitedTasks = tasks.slice(0, 4);
-      
-      try {
-        const componentResponse = await fetch('src/components/task-component.html');
-        const componentHtml = await componentResponse.text();
 
-        limitedTasks.forEach(task => {
-          //const template = document.createElement('template');
-          //template.innerHTML = componentHtml;
-          //const newTask = template.content.querySelector('.task-card').cloneNode(true);
-          
-          // Clear existing buttons
-          //const taskActions = newTask.querySelector('.task-actions');
-          //taskActions.innerHTML = '';
-
-          // Add buttons
-          //const addButton = document.createElement('button');
-          //addButton.className = 'btn-action add';
-          //addButton.innerHTML = '➕';
-
-          //const deleteButton = document.createElement('button');
-          //deleteButton.className = 'btn-action delete';
-          //deleteButton.innerHTML = '🗑️';
-
-         // taskActions.append(addButton, deleteButton);
-
-          newTask.querySelector('.task-title').textContent = task.title;
-          newTask.querySelector('.task-description').textContent = `Duration: ${task.duration}`;
-          //newTask.querySelector('.due-date').textContent = `Due: ${new Date().toLocaleTimeString()}`;
-          //newTask.classList.add('suggested');
-          
-          container.appendChild(newTask);
-        });
-        
-        return Array.from(container.children);
-      } catch (error) {
-        console.error('Error rendering tasks:', error);
-        return [];
-      }
-    }
 
     static debounce(fn, delay) {
         let debounceTimer;
@@ -120,13 +76,5 @@ export class MoodTaskService {
         };
     }
 
-    static getDebouncedUpdateTasks(moodValue, weather) {
-        const debouncedUpdateTasks = this.debounce(() => {
-            this.getFilteredTasks(moodValue, weather).then(tasks => {
-                this.renderSuggestedTasks(tasks, '#task-container');
-            });
-        }, 300); // Adjust delay as needed
 
-        return debouncedUpdateTasks;
-    }
 }
