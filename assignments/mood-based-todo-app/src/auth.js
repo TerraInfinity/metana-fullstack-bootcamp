@@ -205,55 +205,63 @@ export function handleAuthSubmit(e, isLogin) {
 }
 
 export function saveCurrentUserData() {
-    if (!currentUser) {
-        console.log('No user logged in to save data for');
-        return;
-    }
-    
-    const users = UserService.getUsers();
-    const userIndex = users.findIndex(u => u.email === currentUser.email);
-    
-    if (userIndex !== -1) {
-        // Log tasks before saving
-        console.log('Tasks to save:', [
-            ...yourTasks.map(task => ({
-                title: task.title,
-                description: task.description,
-                dueDate: task.dueDate,
-                completed: false // Mark as incomplete
-            })),
-            ...completedTasks.map(task => ({
-                title: task.title,
-                description: task.description,
-                dueDate: task.dueDate,
-                completed: true // Mark as complete
-            }))
-        ]);
+    return new Promise((resolve, reject) => {
+        try {
+            if (!currentUser) {
+                console.log('No user logged in to save data for');
+                resolve(); // Resolve if no user to save
+                return;
+            }
+            
+            const users = UserService.getUsers();
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            
+            if (userIndex !== -1) {
+                // Log tasks before saving
+                console.log('Tasks to save:', [
+                    ...yourTasks.map(task => ({
+                        title: task.title,
+                        description: task.description,
+                        dueDate: task.dueDate,
+                        completed: false // Mark as incomplete
+                    })),
+                    ...completedTasks.map(task => ({
+                        title: task.title,
+                        description: task.description,
+                        dueDate: task.dueDate,
+                        completed: true // Mark as complete
+                    }))
+                ]);
 
-        // Save tasks to the user object
-        users[userIndex].tasks = [
-            ...yourTasks.map(task => ({
-                title: task.title,
-                description: task.description,
-                dueDate: task.dueDate,
-                completed: false // Mark as incomplete
-            })),
-            ...completedTasks.map(task => ({
-                title: task.title,
-                description: task.description,
-                dueDate: task.dueDate,
-                completed: true // Mark as complete
-            }))
-        ];
-        
-        console.log(`Saving tasks for ${currentUser.email}:`, users[userIndex].tasks);
-        localStorage.setItem('users', JSON.stringify(users));
-        console.log('User data saved in localStorage:', localStorage.getItem('users'));
-        console.log('Current user tasks:', users[userIndex].tasks); // Log the current user's tasks
-        console.log('All users:', users); // Log all users to check if the user exists
-        console.log('User index:', userIndex); // Log the index of the current user
-        console.log('Current user:', currentUser); // Log the current user object
-    }
+                // Save tasks to the user object
+                users[userIndex].tasks = [
+                    ...yourTasks.map(task => ({
+                        title: task.title,
+                        description: task.description,
+                        dueDate: task.dueDate,
+                        completed: false // Mark as incomplete
+                    })),
+                    ...completedTasks.map(task => ({
+                        title: task.title,
+                        description: task.description,
+                        dueDate: task.dueDate,
+                        completed: true // Mark as complete
+                    }))
+                ];
+                
+                console.log(`Saving tasks for ${currentUser.email}:`, users[userIndex].tasks);
+                localStorage.setItem('users', JSON.stringify(users));
+                console.log('User data saved in localStorage:', localStorage.getItem('users'));
+                console.log('Current user tasks:', users[userIndex].tasks); // Log the current user's tasks
+                console.log('All users:', users); // Log all users to check if the user exists
+                console.log('User index:', userIndex); // Log the index of the current user
+                console.log('Current user:', currentUser); // Log the current user object
+            }
+            resolve(); // Resolve if successful
+        } catch (error) {
+            reject(error); // Reject if there's an error
+        }
+    });
 }
 
 export async function fetchLoginForm() {
@@ -370,10 +378,16 @@ export function loadGuestTasks() {
 }
 
 export function saveGuestTasks() {
-    const tasksToSave = [
-        ...yourTasks.map(task => ({...task, completed: false})),
-        ...completedTasks.map(task => ({...task, completed: true}))
-    ];
-    localStorage.setItem('guestTasks', JSON.stringify(tasksToSave));
-    console.log('Guest tasks saved:', tasksToSave);
+    return new Promise((resolve, reject) => {
+        try {
+            const tasksToSave = [
+                ...yourTasks.map(task => ({...task, completed: false})),
+                ...completedTasks.map(task => ({...task, completed: true}))
+            ];
+            localStorage.setItem('guestTasks', JSON.stringify(tasksToSave));
+            resolve(); // Resolve if successful
+        } catch (error) {
+            reject(error); // Reject if there's an error
+        }
+    });
 }

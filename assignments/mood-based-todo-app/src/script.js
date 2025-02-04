@@ -748,7 +748,7 @@ async function loadUserData() {
 // Function to save tasks to localStorage
 function saveTasksToLocalStorage() {
     if (currentUser) {
-        // Save tasks for logged-in users
+        console.log('Saving for logged-in user with email:', currentUser.email); // Added logging
         saveCurrentUserData().then(() => {
             console.log('Tasks saved to localStorage for user:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
             console.log('Your tasks have been successfully saved!');
@@ -757,7 +757,7 @@ function saveTasksToLocalStorage() {
             console.log('Sorry, there was an error saving your tasks. Please try again later.');
         });
     } else {
-        // Save tasks for guests
+        console.log('Saving for guest user'); // Added logging
         saveGuestTasks().then(() => {
             console.log('Guest tasks saved to localStorage');
             console.log('Your tasks have been successfully saved!');
