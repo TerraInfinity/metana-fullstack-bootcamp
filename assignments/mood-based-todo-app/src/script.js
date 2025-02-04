@@ -59,6 +59,7 @@ themeToggle.addEventListener('click', () => {
 
 // Initialize task arrays
 let suggestedTasks = []; // Instead of initializing with existing DOM elements
+let yourTasks = []; // Change from const to let
 
 console.log("Before update:", suggestedTasks.length);
 async function updateSuggestedTasks() {
