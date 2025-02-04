@@ -24,13 +24,14 @@ export class MoodTaskService {
       // Ensure all tasks have a title, even if it was missing or null in the JSON
       const filtered = filteredTasks.map(task => ({
         ...task,
-        title: task.title || 'Untitled Task', // Default title if not provided
+        title: task.name || task.title || 'Untitled Task', // Use 'name' (json uses name) if available, fallback to 'title' or default
         description: task.description || '', // Default description if not provided
-        dueDate: task.dueDate || 'No Due Date' // Default due date if not provided
+        dueDate: task.dueDate || task.duration || 'No Due Date' // Use 'dueDate' if available, otherwise use 'duration' (JSON mostly uses duration)
       }));
 
+
       // Log tasks that match the criteria
-      console.log("Tasks matching criteria:", filtered.map(task => task.name));
+      console.log("Tasks matching criteria:", filtered.map(task => task.title));
 
       // Shuffle and pick 4
       const shuffled = this.shuffleArray(filtered);
@@ -39,7 +40,7 @@ export class MoodTaskService {
       // Log selected tasks with reasoning
       console.group("Selected Tasks");
       selectedTasks.forEach(task => {
-        console.log(`Task: ${task.name}, Mood Range: ${task.moodRange.min}-${task.moodRange.max}, Weather: ${task.weatherConditions.join(', ')}`);
+        console.log(`Task: ${task.title}, Mood Range: ${task.moodRange.min}-${task.moodRange.max}, Weather: ${task.weatherConditions.join(', ')}`);
       });
       console.groupEnd();
 
@@ -96,7 +97,7 @@ export class MoodTaskService {
 
           taskActions.append(addButton, deleteButton);
 
-          newTask.querySelector('.task-title').textContent = task.name;
+          newTask.querySelector('.task-title').textContent = task.title;
           newTask.querySelector('.task-description').textContent = `Duration: ${task.duration}`;
           newTask.querySelector('.due-date').textContent = `Due: ${new Date().toLocaleTimeString()}`;
           newTask.classList.add('suggested');
