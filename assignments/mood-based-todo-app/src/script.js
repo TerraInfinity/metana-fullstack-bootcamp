@@ -83,15 +83,9 @@ async function updateSuggestedTasks() {
         
         suggestedTasks = filteredTasks; // Store data objects, not DOM elements
         
-        // Create DOM elements for each task, but only with name and duration
+        // Create DOM elements for each task
         const taskCards = await Promise.all(suggestedTasks.map(async (task) => {
-            const taskCard = await createTaskCard(task, true); // Assuming createTaskCard function handles suggested tasks
-
-            // Modify taskCard to only show name and duration
-            taskCard.querySelector('.task-title').textContent = task.title; // Updated to use 'title'
-            taskCard.querySelector('.task-description').textContent = task.description; // Assuming 'description' holds duration info
-            taskCard.querySelector('.due-date').remove(); // Remove due date if it exists
-
+            const taskCard = await createTaskCard(task, true); // Assuming createTaskCard returns a DOM node
             return taskCard;
         }));
 
@@ -99,22 +93,25 @@ async function updateSuggestedTasks() {
         suggestedTasksSection.innerHTML = ''; // Clear existing tasks
         taskCards.forEach(taskCard => suggestedTasksSection.appendChild(taskCard)); // Append new task cards
 
-        // Ensure each task card is processed correctly
+        // Process each task card with handleTaskActions
         taskCards.forEach(taskCard => {
             console.log('Processing task card:', taskCard);
-            handleTaskActions(taskCard); // Pass the DOM element to handleTaskActions
+            handleTaskActions(taskCard); // This should be a DOM element
         });
 
-        // Enhanced logging for suggested tasks
+        // Remove the incorrect usage of handleTaskActions with data objects
+        // Comment out or remove the following block:
+        /*
         suggestedTasks.forEach(task => {
             console.log('Task being processed:', task);
             console.log('Task type:', typeof task);
             if (task && typeof task === 'object') {
-                handleTaskActions(task);
+                handleTaskActions(task); // This line was causing the invalid taskCard error
             } else {
                 console.error('Invalid task encountered:', task);
             }
         });
+        */
 
         saveTasksToLocalStorage(); // Save after updating suggested tasks
         console.log('Suggested tasks have been updated based on your current mood and weather!');
