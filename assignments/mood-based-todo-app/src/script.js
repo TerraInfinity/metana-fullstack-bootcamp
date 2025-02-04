@@ -83,9 +83,15 @@ async function updateSuggestedTasks() {
         
         suggestedTasks = filteredTasks; // Store data objects, not DOM elements
         
-        // Initialize actions for new tasks
+        // Create DOM elements for each task, but only with name and duration
         const taskCards = await Promise.all(suggestedTasks.map(async (task) => {
-            const taskCard = await createTaskCard(task, true); // Create DOM elements
+            const taskCard = await createTaskCard(task, true); // Assuming createTaskCard function handles suggested tasks
+
+            // Modify taskCard to only show name and duration
+            taskCard.querySelector('.task-title').textContent = task.title; // Updated to use 'title'
+            taskCard.querySelector('.task-description').textContent = task.description; // Assuming 'description' holds duration info
+            taskCard.querySelector('.due-date').remove(); // Remove due date if it exists
+
             return taskCard;
         }));
 
@@ -208,6 +214,13 @@ function handleTaskActions(taskCard) {
         console.error('Invalid taskCard:', taskCard);
         return; // Exit if taskCard is not a valid DOM element
     }
+
+    // Check if taskCard is a DOM element before proceeding
+    if (taskCard.nodeType !== Node.ELEMENT_NODE) {
+        console.error('taskCard is not a DOM element:', taskCard);
+        return; // Exit if taskCard is not a DOM element
+    }
+
     const isSuggested = taskCard.classList.contains('suggested');
     const addButton = taskCard.querySelector('.btn-action.add');
     const deleteButton = taskCard.querySelector('.btn-action.delete');
