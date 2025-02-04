@@ -9,7 +9,9 @@ import {
     initializeAuth,
     loadUserTasks,
     yourTasks,
-    completedTasks
+    completedTasks,
+    loadGuestTasks,
+    saveGuestTasks
 } from './auth.js';
 
 // Move the generateRandomWeather function to the top
@@ -98,7 +100,7 @@ async function renderTasks(tasks, container, isSuggested = false) {
 }
 
 // New function to create a task card from task data
-async function createTaskCard(taskData, isSuggested) {
+async function createTaskCard(task, isSuggested) {
     const componentResponse = await fetch('src/components/task-component.html');
     if (!componentResponse.ok) {
         throw new Error('Failed to load task component HTML');
@@ -108,18 +110,58 @@ async function createTaskCard(taskData, isSuggested) {
     template.innerHTML = componentHtml;
     const taskCard = template.content.querySelector('.task-card').cloneNode(true);
     
-    taskCard.querySelector('.task-title').textContent = taskData.title;
-    taskCard.querySelector('.task-description').textContent = taskData.description;
-    taskCard.querySelector('.due-date').textContent = `Due: ${taskData.dueDate}`;
+    // Ensure task properties are assigned from the data object
+    taskCard.querySelector('.task-title').textContent = task.title;
+    taskCard.querySelector('.task-description').textContent = task.description;
+    taskCard.querySelector('.due-date').textContent = `Due: ${task.dueDate}`;
 
     if (isSuggested) {
         taskCard.classList.add('suggested');
         // Add suggested task buttons
+        const addButton = document.createElement('button');
+        addButton.className = 'btn-action add';
+        addButton.innerHTML = '➕'; // or whatever icon you use for adding
+        addButton.addEventListener('click', () => {
+            // Implement add functionality here
+            // This could involve adding the task to yourTasks
+        });
+        taskCard.querySelector('.task-actions').appendChild(addButton);
     } else {
         // Add regular task buttons
+        const taskActions = taskCard.querySelector('.task-actions') || document.createElement('div');
+        taskActions.className = 'task-actions';
+        taskActions.innerHTML = ''; // Clear any existing buttons
+
+        // Create action buttons for non-suggested tasks
+        const editButton = document.createElement('button');
+        editButton.className = 'btn-action edit';
+        editButton.innerHTML = '✏️';
+        editButton.addEventListener('click', () => {
+            // Implement edit functionality here
+            // You'll need to pass the task data to an edit function or modal
+        });
+
+        const completeButton = document.createElement('button');
+        completeButton.className = 'btn-action complete';
+        completeButton.innerHTML = '✅';
+        completeButton.addEventListener('click', () => {
+            // Implement complete functionality here
+            // Here, you would move the task to completedTasks or toggle its state
+        });
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn-action delete';
+        deleteButton.innerHTML = '🗑️';
+        deleteButton.addEventListener('click', () => {
+            // Implement delete functionality here
+            // Here, you would remove the task from yourTasks or completedTasks
+        });
+
+        taskActions.append(editButton, completeButton, deleteButton);
+        taskCard.appendChild(taskActions);
     }
 
-    handleTaskActions(taskCard);
+    handleTaskActions(taskCard); // Attach actions to the task card
     return taskCard;
 }
 
@@ -185,7 +227,12 @@ function handleTaskActions(taskCard) {
                 newTaskCard.querySelector('.due-date').textContent = dueDate;
 
                 // Add to your tasks
-                yourTasks.push(newTaskCard);
+                yourTasks.push({
+                    title: title,
+                    description: description,
+                    dueDate: dueDate.split(': ')[1],
+                    completed: false
+                });
                 console.log('Task added to yourTasks:', yourTasks);
                 saveTasksToLocalStorage(); // Save after adding a task
 
@@ -222,19 +269,18 @@ function handleTaskActions(taskCard) {
                 renderTasks(suggestedTasks, suggestedTasksSection);
             } else {
                 const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+                // Update data structure before removing from DOM
                 if (isShowingCompleted) {
-                    completedTasks.splice(completedTasks.indexOf(taskCard), 1);
-                    console.log('Task removed from completedTasks (See Completed Tasks):', completedTasks);
+                    completedTasks = completedTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
                 } else {
-                    yourTasks.splice(yourTasks.indexOf(taskCard), 1);
-                    console.log('Task removed from yourTasks:', yourTasks);
+                    yourTasks = yourTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
                 }
+                // Now remove from DOM and update UI
+                taskCard.remove();
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
                 renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
-                saveTasksToLocalStorage(); // Save 
+                saveTasksToLocalStorage(); // Save after deletion
             }
-            taskCard.remove(); // Remove the task from the DOM
-
             // Update task count
             updateTaskCount();
         });
@@ -294,11 +340,24 @@ function handleTaskActions(taskCard) {
                     const taskDuration = taskForm.querySelector('#duration-input').value;
                     const taskDate = taskForm.querySelector('#datepicker').value;
 
+                    // Update the task in the data structure
+                    const taskIndex = yourTasks.findIndex(t => t.title === taskCard.querySelector('.task-title').textContent);
+                    if (taskIndex !== -1) {
+                        yourTasks[taskIndex] = {
+                            ...yourTasks[taskIndex],
+                            title: taskName,
+                            description: `Duration: ${taskDuration} ${durationUnits[currentUnitIndex]}`,
+                            dueDate: taskDate
+                        };
+                    }
+
+                    // Update DOM
                     taskCard.querySelector('.task-title').textContent = taskName;
                     taskCard.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationUnits[currentUnitIndex]}`;
                     taskCard.querySelector('.due-date').textContent = `Due: ${taskDate}`;
 
                     modalContainer.remove();
+                    saveTasksToLocalStorage(); // Save after editing
                 });
 
                 modalContainer.querySelector('.close-modal').addEventListener('click', () => {
@@ -316,18 +375,23 @@ function handleTaskActions(taskCard) {
             const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
 
             if (!isShowingCompleted) {
-                // Move task from "Your Tasks" to "Completed Tasks"
-                yourTasks.splice(yourTasks.indexOf(taskCard), 1);
-                completedTasks.push(taskCard);
-                console.log('Task moved to completedTasks (See Completed Tasks):', completedTasks);
-                console.log('Updated yourTasks (See Your Tasks):', yourTasks);
+                // Find and move the task data
+                const taskIndex = yourTasks.findIndex(t => t.title === taskCard.querySelector('.task-title').textContent);
+                if (taskIndex !== -1) {
+                    const completedTask = { ...yourTasks[taskIndex], completed: true };
+                    yourTasks.splice(taskIndex, 1);
+                    completedTasks.push(completedTask);
+                    console.log('Task moved to completedTasks (See Completed Tasks):', completedTasks);
+                    console.log('Updated yourTasks (See Your Tasks):', yourTasks);
+                }
             } else {
-                // Remove task from "Completed Tasks"
-                completedTasks.splice(completedTasks.indexOf(taskCard), 1);
-                console.log('Task removed from completedTasks (See Completed Tasks):', completedTasks);
-                taskCard.remove(); // Remove the task from the DOM
+                // Remove from completed tasks in data
+                const taskIndex = completedTasks.findIndex(t => t.title === taskCard.querySelector('.task-title').textContent);
+                if (taskIndex !== -1) {
+                    completedTasks.splice(taskIndex, 1);
+                }
+                taskCard.remove(); // Remove from DOM
             }
-
 
             // Re-render the appropriate section
             const yourTasksSection = document.querySelector('.tasks-section .task-cards');
@@ -468,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Form submission handler
             const taskForm = modalContainer.querySelector('.task-form');
-            taskForm.addEventListener('submit', (event) => {
+            taskForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 
                 // Get task details
@@ -479,55 +543,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Get the current duration unit
                 const durationUnit = durationToggle.textContent;
 
-                // Create temporary container to parse component HTML
-                const template = document.createElement('template');
-                template.innerHTML = componentHtml;
-                const newTask = template.content.querySelector('.task-card');
-
-                // Update task component with form data
-                newTask.querySelector('.task-title').textContent = taskName;
-                newTask.querySelector('.task-description').textContent = `Duration: ${taskDuration} ${durationUnit}`;
-                newTask.querySelector('.due-date').textContent = `Due: ${taskDate}`;
-
-                // Add action buttons to the task
-                const taskActions = newTask.querySelector('.task-actions') || document.createElement('div');
-                taskActions.className = 'task-actions';
-                taskActions.innerHTML = ''; // Clear any existing buttons if there are any
-
-                // Create action buttons
-                const editButton = document.createElement('button');
-                editButton.className = 'btn-action edit';
-                editButton.innerHTML = '✏️';
-                editButton.addEventListener('click', () => {
-                    // Implement edit functionality here
+                // Ensure you're adding to the data structure before creating the DOM element
+                yourTasks.push({
+                    title: taskName,
+                    description: `Duration: ${taskDuration} ${durationUnit}`,
+                    dueDate: taskDate,
+                    completed: false
                 });
-
-                const completeButton = document.createElement('button');
-                completeButton.className = 'btn-action complete';
-                completeButton.innerHTML = '✅';
-                completeButton.addEventListener('click', () => {
-                    // Implement complete functionality here
-                });
-
-                const deleteButton = document.createElement('button');
-                deleteButton.className = 'btn-action delete';
-                deleteButton.innerHTML = '🗑️';
-                deleteButton.addEventListener('click', () => {
-                    // Implement delete functionality here
-                });
-
-                // Append buttons to task actions
-                taskActions.append(editButton, completeButton, deleteButton);
-                newTask.appendChild(taskActions);
-
-                // Add to tasks section
-                yourTasks.push(newTask); // Add to your tasks array
-                console.log('New task added to yourTasks:', yourTasks); // Log the updated tasks array
+                // Then create DOM element
+                const newTaskCard = await createTaskCard(yourTasks[yourTasks.length - 1], false);
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-                yourTasksSection.appendChild(newTask);
+                yourTasksSection.appendChild(newTaskCard);
 
                 // Initialize actions for the new task
-                handleTaskActions(newTask);
+                handleTaskActions(newTaskCard);
 
                 // Check if currently showing completed tasks and switch to "Your Tasks"
                 const showCompletedButton = document.getElementById('show-completed');
@@ -543,6 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Update task count
                 updateTaskCount();
+                saveTasksToLocalStorage(); // Save after adding a task
             });
 
             // Define taskFormModal after creating the modal
@@ -751,30 +781,14 @@ function loadUserData() {
 
 // Function to save tasks to localStorage
 function saveTasksToLocalStorage() {
-    import('./auth.js').then(({ currentUser, saveCurrentUserData }) => {
+    import('./auth.js').then(({ currentUser, saveCurrentUserData, saveGuestTasks }) => {
         if (currentUser) {
             // Save tasks for logged-in users
             saveCurrentUserData(); // This function is in auth.js
             console.log('Tasks saved to localStorage for user:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
         } else {
-            // Save tasks for guests
-            const tasksToSave = [
-                ...yourTasks.map(task => ({
-                    title: task.querySelector('.task-title').textContent,
-                    description: task.querySelector('.task-description').textContent,
-                    dueDate: task.querySelector('.due-date').textContent,
-                    completed: false // Mark as incomplete
-                })),
-                ...completedTasks.map(task => ({
-                    title: task.querySelector('.task-title').textContent,
-                    description: task.querySelector('.task-description').textContent,
-                    dueDate: task.querySelector('.due-date').textContent,
-                    completed: true // Mark as complete
-                }))
-            ];
-
-            localStorage.setItem('guestTasks', JSON.stringify(tasksToSave));
-            console.log('Tasks saved to localStorage for guest:', tasksToSave);
+            // Save tasks for guests - this now delegates to auth.js
+            saveGuestTasks();
         }
     }).catch(error => {
         console.error('Error in saving tasks:', error);
@@ -808,4 +822,17 @@ function loadGuestTasks() {
 // Call this function before or instead of loadUserData if no user is logged in
 if (!currentUser) {
     loadGuestTasks();
+}
+
+// Helper function to convert data to DOM element
+function createTaskElement(task) {
+    const taskElement = document.createElement('div');
+    taskElement.className = 'task-card';
+    taskElement.innerHTML = `
+        <h3 class="task-title">${task.title}</h3>
+        <p class="task-description">${task.description}</p>
+        <p class="due-date">Due: ${task.dueDate}</p>
+    `;
+    handleTaskActions(taskElement); // Attach actions to the task element
+    return taskElement;
 }

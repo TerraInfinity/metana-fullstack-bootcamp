@@ -49,6 +49,9 @@ export function handleAuth(formData, isRegister) {
     const email = formData.get('email');
     const password = formData.get('password');
 
+    // Security enhancement: Warn about password storage
+    console.warn('Security Note: Passwords are stored in plain text. Implement hashing for production.');
+
     if (isRegister) {
         if (!email || !password) {
             alert(`Please provide both email and password for registration. Email: ${email}, Password: ${password}`);
@@ -112,17 +115,25 @@ export function initializeAuth() {
     // Initialize auth state
     currentUser = SessionService.getSession();
     updateAuthUI();
+    
+    if (!currentUser) {
+        loadGuestTasks(); // Load guest tasks if no user is logged in
+    }
 }
 
 export function handleLogout() {
     console.log('Logging out');
     console.log('Saving current user data:', { yourTasks, completedTasks });
-    saveCurrentUserData();
+    if (currentUser) {
+        saveCurrentUserData();
+    } else {
+        saveGuestTasks(); // Save tasks for guests
+    }
     SessionService.clearSession();
     updateAuthUI();
     // Clear task arrays to reset state when logging out
-    yourTasks = []; // Now defined
-    completedTasks = []; // Now defined
+    yourTasks = [];
+    completedTasks = [];
     console.log('Tasks cleared:', { yourTasks, completedTasks });
     // Reload page or update UI to reflect logged out state
     location.reload();
@@ -206,31 +217,31 @@ export function saveCurrentUserData() {
         // Log tasks before saving
         console.log('Tasks to save:', [
             ...yourTasks.map(task => ({
-                title: task.querySelector('.task-title').textContent,
-                description: task.querySelector('.task-description').textContent,
-                dueDate: task.querySelector('.due-date').textContent,
+                title: task.title,
+                description: task.description,
+                dueDate: task.dueDate,
                 completed: false // Mark as incomplete
             })),
             ...completedTasks.map(task => ({
-                title: task.querySelector('.task-title').textContent,
-                description: task.querySelector('.task-description').textContent,
-                dueDate: task.querySelector('.due-date').textContent,
+                title: task.title,
+                description: task.description,
+                dueDate: task.dueDate,
                 completed: true // Mark as complete
             }))
         ]);
 
+        // Save tasks to the user object
         users[userIndex].tasks = [
             ...yourTasks.map(task => ({
-                title: task.querySelector('.task-title').textContent,
-                description: task.querySelector('.task-description').textContent,
-                dueDate: task.querySelector('.due-date').textContent,
+                title: task.title,
+                description: task.description,
+                dueDate: task.dueDate,
                 completed: false // Mark as incomplete
             })),
             ...completedTasks.map(task => ({
-                // Convert task to a JSON-serializable format
-                title: task.querySelector('.task-title').textContent,
-                description: task.querySelector('.task-description').textContent,
-                dueDate: task.querySelector('.due-date').textContent,
+                title: task.title,
+                description: task.description,
+                dueDate: task.dueDate,
                 completed: true // Mark as complete
             }))
         ];
@@ -331,4 +342,25 @@ export function loadUserTasks(user) {
         // Log if no tasks were found for the user
         console.log(`No tasks found for ${user.email || 'unknown user'}`);
     }
+}
+
+export function loadGuestTasks() {
+    const savedTasks = localStorage.getItem('guestTasks');
+    if (savedTasks) {
+        const tasks = JSON.parse(savedTasks);
+        yourTasks = tasks.filter(task => !task.completed);
+        completedTasks = tasks.filter(task => task.completed);
+        console.log('Guest tasks loaded:', { yourTasks, completedTasks });
+    } else {
+        console.log('No guest tasks found');
+    }
+}
+
+export function saveGuestTasks() {
+    const tasksToSave = [
+        ...yourTasks.map(task => ({...task, completed: false})),
+        ...completedTasks.map(task => ({...task, completed: true}))
+    ];
+    localStorage.setItem('guestTasks', JSON.stringify(tasksToSave));
+    console.log('Guest tasks saved:', tasksToSave);
 }
