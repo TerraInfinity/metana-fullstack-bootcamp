@@ -227,44 +227,43 @@ function handleTaskActions(taskCard) {
     // Add Button (for suggested tasks)
     if (addButton && isSuggested) {
         addButton.addEventListener('click', async () => {
-            // Remove the task from the DOM before modifying the array
-            taskCard.remove();
-            
-            // Replace DOM-based filtering with data-based filtering
-            suggestedTasks = suggestedTasks.filter(t => t.title !== taskCard.querySelector('.task-title').textContent);
-            
-            // Re-render with proper isSuggested flag
-            const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
-            renderTasks(suggestedTasks, suggestedTasksSection, true);
-
             try {
-                // Add to your tasks
+                taskCard.remove(); // Remove the task from the DOM
+                
+                console.log("Removing task from suggestedTasks array");
+                const taskTitle = taskCard.querySelector('.task-title').textContent;
+                suggestedTasks = suggestedTasks.filter(t => t.title !== taskTitle);
+                console.log("Suggested tasks after removal:", suggestedTasks);
+
+                console.log("Adding task to yourTasks array");
                 yourTasks.push({
-                    title: taskCard.querySelector('.task-title').textContent,
+                    title: taskTitle,
                     description: taskCard.querySelector('.task-description').textContent,
                     dueDate: taskCard.querySelector('.due-date').textContent.split(': ')[1],
                     completed: false
                 });
-                console.log('Task added to yourTasks:', yourTasks);
-                saveTasksToLocalStorage(); // Save after adding a task
+                console.log("Your tasks after adding:", yourTasks);
 
-                // Update UI
+                console.log("Rendering new task in yourTasksSection");
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-                renderTasks(suggestedTasks, yourTasksSection);
-                renderTasks(yourTasks, yourTasksSection);
+                const newTaskCard = await createTaskCard(yourTasks[yourTasks.length - 1], false);
+                yourTasksSection.appendChild(newTaskCard);
+                handleTaskActions(newTaskCard);
 
-                // Switch to "Your Tasks" if needed
-                const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-                if (isShowingCompleted) {
-                    document.getElementById('show-completed').textContent = 'Show Completed';
-                    document.querySelector('.tasks-section .section-header h2').textContent = 'Your Tasks';
-                    renderTasks(yourTasks, yourTasksSection);
-                }
+                console.log("Updating UI for suggested tasks");
+                const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
+                renderTasks(suggestedTasks, suggestedTasksSection); // Ensure we pass 'true' for isSuggested
 
-                // Initialize task actions and update count
+                console.log("Saving tasks to localStorage");
+                saveTasksToLocalStorage();
+
+                console.log("Updating task count");
                 updateTaskCount();
+
             } catch (error) {
-                console.error('Error adding suggested task:', error);
+                console.error('Error when adding a suggested task:', error);
+                // Optionally, you can revert the changes or notify the user
+                console.log('An error occurred while adding the task. The action was not completed.');
             }
         });
     }
