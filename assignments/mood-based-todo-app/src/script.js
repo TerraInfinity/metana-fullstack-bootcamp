@@ -11,7 +11,8 @@ import {
     yourTasks,
     completedTasks,
     loadGuestTasks,
-    saveGuestTasks
+    saveGuestTasks,
+    saveCurrentUserData
 } from './auth.js';
 
 // Log types of yourTasks and completedTasks
@@ -709,70 +710,62 @@ function updateTaskCount() {
     saveTasksToLocalStorage();
 }
 
-
-function loadUserData() {
-    import('./auth.js').then(({ loadUserTasks, currentUser }) => {
-        console.log("Current user before loading tasks:", currentUser); // Log currentUser
-        if (currentUser) {
-            loadUserTasks(currentUser); 
-            console.log(`Loaded tasks for ${currentUser.email}:`, { yourTasks, completedTasks }); // Log the loaded tasks
-            
-            // After loading tasks from localStorage, update the UI
-            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-            renderTasks(yourTasks, yourTasksSection); // Render your tasks
-            
-            // Ensure completed tasks are also rendered if the user wants to see them
-            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-            if (isShowingCompleted) {
-                renderTasks(completedTasks, yourTasksSection); // Render completed tasks if needed
+async function loadUserData() {
+    console.log("Current user before loading tasks:", currentUser); // Log currentUser
+    if (currentUser) {
+        await loadUserTasks(currentUser); // Await if loadUserTasks is async
+        console.log(`Loaded tasks for ${currentUser.email}:`, { yourTasks, completedTasks }); // Log the loaded tasks
+        
+        // After loading tasks from localStorage, update the UI
+        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+        renderTasks(yourTasks, yourTasksSection); // Render your tasks
+        
+        // Ensure completed tasks are also rendered if the user wants to see them
+        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+        if (isShowingCompleted) {
+            renderTasks(completedTasks, yourTasksSection); // Render completed tasks if needed
+        }
+    } else {
+        console.log("No user logged in to load tasks for");
+    }
+    
+    // Update task count or any other UI elements that depend on task lists
+    updateTaskCount();
+    
+    // Handle task actions for both yourTasks and completedTasks if they are in the DOM
+    try {
+        [...yourTasks, ...completedTasks].forEach(task => {
+            console.log('Task type:', typeof task, 'Task node type:', task.nodeType);
+            if (task.nodeType === Node.ELEMENT_NODE && document.body.contains(task)) {
+                handleTaskActions(task);
             }
-        } else {
-            console.log("No user logged in to load tasks for");
-        }
-        
-        // Update task count or any other UI elements that depend on task lists
-        updateTaskCount();
-        
-        // Handle task actions for both yourTasks and completedTasks if they are in the DOM
-        try {
-            [...yourTasks, ...completedTasks].forEach(task => {
-                console.log('Task type:', typeof task, 'Task node type:', task.nodeType);
-                if (task.nodeType === Node.ELEMENT_NODE && document.body.contains(task)) {
-                    handleTaskActions(task);
-                }
-            });
-        } catch (error) {
-            console.error('Error in task handling:', error);
-        }
-    });
+        });
+    } catch (error) {
+        console.error('Error in task handling:', error);
+    }
 }
 
 // Function to save tasks to localStorage
 function saveTasksToLocalStorage() {
-    import('./auth.js').then(({ currentUser, saveCurrentUserData, saveGuestTasks }) => {
-        if (currentUser) {
-            // Save tasks for logged-in users
-            saveCurrentUserData().then(() => {
-                console.log('Tasks saved to localStorage for user:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
-                console.log('Your tasks have been successfully saved!');
-            }).catch(error => {
-                console.error('Error in saving tasks:', error);
-                console.log('Sorry, there was an error saving your tasks. Please try again later.');
-            });
-        } else {
-            // Save tasks for guests - this now delegates to auth.js
-            saveGuestTasks().then(() => {
-                console.log('Guest tasks saved to localStorage');
-                console.log('Your tasks have been successfully saved!');
-            }).catch(error => {
-                console.error('Error in saving guest tasks:', error);
-                console.log('Sorry, there was an error saving your tasks. Please try again later.');
-            });
-        }
-    }).catch(error => {
-        console.error('Error in importing auth.js:', error);
-        console.log('An unexpected error occurred. Please refresh the page or try again later.');
-    });
+    if (currentUser) {
+        // Save tasks for logged-in users
+        saveCurrentUserData().then(() => {
+            console.log('Tasks saved to localStorage for user:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
+            console.log('Your tasks have been successfully saved!');
+        }).catch(error => {
+            console.error('Error in saving tasks:', error);
+            console.log('Sorry, there was an error saving your tasks. Please try again later.');
+        });
+    } else {
+        // Save tasks for guests
+        saveGuestTasks().then(() => {
+            console.log('Guest tasks saved to localStorage');
+            console.log('Your tasks have been successfully saved!');
+        }).catch(error => {
+            console.error('Error in saving guest tasks:', error);
+            console.log('Sorry, there was an error saving your tasks. Please try again later.');
+        });
+    }
 }
 
 // Call this function before or instead of loadUserData if no user is logged in
