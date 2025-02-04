@@ -88,12 +88,12 @@ export class MoodTaskService {
 
           // Add buttons
           const addButton = document.createElement('button');
-          addButton.className = 'btn-action add';
-          addButton.innerHTML = '➕';
+          //addButton.className = 'btn-action add';
+          //addButton.innerHTML = '➕';
 
           const deleteButton = document.createElement('button');
-          deleteButton.className = 'btn-action delete';
-          deleteButton.innerHTML = '🗑️';
+          //deleteButton.className = 'btn-action delete';
+          //deleteButton.innerHTML = '🗑️';
 
           taskActions.append(addButton, deleteButton);
 

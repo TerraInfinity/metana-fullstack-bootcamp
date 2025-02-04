@@ -248,11 +248,7 @@ function handleTaskActions(taskCard) {
                     const newTaskCard = await createTaskCard(yourTasks[yourTasks.length - 1], false);
                     yourTasksSection.appendChild(newTaskCard);
                     handleTaskActions(newTaskCard); // Attach actions to the new task card
-
-                    //console.log("Updating UI for suggested tasks");
-                    //const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
-                    //renderTasks(suggestedTasks, suggestedTasksSection); // Ensure we pass 'true' for isSuggested
-
+                    
                     console.log("Saving tasks to localStorage");
                     saveTasksToLocalStorage();
 
