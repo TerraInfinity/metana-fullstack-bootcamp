@@ -16,10 +16,18 @@ export class MoodTaskService {
       // Log current mood and weather before filtering
       console.log(`Current Mood: ${moodValue}, Current Weather: ${weather}`);
       
-      const filtered = tasks.filter(task => 
+      const filteredTasks = tasks.filter(task => 
         this.matchesMood(task, moodValue) && 
         this.matchesWeather(task, weather)
       );
+
+      // Ensure all tasks have a title, even if it was missing or null in the JSON
+      const filtered = filteredTasks.map(task => ({
+        ...task,
+        title: task.title || 'Untitled Task', // Default title if not provided
+        description: task.description || '', // Default description if not provided
+        dueDate: task.dueDate || 'No Due Date' // Default due date if not provided
+      }));
 
       // Log tasks that match the criteria
       console.log("Tasks matching criteria:", filtered.map(task => task.name));

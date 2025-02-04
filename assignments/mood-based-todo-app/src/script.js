@@ -144,7 +144,7 @@ async function createTaskCard(task, isSuggested) {
         const taskCard = template.content.querySelector('.task-card').cloneNode(true);
         
         // Ensure task properties are assigned from the data object
-        taskCard.querySelector('.task-title').textContent = task.title;
+        taskCard.querySelector('.task-title').textContent = task.name;
         console.log("Task title:", task.title);
         
         if (!isSuggested) {
