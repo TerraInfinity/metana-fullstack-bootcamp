@@ -751,12 +751,14 @@ function loadUserData() {
 
 // Function to save tasks to localStorage
 function saveTasksToLocalStorage() {
-    import('./auth.js').then(({ saveCurrentUserData, currentUser }) => {
+    import('./auth.js').then(({ currentUser, saveCurrentUserData }) => {
         if (currentUser) {
-            saveCurrentUserData(); // This function should be in auth.js
-            console.log('Tasks saved to localStorage:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
-            
-            console.log('Tasks to save:', [
+            // Save tasks for logged-in users
+            saveCurrentUserData(); // This function is in auth.js
+            console.log('Tasks saved to localStorage for user:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
+        } else {
+            // Save tasks for guests
+            const tasksToSave = [
                 ...yourTasks.map(task => ({
                     title: task.querySelector('.task-title').textContent,
                     description: task.querySelector('.task-description').textContent,
@@ -769,9 +771,41 @@ function saveTasksToLocalStorage() {
                     dueDate: task.querySelector('.due-date').textContent,
                     completed: true // Mark as complete
                 }))
-            ]);
-        } else {
-            console.log('No user logged in, cannot save tasks');
+            ];
+
+            localStorage.setItem('guestTasks', JSON.stringify(tasksToSave));
+            console.log('Tasks saved to localStorage for guest:', tasksToSave);
         }
+    }).catch(error => {
+        console.error('Error in saving tasks:', error);
     });
+}
+
+function loadGuestTasks() {
+    const savedTasks = localStorage.getItem('guestTasks');
+    if (savedTasks) {
+        const tasks = JSON.parse(savedTasks);
+        yourTasks = tasks.filter(task => !task.completed).map(createTaskElement);
+        completedTasks = tasks.filter(task => task.completed).map(createTaskElement);
+        
+        // Update UI here
+        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+        renderTasks(yourTasks, yourTasksSection);
+
+        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+        if (isShowingCompleted) {
+            renderTasks(completedTasks, yourTasksSection);
+        }
+        
+        // Initialize task actions for loaded tasks
+        [...yourTasks, ...completedTasks].forEach(task => handleTaskActions(task));
+        
+        // Update task count
+        updateTaskCount();
+    }
+}
+
+// Call this function before or instead of loadUserData if no user is logged in
+if (!currentUser) {
+    loadGuestTasks();
 }
