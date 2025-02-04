@@ -232,16 +232,10 @@ function handleTaskActions(taskCard) {
     if (addButton && isSuggested) {
         addButton.addEventListener('click', async () => {
             try {
-                const taskTitle = taskCard.querySelector('.task-title').textContent;
-                
-                if (yourTasks.some(task => task.title === taskTitle)) {
-                    console.log('Task already exists in yourTasks:', taskTitle);
-                    return; // Exit if task already exists to avoid duplicates
-                }
-
-                taskCard.remove();
+                taskCard.remove(); // Remove the task from the DOM
                 
                 console.log("Removing task from suggestedTasks array");
+                const taskTitle = taskCard.querySelector('.task-title').textContent;
                 suggestedTasks = suggestedTasks.filter(t => t.title !== taskTitle);
                 console.log("Suggested tasks after removal:", suggestedTasks);
 
@@ -256,11 +250,13 @@ function handleTaskActions(taskCard) {
 
                 console.log("Rendering new task in yourTasksSection");
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-                renderTasks(yourTasks, yourTasksSection); // Directly render all tasks instead of appending one
+                const newTaskCard = await createTaskCard(yourTasks[yourTasks.length - 1], false);
+                yourTasksSection.appendChild(newTaskCard);
+                handleTaskActions(newTaskCard);
 
                 console.log("Updating UI for suggested tasks");
                 const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
-                renderTasks(suggestedTasks, suggestedTasksSection, true); // true for isSuggested
+                renderTasks(suggestedTasks, suggestedTasksSection); // Ensure we pass 'true' for isSuggested
 
                 console.log("Saving tasks to localStorage");
                 saveTasksToLocalStorage();
