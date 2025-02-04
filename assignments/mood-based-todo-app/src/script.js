@@ -795,13 +795,15 @@ function saveTasksToLocalStorage() {
     });
 }
 
-function loadGuestTasks() {
-    const savedTasks = localStorage.getItem('guestTasks');
-    if (savedTasks) {
-        const tasks = JSON.parse(savedTasks);
-        yourTasks = tasks.filter(task => !task.completed).map(createTaskElement);
-        completedTasks = tasks.filter(task => task.completed).map(createTaskElement);
+// Call this function before or instead of loadUserData if no user is logged in
+if (!currentUser) {
+    import('./auth.js').then(({ loadGuestTasks }) => {
+        loadGuestTasks();
         
+        // Convert data tasks to DOM elements
+        yourTasks = yourTasks.map(createTaskElement);
+        completedTasks = completedTasks.map(createTaskElement);
+
         // Update UI here
         const yourTasksSection = document.querySelector('.tasks-section .task-cards');
         renderTasks(yourTasks, yourTasksSection);
@@ -816,12 +818,7 @@ function loadGuestTasks() {
         
         // Update task count
         updateTaskCount();
-    }
-}
-
-// Call this function before or instead of loadUserData if no user is logged in
-if (!currentUser) {
-    loadGuestTasks();
+    });
 }
 
 // Helper function to convert data to DOM element

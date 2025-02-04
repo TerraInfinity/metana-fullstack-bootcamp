@@ -344,13 +344,26 @@ export function loadUserTasks(user) {
     }
 }
 
+function isValidTask(task) {
+    return task && typeof task.title === 'string' && 
+           typeof task.description === 'string' && 
+           typeof task.dueDate === 'string' && 
+           typeof task.completed === 'boolean';
+}
+
 export function loadGuestTasks() {
     const savedTasks = localStorage.getItem('guestTasks');
     if (savedTasks) {
-        const tasks = JSON.parse(savedTasks);
-        yourTasks = tasks.filter(task => !task.completed);
-        completedTasks = tasks.filter(task => task.completed);
-        console.log('Guest tasks loaded:', { yourTasks, completedTasks });
+        try {
+            const tasks = JSON.parse(savedTasks);
+            yourTasks = tasks.filter(task => !task.completed && isValidTask(task));
+            completedTasks = tasks.filter(task => task.completed && isValidTask(task));
+            console.log('Guest tasks loaded:', { yourTasks, completedTasks });
+        } catch (error) {
+            console.error('Error parsing guest tasks from localStorage:', error);
+            yourTasks = [];
+            completedTasks = [];
+        }
     } else {
         console.log('No guest tasks found');
     }
