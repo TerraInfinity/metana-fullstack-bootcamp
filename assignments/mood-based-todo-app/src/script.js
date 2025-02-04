@@ -59,7 +59,6 @@ themeToggle.addEventListener('click', () => {
 
 // Initialize task arrays
 let suggestedTasks = []; // Instead of initializing with existing DOM elements
-let yourTasks = []; // Change from const to let
 
 console.log("Before update:", suggestedTasks.length);
 async function updateSuggestedTasks() {
@@ -801,7 +800,7 @@ if (!currentUser) {
     import('./auth.js').then(({ loadGuestTasks }) => {
         loadGuestTasks();
         
-        // Convert data tasks to DOM elements
+        // Convert data tasks to DOM elements directly modifying the arrays
         yourTasks = yourTasks.map(createTaskElement);
         completedTasks = completedTasks.map(createTaskElement);
 
