@@ -88,12 +88,10 @@ async function updateSuggestedTasks() {
         // Initialize actions for new tasks
         suggestedTasks.forEach(task => handleTaskActions(task));
         saveTasksToLocalStorage(); // Save after updating suggested tasks
-        // Success feedback
-        alert('Suggested tasks have been updated based on your current mood and weather!');
+        console.log('Suggested tasks have been updated based on your current mood and weather!');
     } catch (error) {
         console.error('Error updating suggestions:', error);
-        // Error feedback
-        alert('There was an error updating the suggested tasks. Please try again later.');
+        console.log('There was an error updating the suggested tasks. Please try again later.');
     }
 }
 console.log("After update:", suggestedTasks.length);
@@ -174,7 +172,7 @@ async function createTaskCard(task, isSuggested) {
         return taskCard;
     } catch (error) {
         console.error('Error in createTaskCard:', error.message);
-        alert('Error loading task component. Please refresh the page or try again later.');
+        console.log('Error loading task component. Please refresh the page or try again later.');
         // Return an empty div as a fallback
         return document.createElement('div');
     }
@@ -555,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } catch (error) {
             console.error(error.message);
-            alert('There was an error loading the task form. Please try again later.');
+            console.log('There was an error loading the task form. Please try again later.');
         }
     });
 
@@ -572,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
             - Humidity: ${currentWeather.humidity}%
             - Wind: ${currentWeather.wind} m/s`;
         
-        alert(weatherInfo);
+        console.log(weatherInfo);
         updateWeatherIcon(currentWeather);
         updateSuggestedTasks(); // Make sure this is called after updating currentWeather
     });
@@ -756,29 +754,24 @@ function saveTasksToLocalStorage() {
             // Save tasks for logged-in users
             saveCurrentUserData().then(() => {
                 console.log('Tasks saved to localStorage for user:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
-                // Success feedback
-                alert('Your tasks have been successfully saved!');
+                console.log('Your tasks have been successfully saved!');
             }).catch(error => {
                 console.error('Error in saving tasks:', error);
-                // Error feedback
-                alert('Sorry, there was an error saving your tasks. Please try again later.');
+                console.log('Sorry, there was an error saving your tasks. Please try again later.');
             });
         } else {
             // Save tasks for guests - this now delegates to auth.js
             saveGuestTasks().then(() => {
                 console.log('Guest tasks saved to localStorage');
-                // Success feedback
-                alert('Your tasks have been successfully saved!');
+                console.log('Your tasks have been successfully saved!');
             }).catch(error => {
                 console.error('Error in saving guest tasks:', error);
-                // Error feedback
-                alert('Sorry, there was an error saving your tasks. Please try again later.');
+                console.log('Sorry, there was an error saving your tasks. Please try again later.');
             });
         }
     }).catch(error => {
         console.error('Error in importing auth.js:', error);
-        // Error feedback for import failure
-        alert('An unexpected error occurred. Please refresh the page or try again later.');
+        console.log('An unexpected error occurred. Please refresh the page or try again later.');
     });
 }
 

@@ -54,7 +54,7 @@ export function handleAuth(formData, isRegister) {
 
     if (isRegister) {
         if (!email || !password) {
-            alert(`Please provide both email and password for registration. Email: ${email}, Password: ${password}`);
+            console.log(`Please provide both email and password for registration. Email: ${email}, Password: ${password}`);
             console.log('Form data:', { email, password }); // Log form data
             return;
         }
@@ -63,9 +63,9 @@ export function handleAuth(formData, isRegister) {
         if (success) {
             SessionService.setSession(user); // Log in user after registration
             updateAuthUI();
-            alert('Registration successful! You are now logged in.');
+            console.log('Registration successful! You are now logged in.');
         } else {
-            alert('User already exists. Please use a different email.');
+            console.log('User already exists. Please use a different email.');
         }
     } else {
         const user = UserService.validateUser(email, password);
