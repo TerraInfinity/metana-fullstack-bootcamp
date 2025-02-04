@@ -145,7 +145,11 @@ async function createTaskCard(task, isSuggested) {
         
         // Ensure task properties are assigned from the data object
         taskCard.querySelector('.task-title').textContent = task.title;
-        taskCard.querySelector('.task-description').textContent = task.description;
+        if (!isSuggested) {
+            taskCard.querySelector('.task-description').textContent = task.description;
+        } else {
+            taskCard.querySelector('.task-description').textContent = ''; // Empty for suggested tasks
+        }
         taskCard.querySelector('.due-date').textContent = `Due: ${task.dueDate}`;
 
         if (isSuggested) {
