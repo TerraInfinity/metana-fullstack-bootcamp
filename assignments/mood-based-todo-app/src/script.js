@@ -736,11 +736,16 @@ function loadUserData() {
         updateTaskCount();
         
         // Handle task actions for both yourTasks and completedTasks if they are in the DOM
-        [...yourTasks, ...completedTasks].forEach(task => {
-            if (task.nodeType === Node.ELEMENT_NODE && document.body.contains(task)) {
-                handleTaskActions(task);
-            }
-        });
+        try {
+            [...yourTasks, ...completedTasks].forEach(task => {
+                console.log('Task type:', typeof task, 'Task node type:', task.nodeType);
+                if (task.nodeType === Node.ELEMENT_NODE && document.body.contains(task)) {
+                    handleTaskActions(task);
+                }
+            });
+        } catch (error) {
+            console.error('Error in task handling:', error);
+        }
     });
 }
 
