@@ -160,16 +160,12 @@ async function createTaskCard(task, isSuggested) {
             const addButton = document.createElement('button');
             addButton.className = 'btn-action add';
             addButton.innerHTML = '➕';
-            addButton.addEventListener('click', () => {
-                // Add functionality already implemented
-            });
+
 
             const deleteButton = document.createElement('button');
             deleteButton.className = 'btn-action delete';
             deleteButton.innerHTML = '🗑️';
-            deleteButton.addEventListener('click', () => {
-                // Delete functionality
-            });
+
 
             // Append only add and delete buttons
             taskCard.querySelector('.task-actions').innerHTML = '';
@@ -185,23 +181,17 @@ async function createTaskCard(task, isSuggested) {
             const editButton = document.createElement('button');
             editButton.className = 'btn-action edit';
             editButton.innerHTML = '✏️';
-            editButton.addEventListener('click', () => {
-                // Implement edit functionality here
-            });
+
 
             const completeButton = document.createElement('button');
             completeButton.className = 'btn-action complete';
             completeButton.innerHTML = '✅';
-            completeButton.addEventListener('click', () => {
-                // Implement complete functionality here
-            });
+
 
             const deleteButton = document.createElement('button');
             deleteButton.className = 'btn-action delete';
             deleteButton.innerHTML = '🗑️';
-            deleteButton.addEventListener('click', () => {
-                // Delete functionality
-            });
+
 
             taskActions.append(editButton, completeButton, deleteButton);
             taskCard.appendChild(taskActions);
