@@ -81,10 +81,7 @@ async function updateSuggestedTasks() {
             condition
         );
         
-        suggestedTasks = await MoodTaskService.renderSuggestedTasks(
-            filteredTasks,
-            '#suggested-tasks-section .task-cards'
-        );
+        suggestedTasks = filteredTasks; // Store data objects, not DOM elements
         
         // Initialize actions for new tasks
         suggestedTasks.forEach(task => handleTaskActions(task));
@@ -130,7 +127,18 @@ async function createTaskCard(task, isSuggested) {
             addButton.className = 'btn-action add';
             addButton.innerHTML = '➕';
             addButton.addEventListener('click', () => {
-                // Add functionality already implemented
+                const taskData = {
+                    title: taskCard.querySelector('.task-title').textContent,
+                    description: taskCard.querySelector('.task-description').textContent,
+                    dueDate: taskCard.querySelector('.due-date').textContent.split(': ')[1],
+                    completed: false
+                };
+                
+                yourTasks.push(taskData);
+                suggestedTasks = suggestedTasks.filter(t => t.title !== taskData.title);
+                
+                const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
+                renderTasks(suggestedTasks, suggestedTasksSection, true); // Force suggested mode
             });
 
             const deleteButton = document.createElement('button');
@@ -150,22 +158,14 @@ async function createTaskCard(task, isSuggested) {
             taskActions.className = 'task-actions';
             taskActions.innerHTML = ''; // Clear any existing buttons
 
-            // Create action buttons for non-suggested tasks
-            const editButton = document.createElement('button');
-            editButton.className = 'btn-action edit';
-            editButton.innerHTML = '✏️';
-            editButton.addEventListener('click', () => {
-                // Implement edit functionality here
+            // Create all three buttons
+            const editButton = createButton('✏️', 'edit', () => { /* edit logic */ });
+            const completeButton = createButton('✅', 'complete', () => { /* complete logic */ });
+            const deleteButton = createButton('🗑️', 'delete', () => { 
+                // Implement delete functionality here
             });
 
-            const completeButton = document.createElement('button');
-            completeButton.className = 'btn-action complete';
-            completeButton.innerHTML = '✅';
-            completeButton.addEventListener('click', () => {
-                // Implement complete functionality here
-            });
-
-            taskActions.append(editButton, completeButton);
+            taskActions.append(editButton, completeButton, deleteButton);
             taskCard.appendChild(taskActions);
         }
 
@@ -193,7 +193,12 @@ function handleTaskActions(taskCard) {
             // Remove the task from the DOM before modifying the array
             taskCard.remove();
             
-            suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
+            // Replace DOM-based filtering with data-based filtering
+            suggestedTasks = suggestedTasks.filter(t => t.title !== taskCard.querySelector('.task-title').textContent);
+            
+            // Re-render with proper isSuggested flag
+            const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
+            renderTasks(suggestedTasks, suggestedTasksSection, true);
 
             try {
                 // Add to your tasks
@@ -207,9 +212,7 @@ function handleTaskActions(taskCard) {
                 saveTasksToLocalStorage(); // Save after adding a task
 
                 // Update UI
-                const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-                renderTasks(suggestedTasks, suggestedTasksSection);
                 renderTasks(yourTasks, yourTasksSection);
 
                 // Switch to "Your Tasks" if needed
