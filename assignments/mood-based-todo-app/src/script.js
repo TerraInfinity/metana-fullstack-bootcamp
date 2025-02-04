@@ -14,6 +14,10 @@ import {
     saveGuestTasks
 } from './auth.js';
 
+// Log types of yourTasks and completedTasks
+console.log('yourTasks type:', typeof yourTasks);
+console.log('completedTasks type:', typeof completedTasks);
+
 // Move the generateRandomWeather function to the top
 function generateRandomWeather() {
     const conditions = ['clear', 'clouds', 'rain', 'snow', 'thunderstorm', 'mist'];
@@ -120,12 +124,27 @@ async function createTaskCard(task, isSuggested) {
         // Add suggested task buttons
         const addButton = document.createElement('button');
         addButton.className = 'btn-action add';
-        addButton.innerHTML = '➕'; // or whatever icon you use for adding
+        addButton.innerHTML = '➕';
         addButton.addEventListener('click', () => {
-            // Implement add functionality here
-            // This could involve adding the task to yourTasks
+            // Add functionality already implemented
         });
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn-action delete';
+        deleteButton.innerHTML = '🗑️';
+        deleteButton.addEventListener('click', () => {
+            // Delete functionality
+            suggestedTasks = suggestedTasks.filter(t => t !== taskCard);
+            taskCard.remove();
+            const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
+            renderTasks(suggestedTasks, suggestedTasksSection);
+            updateTaskCount();
+        });
+
+        // Append only add and delete buttons
+        taskCard.querySelector('.task-actions').innerHTML = '';
         taskCard.querySelector('.task-actions').appendChild(addButton);
+        taskCard.querySelector('.task-actions').appendChild(deleteButton);
     } else {
         // Add regular task buttons
         const taskActions = taskCard.querySelector('.task-actions') || document.createElement('div');
@@ -149,15 +168,7 @@ async function createTaskCard(task, isSuggested) {
             // Here, you would move the task to completedTasks or toggle its state
         });
 
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'btn-action delete';
-        deleteButton.innerHTML = '🗑️';
-        deleteButton.addEventListener('click', () => {
-            // Implement delete functionality here
-            // Here, you would remove the task from yourTasks or completedTasks
-        });
-
-        taskActions.append(editButton, completeButton, deleteButton);
+        taskActions.append(editButton, completeButton);
         taskCard.appendChild(taskActions);
     }
 
@@ -176,61 +187,17 @@ function handleTaskActions(taskCard) {
     // Add Button (for suggested tasks)
     if (addButton && isSuggested) {
         addButton.addEventListener('click', async () => {
+            // Remove the task from the DOM before modifying the array
+            taskCard.remove();
+            
             suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
 
             try {
-                // Fetch task component HTML
-                const componentResponse = await fetch('src/components/task-component.html');
-                if (!componentResponse.ok) throw new Error('Failed to load task component');
-                const componentHtml = await componentResponse.text();
-
-                // Create new task card from template
-                const template = document.createElement('template');
-                template.innerHTML = componentHtml;
-                const newTaskCard = template.content.querySelector('.task-card');
-
-                // Remove suggested class and buttons
-                newTaskCard.classList.remove('suggested');
-                const taskActions = newTaskCard.querySelector('.task-actions');
-                taskActions.innerHTML = ''; // Clear existing buttons
-
-                // Create a new task actions div
-                const newTaskActions = document.createElement('div');
-                newTaskActions.className = 'task-actions';
-
-                // Add regular task buttons
-                const editButton = document.createElement('button');
-                editButton.className = 'btn-action edit';
-                editButton.innerHTML = '✏️';
-
-                const completeButton = document.createElement('button');
-                completeButton.className = 'btn-action complete';
-                completeButton.innerHTML = '✅';
-
-                const deleteButton = document.createElement('button');
-                deleteButton.className = 'btn-action delete';
-                deleteButton.innerHTML = '🗑️';
-
-                // Append buttons to the new task actions div
-                newTaskActions.append(editButton, completeButton, deleteButton);
-                // Append the new task actions div to the new task card
-                newTaskCard.appendChild(newTaskActions);
-
-                // Extract details from suggested task
-                const title = taskCard.querySelector('.task-title').textContent;
-                const description = taskCard.querySelector('.task-description').textContent;
-                const dueDate = taskCard.querySelector('.due-date').textContent;
-
-                // Populate new task card
-                newTaskCard.querySelector('.task-title').textContent = title;
-                newTaskCard.querySelector('.task-description').textContent = description;
-                newTaskCard.querySelector('.due-date').textContent = dueDate;
-
                 // Add to your tasks
                 yourTasks.push({
-                    title: title,
-                    description: description,
-                    dueDate: dueDate.split(': ')[1],
+                    title: taskCard.querySelector('.task-title').textContent,
+                    description: taskCard.querySelector('.task-description').textContent,
+                    dueDate: taskCard.querySelector('.due-date').textContent.split(': ')[1],
                     completed: false
                 });
                 console.log('Task added to yourTasks:', yourTasks);
@@ -251,7 +218,6 @@ function handleTaskActions(taskCard) {
                 }
 
                 // Initialize task actions and update count
-                handleTaskActions(newTaskCard);
                 updateTaskCount();
             } catch (error) {
                 console.error('Error adding suggested task:', error);
