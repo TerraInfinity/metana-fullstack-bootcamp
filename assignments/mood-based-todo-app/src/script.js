@@ -196,7 +196,14 @@ async function createTaskCard(task, isSuggested) {
                 // Implement complete functionality here
             });
 
-            taskActions.append(editButton, completeButton);
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn-action delete';
+            deleteButton.innerHTML = '🗑️';
+            deleteButton.addEventListener('click', () => {
+                // Delete functionality
+            });
+
+            taskActions.append(editButton, completeButton, deleteButton);
             taskCard.appendChild(taskActions);
         }
 
