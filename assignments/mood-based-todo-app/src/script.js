@@ -162,15 +162,7 @@ async function createTaskCard(task, isSuggested) {
                 // Implement complete functionality here
             });
 
-            // New delete button for non-suggested tasks
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'btn-action delete';
-            deleteButton.innerHTML = '🗑️';
-            deleteButton.addEventListener('click', () => {
-                // Delete functionality
-            });
-
-            taskActions.append(editButton, completeButton, deleteButton); // Append all buttons
+            taskActions.append(editButton, completeButton);
             taskCard.appendChild(taskActions);
         }
 
@@ -218,6 +210,7 @@ function handleTaskActions(taskCard) {
 
                 // Update UI
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                renderTasks(suggestedTasks, suggestedTasksSection);
                 renderTasks(yourTasks, yourTasksSection);
 
                 // Switch to "Your Tasks" if needed
