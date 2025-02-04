@@ -800,9 +800,15 @@ if (!currentUser) {
     import('./auth.js').then(({ loadGuestTasks }) => {
         loadGuestTasks();
         
-        // Convert data tasks to DOM elements directly modifying the arrays
-        yourTasks = yourTasks.map(createTaskElement);
-        completedTasks = completedTasks.map(createTaskElement);
+        // Instead of direct reassignment, create new arrays:
+        const newYourTasks = yourTasks.map(createTaskElement);
+        const newCompletedTasks = completedTasks.map(createTaskElement);
+
+        // Clear current arrays and push new elements
+        yourTasks.length = 0; // Clear existing yourTasks
+        completedTasks.length = 0; // Clear existing completedTasks
+        yourTasks.push(...newYourTasks); // Add new elements to yourTasks
+        completedTasks.push(...newCompletedTasks); // Add new elements to completedTasks
 
         // Update UI here
         const yourTasksSection = document.querySelector('.tasks-section .task-cards');
