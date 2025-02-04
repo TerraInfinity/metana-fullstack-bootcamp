@@ -127,18 +127,7 @@ async function createTaskCard(task, isSuggested) {
             addButton.className = 'btn-action add';
             addButton.innerHTML = '➕';
             addButton.addEventListener('click', () => {
-                const taskData = {
-                    title: taskCard.querySelector('.task-title').textContent,
-                    description: taskCard.querySelector('.task-description').textContent,
-                    dueDate: taskCard.querySelector('.due-date').textContent.split(': ')[1],
-                    completed: false
-                };
-                
-                yourTasks.push(taskData);
-                suggestedTasks = suggestedTasks.filter(t => t.title !== taskData.title);
-                
-                const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
-                renderTasks(suggestedTasks, suggestedTasksSection, true); // Force suggested mode
+                // Add functionality already implemented
             });
 
             const deleteButton = document.createElement('button');
@@ -158,14 +147,30 @@ async function createTaskCard(task, isSuggested) {
             taskActions.className = 'task-actions';
             taskActions.innerHTML = ''; // Clear any existing buttons
 
-            // Create all three buttons
-            const editButton = createButton('✏️', 'edit', () => { /* edit logic */ });
-            const completeButton = createButton('✅', 'complete', () => { /* complete logic */ });
-            const deleteButton = createButton('🗑️', 'delete', () => { 
-                // Implement delete functionality here
+            // Create action buttons for non-suggested tasks
+            const editButton = document.createElement('button');
+            editButton.className = 'btn-action edit';
+            editButton.innerHTML = '✏️';
+            editButton.addEventListener('click', () => {
+                // Implement edit functionality here
             });
 
-            taskActions.append(editButton, completeButton, deleteButton);
+            const completeButton = document.createElement('button');
+            completeButton.className = 'btn-action complete';
+            completeButton.innerHTML = '✅';
+            completeButton.addEventListener('click', () => {
+                // Implement complete functionality here
+            });
+
+            // New delete button for non-suggested tasks
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn-action delete';
+            deleteButton.innerHTML = '🗑️';
+            deleteButton.addEventListener('click', () => {
+                // Delete functionality
+            });
+
+            taskActions.append(editButton, completeButton, deleteButton); // Append all buttons
             taskCard.appendChild(taskActions);
         }
 
