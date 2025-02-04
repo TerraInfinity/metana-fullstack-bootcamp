@@ -78,29 +78,29 @@ export class MoodTaskService {
         const componentHtml = await componentResponse.text();
 
         limitedTasks.forEach(task => {
-          const template = document.createElement('template');
-          template.innerHTML = componentHtml;
-          const newTask = template.content.querySelector('.task-card').cloneNode(true);
+          //const template = document.createElement('template');
+          //template.innerHTML = componentHtml;
+          //const newTask = template.content.querySelector('.task-card').cloneNode(true);
           
           // Clear existing buttons
-          const taskActions = newTask.querySelector('.task-actions');
-          taskActions.innerHTML = '';
+          //const taskActions = newTask.querySelector('.task-actions');
+          //taskActions.innerHTML = '';
 
           // Add buttons
-          const addButton = document.createElement('button');
+          //const addButton = document.createElement('button');
           //addButton.className = 'btn-action add';
           //addButton.innerHTML = '➕';
 
-          const deleteButton = document.createElement('button');
+          //const deleteButton = document.createElement('button');
           //deleteButton.className = 'btn-action delete';
           //deleteButton.innerHTML = '🗑️';
 
-          taskActions.append(addButton, deleteButton);
+         // taskActions.append(addButton, deleteButton);
 
           newTask.querySelector('.task-title').textContent = task.title;
           newTask.querySelector('.task-description').textContent = `Duration: ${task.duration}`;
-          newTask.querySelector('.due-date').textContent = `Due: ${new Date().toLocaleTimeString()}`;
-          newTask.classList.add('suggested');
+          //newTask.querySelector('.due-date').textContent = `Due: ${new Date().toLocaleTimeString()}`;
+          //newTask.classList.add('suggested');
           
           container.appendChild(newTask);
         });
