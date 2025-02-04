@@ -84,7 +84,32 @@ async function updateSuggestedTasks() {
         suggestedTasks = filteredTasks; // Store data objects, not DOM elements
         
         // Initialize actions for new tasks
-        suggestedTasks.forEach(task => handleTaskActions(task));
+        const taskCards = await Promise.all(suggestedTasks.map(async (task) => {
+            const taskCard = await createTaskCard(task, true); // Create DOM elements
+            return taskCard;
+        }));
+
+        const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
+        suggestedTasksSection.innerHTML = ''; // Clear existing tasks
+        taskCards.forEach(taskCard => suggestedTasksSection.appendChild(taskCard)); // Append new task cards
+
+        // Ensure each task card is processed correctly
+        taskCards.forEach(taskCard => {
+            console.log('Processing task card:', taskCard);
+            handleTaskActions(taskCard); // Pass the DOM element to handleTaskActions
+        });
+
+        // Enhanced logging for suggested tasks
+        suggestedTasks.forEach(task => {
+            console.log('Task being processed:', task);
+            console.log('Task type:', typeof task);
+            if (task && typeof task === 'object') {
+                handleTaskActions(task);
+            } else {
+                console.error('Invalid task encountered:', task);
+            }
+        });
+
         saveTasksToLocalStorage(); // Save after updating suggested tasks
         console.log('Suggested tasks have been updated based on your current mood and weather!');
     } catch (error) {
@@ -167,7 +192,7 @@ async function createTaskCard(task, isSuggested) {
         }
 
         handleTaskActions(taskCard); // Attach actions to the task card
-        return taskCard;
+        return taskCard; // Ensure this returns a DOM element
     } catch (error) {
         console.error('Error in createTaskCard:', error.message);
         console.log('Error loading task component. Please refresh the page or try again later.');
@@ -178,6 +203,11 @@ async function createTaskCard(task, isSuggested) {
 
 // Function to handle task actions
 function handleTaskActions(taskCard) {
+    // Ensure taskCard is defined and is a valid DOM node
+    if (!taskCard || !(taskCard instanceof Node)) {
+        console.error('Invalid taskCard:', taskCard);
+        return; // Exit if taskCard is not a valid DOM element
+    }
     const isSuggested = taskCard.classList.contains('suggested');
     const addButton = taskCard.querySelector('.btn-action.add');
     const deleteButton = taskCard.querySelector('.btn-action.delete');
@@ -210,7 +240,7 @@ function handleTaskActions(taskCard) {
 
                 // Update UI
                 const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-                renderTasks(suggestedTasks, suggestedTasksSection);
+                renderTasks(suggestedTasks, yourTasksSection);
                 renderTasks(yourTasks, yourTasksSection);
 
                 // Switch to "Your Tasks" if needed
