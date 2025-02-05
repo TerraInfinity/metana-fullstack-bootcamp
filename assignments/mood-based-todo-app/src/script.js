@@ -432,7 +432,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (currentUser) {
         loadUserData();
-        switchToYourTasksView(); 
     }
     
     // Log initial weather for debugging
@@ -866,20 +865,33 @@ function createTaskElement(task) {
     return taskElement;
 }
 
-function switchToYourTasksView() {
+export function switchToYourTasksView() {
+    console.log('Switching to Your Tasks view');
     const showCompletedButton = document.getElementById('show-completed');
-    if (!showCompletedButton) return;
+    if (!showCompletedButton) 
+    {
+        console.log('Show completed button not found');
+        return;
+    }
 
     const isShowingCompleted = showCompletedButton.textContent.includes('Hide');
     if (isShowingCompleted) {
+        console.log('Showing completed tasks');
         const yourTasksSection = document.querySelector('.tasks-section .task-cards');
         if (yourTasksSection) {
+            console.log('Your tasks section found');
             renderTasks(yourTasks, yourTasksSection);
             const header = document.querySelector('.tasks-section .section-header h2');
             if (header) {
+                console.log('Header updated');
                 header.textContent = 'Your Tasks';
             }
+            console.log('Switching to show completed tasks');
             showCompletedButton.textContent = 'Show Completed';
+        } else {
+            console.log('Your tasks section not found');
         }
+    } else {
+        console.log('Not switching to completed tasks');
     }
 }
