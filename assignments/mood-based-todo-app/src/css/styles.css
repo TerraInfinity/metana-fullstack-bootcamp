@@ -1,17 +1,19 @@
-/* Add all the CSS from the previous styles.css here */
-/* The CSS remains exactly the same as provided earlier */
-/* Just make sure it's in the src folder */
+/* styles.css  */
 
 body {
     font-family: 'Patrick Hand', cursive;
     margin: 0;
-    padding: 20px;
+    padding: 20px; /* Consider reducing padding on smaller screens */
     background-image: url('../../public/images/spice%20bimbo%20loop.gif'); /* Path updated */
     background-size: cover; /* Ensures the image covers the entire viewport */
     background-position: center;
     background-attachment: fixed; /* Background stays fixed while scrolling */
     position: relative;
     color: #2c3e50;
+    font-size: 16px; /* Good base font size for mobile */
+    line-height: 1.5;
+
+
 }
 
 body::before {
@@ -110,6 +112,7 @@ h1, h2, h3, p, span, a, button {
 }
 
 /* Main Container */
+/* Grid and Responsive Layout */
 .container {
     max-width: 1200px;
     margin: 2rem auto;
@@ -121,7 +124,7 @@ h1, h2, h3, p, span, a, button {
 /* Responsive Layout */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 1fr; /* Mobile-first single column */
+    grid-template-columns: 1fr; /* Mobile-first: single column */
     gap: 2rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -134,6 +137,14 @@ h1, h2, h3, p, span, a, button {
     gap: 1rem;
 }
 
+/* Media Queries (Use min-width for larger screens) */
+@media (min-width: 480px) { /* Example breakpoint, adjust as needed */
+    .suggested-tasks .task-cards {
+        grid-template-columns: repeat(2, 1fr); /* Two columns on larger phones/tablets */
+    }
+}
+
+/*media queries for desktop */
 @media (min-width: 768px) {
     /* Desktop styles */
     .dashboard-grid {
@@ -148,6 +159,10 @@ h1, h2, h3, p, span, a, button {
     
     .suggested-tasks .task-cards {
         grid-template-columns: repeat(2, 1fr); /* Two columns for desktop */
+    }
+
+    body {
+        font-size: 18px; /* Increase font size for desktop */
     }
 }
 
@@ -213,7 +228,6 @@ h1, h2, h3, p, span, a, button {
     background-color: #39e600;
     color: #fff;
     border: none;
-    padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
 }
@@ -234,6 +248,7 @@ h1, h2, h3, p, span, a, button {
     margin-bottom: 1.5rem;
 }
 
+/* Form Improvements (Touch targets, keyboard types) */
 .form-group input[type="text"],
 .form-group input[type="date"],
 .form-group textarea {
@@ -259,7 +274,8 @@ h1, h2, h3, p, span, a, button {
 
 .form-group input[type="number"] {
     width: 100%;
-    padding: 0.75rem;
+    padding: 1rem; /* Increase padding for touch targets */
+    font-size: 1rem; /* Adjust font size for readability */
     border: 1px solid var(--border-color);
     border-radius: 4px;
     background-color: var(--bg-color);
@@ -267,10 +283,14 @@ h1, h2, h3, p, span, a, button {
     font-family: inherit;
 }
 
+.btn-primary, .btn-secondary, .btn-tertiary, .btn-create {
+    padding: 1rem 1.5rem; /* Increase padding on buttons */
+    font-size: 1rem; /* Adjust font size as needed */
+}
+
 .btn-primary {
     background-color: var(--accent-color);
     color: white;
-    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -281,9 +301,7 @@ h1, h2, h3, p, span, a, button {
     background: #2196F3;
     color: white;
     border: none;
-    padding: 1rem 2rem;
     border-radius: 25px;
-    font-size: 1.1rem;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     display: flex;
@@ -297,9 +315,7 @@ h1, h2, h3, p, span, a, button {
     background: #dda0dd;
     color: white;
     border: none;
-    padding: 0.3rem 0.6rem; /* Further reduced padding */
     border-radius: 10px; /* Even smaller rounded corners */
-    font-size: 0.8rem; /* Smaller text size */
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Reduced shadow for less visual weight */
     display: inline-block; /* Changed from flex to inline-block for simplicity */
