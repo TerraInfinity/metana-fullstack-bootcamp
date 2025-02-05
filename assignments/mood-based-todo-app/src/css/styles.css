@@ -3,7 +3,6 @@
 body {
     font-family: 'Patrick Hand', cursive;
     margin: 0;
-    padding: 20px; /* Consider reducing padding on smaller screens */
     background-image: url('../../public/images/spice%20bimbo%20loop.gif'); /* Path updated */
     background-size: cover; /* Ensures the image covers the entire viewport */
     background-position: center;
@@ -15,6 +14,11 @@ body {
     overflow-x: hidden; /* Prevents horizontal scrolling if not needed */
 
 
+}
+
+img, video {
+    max-width: 100%;
+    height: auto;
 }
 
 body::before {
@@ -163,7 +167,13 @@ h1, h2, h3, p, span, a, button {
     }
 
     body {
-        font-size: 18px; /* Increase font size for desktop */
+        font-size: 1.125rem; /* Increase font size for desktop (18px equivalent) */
+    }
+}
+
+@media (max-width: 480px) { /* Adjust for mobile devices */
+    h1 {
+        font-size: 0.9rem; /* Adjust the font size for smaller screens */
     }
 }
 
@@ -171,9 +181,6 @@ h1, h2, h3, p, span, a, button {
 @media (min-width: 480px) and (max-width: 768px) {
     .suggested-tasks .task-cards {
         grid-template-columns: repeat(2, 1fr); /* Two columns on tablet */
-    }
-    body {
-        padding: 10px; /* Reduce padding on smaller screens */
     }
 }
 
