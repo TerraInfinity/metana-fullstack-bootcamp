@@ -125,9 +125,15 @@ console.log("After update:", suggestedTasks.length);
 // Function to render tasks
 async function renderTasks(tasks, container, isSuggested = false) {
     container.innerHTML = ''; // Clear the container
-    for (const task of tasks) {
-        const taskCard = await createTaskCard(task, isSuggested);
-        container.appendChild(taskCard);
+    if (tasks && tasks.length > 0) {
+        console.log('Rendering tasks:', tasks);
+        for (const task of tasks) {
+            console.log('Rendering task:', task);
+            const taskCard = await createTaskCard(task, isSuggested);
+            container.appendChild(taskCard);
+        }
+    } else {
+        console.log('No tasks to render');
     }
 }
 
@@ -431,7 +437,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeAuth();
     
     if (currentUser) {
-        loadUserData();
+        loadUserData().then(() => {
+            // After user data is loaded, render your tasks
+            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+            const sectionHeader = document.querySelector('.tasks-section .section-header h2');
+            const showCompletedButton = document.getElementById('show-completed');
+
+            if (yourTasksSection && sectionHeader && showCompletedButton) {
+                renderTasks(yourTasks, yourTasksSection, false);
+                sectionHeader.textContent = 'Your Tasks';
+                showCompletedButton.textContent = 'Show Completed';
+            }
+        });
     }
     
     // Log initial weather for debugging
