@@ -440,18 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeAuth();
     
     if (currentUser) {
-        loadUserData().then(() => {
-            // After user data is loaded, render your tasks
-            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-            const sectionHeader = document.querySelector('.tasks-section .section-header h2');
-            const showCompletedButton = document.getElementById('show-completed');
-
-            if (yourTasksSection && sectionHeader && showCompletedButton) {
-                renderTasks(yourTasks, yourTasksSection, false);
-                sectionHeader.textContent = 'Your Tasks';
-                showCompletedButton.textContent = 'Show Completed';
-            }
-        });
+        loadUserData();
     }
     
     // Log initial weather for debugging
@@ -915,3 +904,21 @@ function switchTaskView() {
         console.log('Your tasks section not found');
     }
 }
+
+function populateTasks() {
+    let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
+    
+    const taskContainer = document.getElementById("taskContainer"); 
+    taskContainer.innerHTML = ""; // Clear old tasks
+
+    yourTasks.forEach(task => {
+        let taskElement = document.createElement("div");
+        taskElement.textContent = task.name; // Adjust based on task object structure
+        taskContainer.appendChild(taskElement);
+    });
+}
+
+// Ensure tasks are loaded on page load
+document.addEventListener("DOMContentLoaded", populateTasks);
+
+window.populateTasks = populateTasks;
