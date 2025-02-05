@@ -79,6 +79,8 @@ export async function handleAuth(formData, isRegister) {
             
             // Wait for tasks to load before populating
             if (Array.isArray(yourTasks) && Array.isArray(completedTasks)) {
+                console.log('Populating your tasks' + yourTasks);
+                console.log('Populating completed tasks' + completedTasks);
                 populateTasks(yourTasks);
                 populateTasks(completedTasks);
             } else {

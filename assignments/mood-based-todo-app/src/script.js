@@ -923,5 +923,3 @@ function populateTasks(tasks) {
 // Ensure the function is accessible globally
 window.populateTasks = populateTasks;
 
-// Run only when DOM is ready
-document.addEventListener("DOMContentLoaded", populateTasks);
