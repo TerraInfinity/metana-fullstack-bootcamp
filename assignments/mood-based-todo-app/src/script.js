@@ -772,6 +772,7 @@ async function loadUserData() {
         const yourTasksSection = document.querySelector('.tasks-section .task-cards');
         renderTasks(yourTasks, yourTasksSection); // Render your tasks
         
+        
         // Ensure completed tasks are also rendered if the user wants to see them
         const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
         if (isShowingCompleted) {
