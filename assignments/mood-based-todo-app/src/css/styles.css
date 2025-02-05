@@ -168,9 +168,12 @@ h1, h2, h3, p, span, a, button {
 }
 
 /* Optional: Adjust suggested tasks cards for medium screens */
-@media (min-width: 480px) and (max-width: 767px) {
+@media (min-width: 480px) and (max-width: 768px) {
     .suggested-tasks .task-cards {
         grid-template-columns: repeat(2, 1fr); /* Two columns on tablet */
+    }
+    body {
+        padding: 10px; /* Reduce padding on smaller screens */
     }
 }
 
