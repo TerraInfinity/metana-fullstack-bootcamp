@@ -768,8 +768,15 @@ async function loadUserData() {
         await loadUserTasks(currentUser); // Await if loadUserTasks is async
         console.log(`Loaded tasks for ${currentUser.email}:`, { yourTasks, completedTasks }); // Log the loaded tasks
         
-
-        refreshYourTaskView();
+        // After loading tasks from localStorage, update the UI
+        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+        renderTasks(yourTasks, yourTasksSection); // Render your tasks
+        
+        // Ensure completed tasks are also rendered if the user wants to see them
+        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+        if (isShowingCompleted) {
+            renderTasks(completedTasks, yourTasksSection); // Render completed tasks if needed
+        }
     } else {
         console.log("No user logged in to load tasks for");
     }
