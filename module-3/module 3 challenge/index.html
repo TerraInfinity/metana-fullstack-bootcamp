@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Number Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        input {
+            padding: 0.5rem;
+            margin: 1rem 0;
+            width: 150px;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin: 1rem 0;
+            font-weight: bold;
+            min-height: 1.5rem;
+        }
+
+        .success { color: #28a745; }
+        .warning { color: #ffc107; }
+        .error { color: #dc3545; }
+
+        #playAgain {
+            display: none;
+            background-color: #007bff;
+        }
+
+        #playAgain:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔮 Magic Number Game</h1>
+        <p>Guess the number between 1 and 10<br>You have 3 attempts!</p>
+        <input type="number" id="guessInput" min="1" max="10" placeholder="Enter guess">
+        <div>
+            <button onclick="checkGuess()">Submit</button>
+            <button id="playAgain" onclick="restartGame()">Play Again</button>
+        </div>
+        <div id="message"></div>
+        <div id="attemptsLeft">Attempts remaining: 3</div>
+    </div>
+
+    <script>
+        let magicNumber = Math.floor(Math.random() * 10) + 1;
+        let attemptsLeft = 3;
+
+        function checkGuess() {
+            const guessInput = document.getElementById('guessInput');
+            const guess = parseInt(guessInput.value);
+            const messageDiv = document.getElementById('message');
+            const attemptsDiv = document.getElementById('attemptsLeft');
+
+            // Validate input
+            if (isNaN(guess) || guess < 1 || guess > 10) {
+                messageDiv.innerHTML = 'Please enter a number between 1 and 10!';
+                messageDiv.className = 'error';
+                return;
+            }
+
+            attemptsLeft--;
+            
+            if (guess === magicNumber) {
+                const usedAttempts = 3 - attemptsLeft;
+                let message;
+                
+                switch(usedAttempts) {
+                    case 1:
+                        message = `🎯 Bullseye! Got it in 1 try!`;
+                        break;
+                    case 2:
+                        message = `👏 Nice! Solved in 2 attempts!`;
+                        break;
+                    case 3:
+                        message = `😅 Close call! Nailed it on attempt 3!`;
+                        break;
+                }
+                
+                messageDiv.innerHTML = `${message} The magic number was ${magicNumber}!`;
+                messageDiv.className = 'success';
+                endGame();
+                return;
+            }
+
+            // Give hint
+            messageDiv.innerHTML = `${guess} is too ${guess > magicNumber ? 'high' : 'low'}!`;
+            messageDiv.className = 'warning';
+            attemptsDiv.innerHTML = `Attempts remaining: ${attemptsLeft}`;
+
+            // Check for game over
+            if (attemptsLeft === 0) {
+                messageDiv.innerHTML = `💀 Game Over! The magic number was ${magicNumber}.`;
+                messageDiv.className = 'error';
+                endGame();
+            }
+
+            // Clear input field
+            guessInput.value = '';
+        }
+
+        function endGame() {
+            document.getElementById('guessInput').disabled = true;
+            document.querySelector('button').disabled = true;
+            document.getElementById('playAgain').style.display = 'inline-block';
+            document.getElementById('attemptsLeft').innerHTML = '';
+        }
+
+        function restartGame() {
+            magicNumber = Math.floor(Math.random() * 10) + 1;
+            attemptsLeft = 3;
+            
+            document.getElementById('guessInput').disabled = false;
+            document.querySelector('button').disabled = false;
+            document.getElementById('playAgain').style.display = 'none';
+            document.getElementById('message').innerHTML = '';
+            document.getElementById('attemptsLeft').innerHTML = 'Attempts remaining: 3';
+            document.getElementById('guessInput').value = '';
+        }
+    </script>
+</body>
+</html>
