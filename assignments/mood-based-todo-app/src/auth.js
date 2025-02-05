@@ -76,16 +76,20 @@ export function handleAuth(formData, isRegister) {
             updateAuthUI();
             loadUserTasks(user); // Ensure user is not null here
             console.log('Login successful');
-            // Ensure the function exists before calling it
-            if (window.populateTasks) {
-                window.populateTasks(); 
-            } else {
-                console.error('populateTasks function not found');
-            }
+
+            // Ensure tasks load after the DOM is ready
+            document.addEventListener("DOMContentLoaded", () => {
+                if (window.populateTasks) {
+                    window.populateTasks();
+                } else {
+                    console.error('populateTasks function not found');
+                }
+            });
 
         } else {
             alert('Invalid credentials');
         }
+
     }
 }
 
