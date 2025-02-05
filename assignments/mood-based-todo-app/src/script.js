@@ -269,10 +269,9 @@ function handleTaskActions(taskCard) {
         if (!deleteButton.dataset.listenerAttached) {
             deleteButton.addEventListener('click', () => {
                 if (isSuggested) {
-                    // Remove task from suggestedTasks
+                    // Remove task from suggestedTasks without refreshing the list
                     suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
-                    const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
-                    renderTasks(suggestedTasks, suggestedTasksSection);
+                    taskCard.remove(); // Just remove the task card from the DOM
                 } else {
                     const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
                     // Update data structure before removing from DOM
