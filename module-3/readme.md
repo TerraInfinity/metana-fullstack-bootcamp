@@ -1,0 +1,1 @@
+https://magic-number-game.vercel.app/
