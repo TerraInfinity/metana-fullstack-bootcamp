@@ -924,6 +924,7 @@ function populateTasks(tasks) {
     if (yourTasksContainer) {
         console.log('Rendering your tasks');
         renderTasks(yourTasks, yourTasksContainer);
+        updateTaskCount();
     } else {
         console.error('Task containers not found');
     }
