@@ -905,36 +905,12 @@ function switchTaskView() {
     }
 }
 
-function populateTasks() {
+function populateTasks(tasks) {
     console.log('Populating tasks');
-    const taskContainer = document.querySelector('.tasks-section .task-cards');
-    
-    if (!taskContainer) {
-        console.error("Task container not found. Deferring execution.");
-        return; // Prevents script from breaking
-    }
 
-    try {
-        let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
-        console.log("yourTasks:", yourTasks);
-        taskContainer.innerHTML = ""; // Clear old tasks
-        
-        if (yourTasks.length === 0) {
-            console.warn("No tasks found in localStorage.");
-        }
+    //create all the task cards 
+    tasks.forEach(task => createTaskCard(task, false));
 
-        yourTasks.forEach(task => {
-            if (task && task.name) { // Check if task has a name property
-                let taskElement = document.createElement("div");
-                taskElement.textContent = task.name; // Adjust based on task object structure
-                taskContainer.appendChild(taskElement);
-            } else {
-                console.error("Invalid task structure:", task);
-            }
-        });
-    } catch (error) {
-        console.error("Error populating tasks:", error);
-    }
 }
 
 // Ensure the function is accessible globally

@@ -77,29 +77,9 @@ export function handleAuth(formData, isRegister) {
             loadUserTasks(user); // Ensure user is not null here
             console.log('Login successful');
 
-            // Ensure tasks are saved to localStorage before calling populateTasks
-            if (currentUser) {
-                console.log(`Saving tasks for ${currentUser.email} to localStorage...`);
-                localStorage.setItem('yourTasks', JSON.stringify(yourTasks));
-                localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
-            }
-
-            // Now call populateTasks
-            setTimeout(() => {
-                console.log("Checking for task container after delay...");
-                const taskContainer = document.getElementById("taskContainer");
-
-                if (taskContainer) {
-                    console.log("Task container found. Running populateTasks...");
-                    if (window.populateTasks) {
-                        window.populateTasks();
-                    } else {
-                        console.error('populateTasks function not found');
-                    }
-                } else {
-                    console.error("Task container never appeared. populateTasks() not executed.");
-                }
-            }, 1000); // Delay ensures DOM updates before executing
+            //populate the tasks
+            populateTasks(yourTasks);
+            populateTasks(completedTasks);
         } else {
             alert('Invalid credentials');
         }
