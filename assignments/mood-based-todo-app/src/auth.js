@@ -79,7 +79,7 @@ export function handleAuth(formData, isRegister) {
 
             // Ensure populateTasks runs AFTER the modal closes or when DOM is ready
             function ensureTaskContainerExists(attempts = 10) {
-                const taskContainer = document.getElementById("taskContainer");
+                const taskContainer = document.querySelector('.tasks-section .task-cards');
                 if (taskContainer) {
                     console.log("Task container found. Running populateTasks...");
                     if (window.populateTasks) {

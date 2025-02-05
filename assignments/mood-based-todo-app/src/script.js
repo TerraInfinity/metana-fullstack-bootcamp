@@ -907,7 +907,7 @@ function switchTaskView() {
 
 function populateTasks() {
     console.log('Populating tasks');
-    const taskContainer = document.getElementById("taskContainer");
+    const taskContainer = document.querySelector('.tasks-section .task-cards');
     
     if (!taskContainer) {
         console.error("Task container not found. Deferring execution.");
@@ -916,8 +916,9 @@ function populateTasks() {
 
     try {
         let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
+        console.log("yourTasks:", yourTasks);
         taskContainer.innerHTML = ""; // Clear old tasks
-
+        
         if (yourTasks.length === 0) {
             console.warn("No tasks found in localStorage.");
         }
