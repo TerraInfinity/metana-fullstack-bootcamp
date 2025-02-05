@@ -266,29 +266,32 @@ function handleTaskActions(taskCard) {
 
     // Delete Button
     if (deleteButton) {
-        deleteButton.addEventListener('click', () => {
-            if (isSuggested) {
-                // Remove task from suggestedTasks
-                suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
-                const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
-                renderTasks(suggestedTasks, suggestedTasksSection);
-            } else {
-                const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-                // Update data structure before removing from DOM
-                if (isShowingCompleted) {
-                    completedTasks = completedTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
+        if (!deleteButton.dataset.listenerAttached) {
+            deleteButton.addEventListener('click', () => {
+                if (isSuggested) {
+                    // Remove task from suggestedTasks
+                    suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
+                    const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
+                    renderTasks(suggestedTasks, suggestedTasksSection);
                 } else {
-                    yourTasks = yourTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
+                    const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+                    // Update data structure before removing from DOM
+                    if (isShowingCompleted) {
+                        completedTasks = completedTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
+                    } else {
+                        yourTasks = yourTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
+                    }
+                    // Now remove from DOM and update UI
+                    taskCard.remove();
+                    const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                    renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+                    saveTasksToLocalStorage(); // Save after deletion
                 }
-                // Now remove from DOM and update UI
-                taskCard.remove();
-                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-                renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
-                saveTasksToLocalStorage(); // Save after deletion
-            }
-            // Update task count
-            updateTaskCount();
-        });
+                // Update task count
+                updateTaskCount();
+            });
+            deleteButton.dataset.listenerAttached = 'true';
+        }
     }
 
     // Edit Button
@@ -380,36 +383,39 @@ function handleTaskActions(taskCard) {
 
     // Complete Button
     if (completeButton && !isSuggested) {
-        completeButton.addEventListener('click', () => {
-            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+        if (!completeButton.dataset.listenerAttached) {
+            completeButton.addEventListener('click', () => {
+                const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
 
-            if (!isShowingCompleted) {
-                // Find and move the task data
-                const taskIndex = yourTasks.findIndex(t => t.title === taskCard.querySelector('.task-title').textContent);
-                if (taskIndex !== -1) {
-                    const completedTask = { ...yourTasks[taskIndex], completed: true };
-                    yourTasks.splice(taskIndex, 1);
-                    completedTasks.push(completedTask);
-                    console.log('Task moved to completedTasks (See Completed Tasks):', completedTasks);
-                    console.log('Updated yourTasks (See Your Tasks):', yourTasks);
+                if (!isShowingCompleted) {
+                    // Find and move the task data
+                    const taskIndex = yourTasks.findIndex(t => t.title === taskCard.querySelector('.task-title').textContent);
+                    if (taskIndex !== -1) {
+                        const completedTask = { ...yourTasks[taskIndex], completed: true };
+                        yourTasks.splice(taskIndex, 1);
+                        completedTasks.push(completedTask);
+                        console.log('Task moved to completedTasks (See Completed Tasks):', completedTasks);
+                        console.log('Updated yourTasks (See Your Tasks):', yourTasks);
+                    }
+                } else {
+                    // Remove from completed tasks in data
+                    const taskIndex = completedTasks.findIndex(t => t.title === taskCard.querySelector('.task-title').textContent);
+                    if (taskIndex !== -1) {
+                        completedTasks.splice(taskIndex, 1);
+                    }
+                    taskCard.remove(); // Remove from DOM
                 }
-            } else {
-                // Remove from completed tasks in data
-                const taskIndex = completedTasks.findIndex(t => t.title === taskCard.querySelector('.task-title').textContent);
-                if (taskIndex !== -1) {
-                    completedTasks.splice(taskIndex, 1);
-                }
-                taskCard.remove(); // Remove from DOM
-            }
 
-            // Re-render the appropriate section
-            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-            renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+                // Re-render the appropriate section
+                const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+                renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
 
-            // Update task count
-            updateTaskCount();
-            saveTasksToLocalStorage(); // Save after completing a task
-        });
+                // Update task count
+                updateTaskCount();
+                saveTasksToLocalStorage(); // Save after completing a task
+            });
+            completeButton.dataset.listenerAttached = 'true';
+        }
     }
 }
 
