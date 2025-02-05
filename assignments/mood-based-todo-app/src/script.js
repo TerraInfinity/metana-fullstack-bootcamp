@@ -921,6 +921,9 @@ function populateTasks() {
         taskElement.textContent = task.name; // Adjust based on task object structure
         taskContainer.appendChild(taskElement);
     });
+    //refresh the page
+    window.location.reload();
+    
 }
 
 // Ensure the function is accessible globally
