@@ -277,9 +277,14 @@ function handleTaskActions(taskCard) {
                     const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
                     // Update data structure before removing from DOM
                     if (isShowingCompleted) {
-                        completedTasks = completedTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
+                        // Mutate the array instead of reassigning
+                        const titleToDelete = taskCard.querySelector('.task-title').textContent;
+                        const index = completedTasks.findIndex(task => task.title === titleToDelete);
+                        if (index !== -1) completedTasks.splice(index, 1);
                     } else {
-                        yourTasks = yourTasks.filter(task => task.title !== taskCard.querySelector('.task-title').textContent);
+                        const titleToDelete = taskCard.querySelector('.task-title').textContent;
+                        const index = yourTasks.findIndex(task => task.title === titleToDelete);
+                        if (index !== -1) yourTasks.splice(index, 1);
                     }
                     // Now remove from DOM and update UI
                     taskCard.remove();
