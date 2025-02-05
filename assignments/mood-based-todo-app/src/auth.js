@@ -77,9 +77,18 @@ export function handleAuth(formData, isRegister) {
             loadUserTasks(user); // Ensure user is not null here
             console.log('Login successful');
 
-            // Ensure populateTasks runs AFTER the modal closes or when DOM is ready
-            function ensureTaskContainerExists(attempts = 10) {
-                const taskContainer = document.querySelector('.tasks-section .task-cards');
+            // Ensure tasks are saved to localStorage before calling populateTasks
+            if (currentUser) {
+                console.log(`Saving tasks for ${currentUser.email} to localStorage...`);
+                localStorage.setItem('yourTasks', JSON.stringify(yourTasks));
+                localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+            }
+
+            // Now call populateTasks
+            setTimeout(() => {
+                console.log("Checking for task container after delay...");
+                const taskContainer = document.getElementById("taskContainer");
+
                 if (taskContainer) {
                     console.log("Task container found. Running populateTasks...");
                     if (window.populateTasks) {
@@ -87,26 +96,10 @@ export function handleAuth(formData, isRegister) {
                     } else {
                         console.error('populateTasks function not found');
                     }
-                } else if (attempts > 0) {
-                    console.warn(`Task container not found. Retrying in 500ms... (${attempts} attempts left)`);
-                    setTimeout(() => ensureTaskContainerExists(attempts - 1), 500);
                 } else {
                     console.error("Task container never appeared. populateTasks() not executed.");
                 }
-            }
-
-            // Detect modal close OR run immediately if no modal is found
-            let modal = document.getElementById('yourActualModalId'); // Ensure this is correct
-
-            if (modal) {
-                modal.addEventListener('hidden.bs.modal', function () {
-                    console.log("Modal closed, populating tasks...");
-                    ensureTaskContainerExists();
-                });
-            } else {
-                console.warn("Modal not found. Running populateTasks immediately.");
-                ensureTaskContainerExists();
-            }
+            }, 1000); // Delay ensures DOM updates before executing
         } else {
             alert('Invalid credentials');
         }
