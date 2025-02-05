@@ -1,6 +1,6 @@
 // auth.js
 import { MoodTaskService } from './mood-task-service.js'; // If needed
-import { switchToYourTasksView } from './script.js';
+
 
 export let currentUser = null;
 
@@ -76,7 +76,6 @@ export function handleAuth(formData, isRegister) {
             updateAuthUI();
             loadUserTasks(user); // Ensure user is not null here
             console.log('Login successful');
-            switchToYourTasksView();
         } else {
             alert('Invalid credentials');
         }
