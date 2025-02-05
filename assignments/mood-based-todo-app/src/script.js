@@ -256,7 +256,7 @@ function handleTaskActions(taskCard) {
                     updateTaskCount();
 
                     // Check if currently showing completed tasks and switch to "Your Tasks"
-                    switchToYourTasksView(); 
+                    refreshYourTaskView(); 
 
                 } catch (error) {
                     console.error('Error when adding a suggested task:', error);
@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleTaskActions(newTaskCard);
 
                 // Check if currently showing completed tasks and switch to "Your Tasks"
-                switchToYourTasksView(); 
+                refreshYourTaskView(); 
 
                 // Close modal
                 modalContainer.remove();
@@ -768,15 +768,8 @@ async function loadUserData() {
         await loadUserTasks(currentUser); // Await if loadUserTasks is async
         console.log(`Loaded tasks for ${currentUser.email}:`, { yourTasks, completedTasks }); // Log the loaded tasks
         
-        // After loading tasks from localStorage, update the UI
-        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-        renderTasks(yourTasks, yourTasksSection); // Render your tasks
-        
-        // Ensure completed tasks are also rendered if the user wants to see them
-        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-        if (isShowingCompleted) {
-            renderTasks(completedTasks, yourTasksSection); // Render completed tasks if needed
-        }
+
+        refreshYourTaskView();
     } else {
         console.log("No user logged in to load tasks for");
     }
@@ -865,8 +858,9 @@ function createTaskElement(task) {
     return taskElement;
 }
 
-export function switchToYourTasksView() {
-    console.log('Switching to Your Tasks view');
+// Rename the function to reflect its purpose more clearly
+function refreshYourTaskView() {
+    console.log('Refreshing Your Tasks view');
     const showCompletedButton = document.getElementById('show-completed');
     if (!showCompletedButton) 
     {
@@ -875,23 +869,17 @@ export function switchToYourTasksView() {
     }
 
     const isShowingCompleted = showCompletedButton.textContent.includes('Hide');
-    if (isShowingCompleted) {
-        console.log('Showing completed tasks');
-        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-        if (yourTasksSection) {
-            console.log('Your tasks section found');
-            renderTasks(yourTasks, yourTasksSection);
-            const header = document.querySelector('.tasks-section .section-header h2');
-            if (header) {
-                console.log('Header updated');
-                header.textContent = 'Your Tasks';
-            }
-            console.log('Switching to show completed tasks');
-            showCompletedButton.textContent = 'Show Completed';
-        } else {
-            console.log('Your tasks section not found');
+    const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+    if (yourTasksSection) {
+        console.log('Your tasks section found');
+        renderTasks(isShowingCompleted ? yourTasks : completedTasks, yourTasksSection);
+        const header = document.querySelector('.tasks-section .section-header h2');
+        if (header) {
+            console.log('Header updated');
+            header.textContent = isShowingCompleted ? 'Your Tasks' : 'Completed Tasks';
         }
+        showCompletedButton.textContent = isShowingCompleted ? 'Show Completed' : 'Hide Completed';
     } else {
-        console.log('Not switching to completed tasks');
+        console.log('Your tasks section not found');
     }
 }
