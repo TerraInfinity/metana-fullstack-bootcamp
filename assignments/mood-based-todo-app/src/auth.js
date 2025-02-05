@@ -46,7 +46,7 @@ export const SessionService = {
 };
 
 // Authentication logic
-export function handleAuth(formData, isRegister) {
+export async function handleAuth(formData, isRegister) {
     const email = formData.get('email');
     const password = formData.get('password');
 
@@ -74,12 +74,16 @@ export function handleAuth(formData, isRegister) {
             SessionService.setSession(user); // Ensure this runs before loadUserTasks
             currentUser = user; // Set currentUser to the logged-in user
             updateAuthUI();
-            loadUserTasks(user); // Ensure user is not null here
+            await loadUserTasks(user);
             console.log('Login successful');
-
-            //populate the tasks
-            populateTasks(yourTasks);
-            populateTasks(completedTasks);
+            
+            // Wait for tasks to load before populating
+            if (Array.isArray(yourTasks) && Array.isArray(completedTasks)) {
+                populateTasks(yourTasks);
+                populateTasks(completedTasks);
+            } else {
+                console.warn('Tasks are not arrays or not loaded yet:', yourTasks, completedTasks);
+            }
         } else {
             alert('Invalid credentials');
         }
@@ -322,7 +326,7 @@ export async function showLoginModal() {
     document.body.appendChild(modal);
 }
 
-export function loadUserTasks(user) {
+export async function loadUserTasks(user) {
     console.log("Attempting to load tasks for user:", user); // Debugging line
     if (!user || !user.email) {
         console.error("User object or email is undefined when loading tasks");

@@ -905,12 +905,19 @@ function switchTaskView() {
     }
 }
 
+// Function to populate tasks
 function populateTasks(tasks) {
-    console.log('Populating tasks');
-
-    //create all the task cards 
-    tasks.forEach(task => createTaskCard(task, false));
-
+    // Log for debugging
+    console.log('Attempting to populate tasks', tasks);
+    
+    // Check if tasks is an array before processing
+    if (Array.isArray(tasks)) {
+        // Iterate over tasks if it's an array
+        tasks.forEach(task => createTaskCard(task, false));
+    } else {
+        // Log if tasks is not an array
+        console.warn('tasks is not an array:', tasks);
+    }
 }
 
 // Ensure the function is accessible globally
