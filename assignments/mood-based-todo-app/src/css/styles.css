@@ -9,11 +9,11 @@ body {
     background-attachment: fixed; /* Background stays fixed while scrolling */
     position: relative;
     color: #2c3e50;
+
+
     font-size: 16px; /* Good base font size for mobile */
     line-height: 1.5;
     overflow-x: hidden; /* Prevents horizontal scrolling if not needed */
-
-
 }
 
 img, video {
@@ -40,6 +40,8 @@ body::before {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+
 }
 
 :root {
