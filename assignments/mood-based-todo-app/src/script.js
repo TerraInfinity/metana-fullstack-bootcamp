@@ -779,33 +779,33 @@ async function loadUserData() {
     if (currentUser) {
         await loadUserTasks(currentUser); // Await if loadUserTasks is async
         console.log(`Loaded tasks for ${currentUser.email}:`, { yourTasks, completedTasks }); // Log the loaded tasks
-        
-        // After loading tasks from localStorage, update the UI
+
+        // Ensure "Your Tasks" is displayed by default after login
+        const showCompletedButton = document.getElementById('show-completed');
         const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+        const sectionHeader = document.querySelector('.tasks-section .section-header h2');
+
+        // Reset UI to show "Your Tasks"
+        showCompletedButton.textContent = 'Show Completed'; // Reset button text
+        sectionHeader.textContent = 'Your Tasks'; // Set header to "Your Tasks"
         renderTasks(yourTasks, yourTasksSection); // Render your tasks
-        
-        // Ensure completed tasks are also rendered if the user wants to see them
-        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-        if (isShowingCompleted) {
-            renderTasks(completedTasks, yourTasksSection); // Render completed tasks if needed
+
+        // Update task count
+        updateTaskCount();
+
+        // Handle task actions for both yourTasks and completedTasks if they are in the DOM
+        try {
+            [...yourTasks, ...completedTasks].forEach(task => {
+                console.log('Task type:', typeof task, 'Task node type:', task.nodeType);
+                if (task.nodeType === Node.ELEMENT_NODE && document.body.contains(task)) {
+                    handleTaskActions(task);
+                }
+            });
+        } catch (error) {
+            console.error('Error in task handling:', error);
         }
     } else {
         console.log("No user logged in to load tasks for");
-    }
-    
-    // Update task count or any other UI elements that depend on task lists
-    updateTaskCount();
-    
-    // Handle task actions for both yourTasks and completedTasks if they are in the DOM
-    try {
-        [...yourTasks, ...completedTasks].forEach(task => {
-            console.log('Task type:', typeof task, 'Task node type:', task.nodeType);
-            if (task.nodeType === Node.ELEMENT_NODE && document.body.contains(task)) {
-                handleTaskActions(task);
-            }
-        });
-    } catch (error) {
-        console.error('Error in task handling:', error);
     }
 }
 
