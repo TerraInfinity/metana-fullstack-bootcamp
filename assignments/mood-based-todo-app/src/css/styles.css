@@ -12,6 +12,7 @@ body {
     color: #2c3e50;
     font-size: 16px; /* Good base font size for mobile */
     line-height: 1.5;
+    overflow-x: hidden; /* Prevents horizontal scrolling if not needed */
 
 
 }
