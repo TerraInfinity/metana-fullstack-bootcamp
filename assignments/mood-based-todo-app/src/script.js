@@ -934,9 +934,6 @@ function populateTasks() {
     } catch (error) {
         console.error("Error populating tasks:", error);
     }
-
-    // Refresh the page
-    window.location.reload();
 }
 
 // Ensure the function is accessible globally
