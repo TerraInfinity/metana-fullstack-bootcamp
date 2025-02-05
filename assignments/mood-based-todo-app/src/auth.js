@@ -77,18 +77,19 @@ export async function handleAuth(formData, isRegister) {
             await loadUserTasks(user);
             console.log('Login successful');
             
+            
             // Wait for tasks to load before populating
             if (Array.isArray(yourTasks) && Array.isArray(completedTasks)) {
                 console.log('Populating your tasks' + yourTasks);
                 console.log('Populating completed tasks' + completedTasks);
                 populateTasks(yourTasks);
-                populateTasks(completedTasks);
             } else {
                 console.warn('Tasks are not arrays or not loaded yet:', yourTasks, completedTasks);
             }
         } else {
             alert('Invalid credentials');
         }
+
     }
 }
 

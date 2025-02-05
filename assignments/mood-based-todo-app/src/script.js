@@ -918,6 +918,15 @@ function populateTasks(tasks) {
         // Log if tasks is not an array
         console.warn('tasks is not an array:', tasks);
     }
+
+    // Get DOM containers
+    const yourTasksContainer = document.querySelector('.tasks-section .task-cards');
+    if (yourTasksContainer) {
+        console.log('Rendering your tasks');
+        renderTasks(yourTasks, yourTasksContainer);
+    } else {
+        console.error('Task containers not found');
+    }
 }
 
 // Ensure the function is accessible globally
