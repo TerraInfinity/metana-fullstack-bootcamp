@@ -1,3 +1,4 @@
+/* auth.css */
 .login-container {
     min-height: 100vh;
     display: flex;
@@ -5,6 +6,7 @@
     align-items: center;
     padding: 2rem;
 }
+
 
 .login-form {
     width: 100%;
