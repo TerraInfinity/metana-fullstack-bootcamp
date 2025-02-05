@@ -269,27 +269,27 @@ function handleTaskActions(taskCard) {
         if (!deleteButton.dataset.listenerAttached) {
             deleteButton.addEventListener('click', () => {
                 if (isSuggested) {
-                    // Remove task from suggestedTasks without refreshing the list
-                    suggestedTasks = suggestedTasks.filter(task => task !== taskCard);
-                    taskCard.remove(); // Just remove the task card from the DOM
+                    // Remove task from suggestedTasks
+                    const taskTitle = taskCard.querySelector('.task-title').textContent;
+                    suggestedTasks = suggestedTasks.filter(task => task.title !== taskTitle);
+                    taskCard.remove(); // Remove the task card from the DOM
                 } else {
                     const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
                     // Update data structure before removing from DOM
+                    const taskTitle = taskCard.querySelector('.task-title').textContent;
                     if (isShowingCompleted) {
-                        // Mutate the array instead of reassigning
-                        const titleToDelete = taskCard.querySelector('.task-title').textContent;
-                        const index = completedTasks.findIndex(task => task.title === titleToDelete);
+                        // Remove from completedTasks
+                        const index = completedTasks.findIndex(task => task.title === taskTitle);
                         if (index !== -1) completedTasks.splice(index, 1);
                     } else {
-                        const titleToDelete = taskCard.querySelector('.task-title').textContent;
-                        const index = yourTasks.findIndex(task => task.title === titleToDelete);
+                        // Remove from yourTasks
+                        const index = yourTasks.findIndex(task => task.title === taskTitle);
                         if (index !== -1) yourTasks.splice(index, 1);
                     }
-                    // Now remove from DOM and update UI
+                    // Remove the task card from the DOM
                     taskCard.remove();
-                    const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-                    renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
-                    saveTasksToLocalStorage(); // Save after deletion
+                    // Save changes
+                    saveTasksToLocalStorage();
                 }
                 // Update task count
                 updateTaskCount();
