@@ -929,7 +929,7 @@ function populateTasks(tasks) {
         console.error('Task containers not found');
     }
 }
-
-// Ensure the function is accessible globally
+ 
+// Ensure the function is accessible globally.
 window.populateTasks = populateTasks;
 
