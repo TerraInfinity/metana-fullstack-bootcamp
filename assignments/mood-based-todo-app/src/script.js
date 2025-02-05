@@ -262,7 +262,10 @@ function handleTaskActions(taskCard) {
                     updateTaskCount();
 
                     // Check if currently showing completed tasks and switch to "Your Tasks"
-                    refreshYourTaskView(); 
+                    const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+                    if (isShowingCompleted) {
+                        switchTaskView(); 
+                    }
 
                 } catch (error) {
                     console.error('Error when adding a suggested task:', error);
@@ -602,7 +605,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleTaskActions(newTaskCard);
 
                 // Check if currently showing completed tasks and switch to "Your Tasks"
-                refreshYourTaskView(); 
+                const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+                if (isShowingCompleted) {
+                    switchTaskView(); 
+                }
 
                 // Close modal
                 modalContainer.remove();
@@ -884,23 +890,24 @@ function createTaskElement(task) {
 }
 
 // Rename the function to reflect its purpose more clearly
-function refreshYourTaskView() {
-    console.log('Refreshing Your Tasks view');
+function switchTaskView() {
+    console.log('Switching task view');
     const showCompletedButton = document.getElementById('show-completed');
-    if (!showCompletedButton) 
-    {
+    if (!showCompletedButton) {
         console.log('Show completed button not found');
         return;
     }
 
     const isShowingCompleted = showCompletedButton.textContent.includes('Hide');
     const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+    
     if (yourTasksSection) {
-        console.log('Your tasks section found');
+        // Switch between yourTasks and completedTasks based on the current view
         renderTasks(isShowingCompleted ? yourTasks : completedTasks, yourTasksSection);
+        
+        // Update the header and button text accordingly
         const header = document.querySelector('.tasks-section .section-header h2');
         if (header) {
-            console.log('Header updated');
             header.textContent = isShowingCompleted ? 'Your Tasks' : 'Completed Tasks';
         }
         showCompletedButton.textContent = isShowingCompleted ? 'Show Completed' : 'Hide Completed';
