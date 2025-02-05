@@ -906,6 +906,7 @@ function switchTaskView() {
 }
 
 function populateTasks() {
+    console.log('Populating tasks');
     const taskContainer = document.getElementById("taskContainer");
     
     if (!taskContainer) {
@@ -913,17 +914,29 @@ function populateTasks() {
         return; // Prevents script from breaking
     }
 
-    let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
-    taskContainer.innerHTML = ""; // Clear old tasks
+    try {
+        let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
+        taskContainer.innerHTML = ""; // Clear old tasks
 
-    yourTasks.forEach(task => {
-        let taskElement = document.createElement("div");
-        taskElement.textContent = task.name; // Adjust based on task object structure
-        taskContainer.appendChild(taskElement);
-    });
-    //refresh the page
+        if (yourTasks.length === 0) {
+            console.warn("No tasks found in localStorage.");
+        }
+
+        yourTasks.forEach(task => {
+            if (task && task.name) { // Check if task has a name property
+                let taskElement = document.createElement("div");
+                taskElement.textContent = task.name; // Adjust based on task object structure
+                taskContainer.appendChild(taskElement);
+            } else {
+                console.error("Invalid task structure:", task);
+            }
+        });
+    } catch (error) {
+        console.error("Error populating tasks:", error);
+    }
+
+    // Refresh the page
     window.location.reload();
-    
 }
 
 // Ensure the function is accessible globally
