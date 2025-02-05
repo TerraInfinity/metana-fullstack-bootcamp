@@ -467,25 +467,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Complete all tasks in the current view
-    document.getElementById('complete-all').addEventListener('click', function() {
+    document.getElementById('complete-all').addEventListener('click', function () {
         const yourTasksSection = document.querySelector('.tasks-section .task-cards');
         const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-        
+
         if (isShowingCompleted) {
-            // Remove all tasks from completedTasks
-            completedTasks = [];
-            console.log('All tasks removed from completedTasks'); // Log when all tasks are removed
+            // If showing completed tasks, clear the completedTasks array
+            completedTasks.length = 0; // Clear the array without reassigning
+            console.log('All tasks removed from completedTasks');
         } else {
-            // Move all tasks to completedTasks
-            yourTasks.forEach(task => completedTasks.push(task));
-            yourTasks = [];
-            console.log('All tasks moved to completedTasks: (see completed tasks)', completedTasks); // Log the updated completed tasks
-            console.log('yourTasks cleared:', yourTasks); // Log that yourTasks is now empty
+            // If showing your tasks, move all tasks to completedTasks
+            completedTasks.push(...yourTasks); // Add all tasks to completedTasks
+            yourTasks.length = 0; // Clear yourTasks without reassigning
+            console.log('All tasks moved to completedTasks:', completedTasks);
+            console.log('yourTasks cleared:', yourTasks);
         }
+
+        // Update the UI
+        renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+
         // Update task count
         updateTaskCount();
-        // Refresh the UI based on the current view
-        renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
+
+        // Save changes to localStorage
+        saveTasksToLocalStorage();
     });
 
     // Select the Add Task button and the modal
