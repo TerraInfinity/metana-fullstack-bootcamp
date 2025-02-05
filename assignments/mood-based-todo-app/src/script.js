@@ -255,6 +255,15 @@ function handleTaskActions(taskCard) {
                     console.log("Updating task count");
                     updateTaskCount();
 
+                    // Check if currently showing completed tasks and switch to "Your Tasks"
+                    const showCompletedButton = document.getElementById('show-completed');
+                    const isShowingCompleted = showCompletedButton.textContent.includes('Hide');
+                    if (isShowingCompleted) {
+                        renderTasks(yourTasks, yourTasksSection);
+                        document.querySelector('.tasks-section .section-header h2').textContent = 'Your Tasks';
+                        showCompletedButton.textContent = 'Show Completed';
+                    }
+
                 } catch (error) {
                     console.error('Error when adding a suggested task:', error);
                     console.log('An error occurred while adding the task. The action was not completed.');
