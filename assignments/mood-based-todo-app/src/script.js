@@ -906,9 +906,14 @@ function switchTaskView() {
 }
 
 function populateTasks() {
-    let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
+    const taskContainer = document.getElementById("taskContainer");
     
-    const taskContainer = document.getElementById("taskContainer"); 
+    if (!taskContainer) {
+        console.error("Task container not found. Deferring execution.");
+        return; // Prevents script from breaking
+    }
+
+    let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
     taskContainer.innerHTML = ""; // Clear old tasks
 
     yourTasks.forEach(task => {
@@ -918,7 +923,8 @@ function populateTasks() {
     });
 }
 
-// Ensure tasks are loaded on page load
-document.addEventListener("DOMContentLoaded", populateTasks);
-
+// Ensure the function is accessible globally
 window.populateTasks = populateTasks;
+
+// Run only when DOM is ready
+document.addEventListener("DOMContentLoaded", populateTasks);
