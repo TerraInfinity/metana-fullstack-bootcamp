@@ -76,6 +76,8 @@ export function handleAuth(formData, isRegister) {
             updateAuthUI();
             loadUserTasks(user); // Ensure user is not null here
             console.log('Login successful');
+            // Refresh the page after successful login
+            window.location.reload();
         } else {
             alert('Invalid credentials');
         }
