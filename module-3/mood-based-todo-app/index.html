@@ -1,0 +1,76 @@
+<!--Index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodTodo - Home</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+    <link rel="stylesheet" href="src/css/components.css">
+    <!-- Add jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Add jQuery and jQuery UI JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">🏠 MoodTodo</a>
+            <div class="nav-links">
+                <button id="theme-toggle" class="theme-toggle">🌓</button>
+                <a href="#" class="nav-link btn-secondary" id="login-btn">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Main Content -->
+        <div class="dashboard-grid">
+            <!-- Header Section -->
+            <header class="dashboard-header">
+                <div class="greeting" id="greeting-section">
+                    <h1 class="text-bordered">Welcome, Guest.</h1>
+                    <p class="task-count text-bordered" id="task-count">Ready for today? You have <span id="task-count-number">3</span> tasks planned</p>
+                </div>
+                <div class="header-icons">            
+                    <button class="icon-button" id="mood-icon">😊</button>
+                    <button class="icon-button" id="weather-icon" title="Current Weather">⛅</button>
+                    <button class="icon-button" id="user-icon">👤</button>
+                </div>
+            </header>
+            <!-- Your Tasks Section -->
+            <section class="tasks-section">
+                <div class="section-header">
+                    <h2 class="text-bordered">Your Tasks</h2>
+                    <div class="controls">
+                        <button id="complete-all" class="btn-secondary btn-complete-all" style="text-align: center">Complete All</button>
+                        <button id="show-completed" class="btn-secondary btn-show-completed" style="text-align: center">Show Completed</button>
+                    </div>
+                </div>
+
+                <!-- Task Cards -->
+                <div class="task-cards">
+                    
+                </div>
+            </section>
+
+            <!-- Suggested Tasks -->
+            <section class="suggested-tasks" id="suggested-tasks-section">
+                <h2 class="text-bordered">Suggested Tasks</h2>
+                <div class="task-cards">
+
+                </div>
+            </section>
+        </div>
+
+        <!-- Add Task Button -->
+        <button class="btn-add-task">
+            <span>+</span> Add Task
+        </button>
+    </main>
+    <script type="module" src="src/auth.js"></script>
+    <script type="module" src="src/script.js"></script>
+
+</body>
+</html>

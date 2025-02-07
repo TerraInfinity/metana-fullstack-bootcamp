@@ -1,0 +1,468 @@
+{
+    "tasks": [
+    {
+      "name": "Read a book",
+      "weatherConditions": ["rain", "snow"],
+      "moodRange": { "min": 0, "max": 100 },
+      "duration": "30-60 min",
+      "category": "indoor",
+      "description": "A relaxing activity perfect for indoors, ideal for rainy or snowy days to immerse oneself in different worlds or learn new things."
+    },
+    {
+      "name": "Go for a run",
+      "weatherConditions": ["clear", "sunny"],
+      "moodRange": { "min": 60, "max": 100 },
+      "duration": "45 min",
+      "category": "outdoor",
+      "description": "A great way to get exercise and enjoy nature, best suited for clear or sunny days when you're in high spirits."
+    },
+    {
+      "name": "Practice yoga",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 0, "max": 50 },
+      "duration": "30 min",
+      "category": "wellness",
+      "description": "Yoga can be done in any weather, offering a peaceful way to reconnect with your body and mind, especially when mood is low."
+    },
+    {
+      "name": "Watch a Movie",
+      "weatherConditions": ["rain", "snow", "cloudy"],
+      "moodRange": { "min": 0, "max": 100 },
+      "duration": "90-120 min",
+      "category": "indoor",
+      "description": "An excellent indoor activity for any mood, providing entertainment and escape through storytelling on gloomy days."
+    },
+    {
+      "name": "Go Hiking",
+      "weatherConditions": ["clear", "sunny", "mild"],
+      "moodRange": { "min": 50, "max": 100 },
+      "duration": "2-4 hours",
+      "category": "outdoor",
+      "description": "Engage with nature for a few hours, perfect for clear or mild weather, boosting your mood through physical activity and scenic views."
+    },
+    {
+      "name": "Bake Cookies",
+      "weatherConditions": ["cold", "rain", "snow"],
+      "moodRange": { "min": 20, "max": 80 },
+      "duration": "1-2 hours",
+      "category": "indoor",
+      "description": "A warm, comforting activity for cold or wet days, baking cookies can lift spirits and provide a sweet reward."
+    },
+    {
+      "name": "Play Board Games",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 40, "max": 100 },
+      "duration": "60-120 min",
+      "category": "social",
+      "description": "A fun, social activity suitable for any weather, board games bring people together for strategic fun and laughter."
+    },
+    {
+      "name": "Garden",
+      "weatherConditions": ["clear", "sunny", "mild"],
+      "moodRange": { "min": 30, "max": 90 },
+      "duration": "1-3 hours",
+      "category": "outdoor",
+      "description": "Gardening is a nurturing activity that connects you with nature, ideal under sunny or mild conditions for relaxation and productivity."
+    },
+    {
+      "name": "Meditate",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 0, "max": 100 },
+      "duration": "10-30 min",
+      "category": "wellness",
+      "description": "Meditation can be practiced anytime, offering peace and mental clarity regardless of weather or mood."
+    },
+    {
+      "name": "Visit a Museum",
+      "weatherConditions": ["clear", "cloudy", "mild"],
+      "moodRange": { "min": 50, "max": 100 },
+      "duration": "2-3 hours",
+      "category": "cultural",
+      "description": "Explore cultural or historical exhibits, an enriching experience best enjoyed when the weather is pleasant."
+    },
+    {
+      "name": "Paint or Draw",
+      "weatherConditions": ["rain", "snow", "cloudy"],
+      "moodRange": { "min": 10, "max": 100 },
+      "duration": "1-3 hours",
+      "category": "creative",
+      "description": "Channel creativity indoors during less favorable weather, painting or drawing can be both soothing and expressive."
+    },
+    {
+      "name": "Photography Walk",
+      "weatherConditions": ["clear", "mild", "sunset"],
+      "moodRange": { "min": 60, "max": 100 },
+      "duration": "1-2 hours",
+      "category": "outdoor",
+      "description": "Capture the beauty of nature or urban landscapes, ideal during clear or sunset conditions when your mood is high."
+    },
+    {
+      "name": "Cook a New Recipe",
+      "weatherConditions": ["rain", "snow", "cloudy"],
+      "moodRange": { "min": 40, "max": 100 },
+      "duration": "1-2 hours",
+      "category": "indoor",
+      "description": "Experiment with new flavors in the kitchen, an engaging activity for indoor days with the potential to boost your mood."
+    },
+    {
+      "name": "Listen to Music",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 0, "max": 100 },
+      "duration": "30-120 min",
+      "category": "relaxation",
+      "description": "Music can alter and enhance any mood or moment, suitable for any weather to relax or energize."
+    },
+    {
+      "name": "Write in a Journal",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 0, "max": 100 },
+      "duration": "15-60 min",
+      "category": "self-care",
+      "description": "Reflect on thoughts and feelings, a personal and therapeutic activity adaptable to any weather or mood."
+    },
+    {
+      "name": "Swim",
+      "weatherConditions": ["hot", "sunny", "mild"],
+      "moodRange": { "min": 50, "max": 100 },
+      "duration": "30-90 min",
+      "category": "outdoor",
+      "description": "A refreshing and healthy outdoor activity perfect for warm or sunny days to boost energy and mood."
+    },
+    {
+      "name": "Play Video Games",
+      "weatherConditions": ["rain", "snow", "cloudy"],
+      "moodRange": { "min": 30, "max": 100 },
+      "duration": "1-4 hours",
+      "category": "indoor",
+      "description": "Dive into digital worlds when the outdoor ones are less appealing, offering entertainment and skill development."
+    },
+    {
+      "name": "Attend a Concert",
+      "weatherConditions": ["clear", "mild"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "2-4 hours",
+      "category": "cultural",
+      "description": "Enjoy live music in a communal setting, best under clear or mild weather to fully appreciate the experience."
+    },
+    {
+      "name": "Knit or Crochet",
+      "weatherConditions": ["rain", "snow", "cold"],
+      "moodRange": { "min": 10, "max": 90 },
+      "duration": "1-3 hours",
+      "category": "craft",
+      "description": "Create handmade items with yarn, a soothing and productive activity for cold or inclement weather."
+    },
+    {
+      "name": "Volunteer",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 40, "max": 100 },
+      "duration": "2-4 hours",
+      "category": "community",
+      "description": "Give back to the community, an activity that can be uplifting and meaningful regardless of weather."
+    },
+    {
+      "name": "Visit the Zoo",
+      "weatherConditions": ["clear", "sunny", "mild"],
+      "moodRange": { "min": 60, "max": 100 },
+      "duration": "3-5 hours",
+      "category": "outdoor",
+      "description": "Explore wildlife and learn about animals, an excellent outing for clear or sunny days when you're feeling cheerful."
+    },
+    {
+      "name": "Take a Nature Walk",
+      "weatherConditions": ["clear", "sunny", "mild"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "1-2 hours",
+      "category": "outdoor",
+      "description": "A peaceful walk through nature, perfect for clear, sunny, or mild days to refresh mind and body."
+    },
+    {
+      "name": "Start a Puzzle",
+      "weatherConditions": ["rain", "snow", "cloudy"],
+      "moodRange": { "min": 1, "max": 30 },
+      "duration": "30-120 min",
+      "category": "indoor",
+      "description": "Engage the mind with a puzzle, a calming activity for when the weather outside isn't cooperative."
+    },
+    {
+      "name": "Write Poetry",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 100 },
+      "duration": "30-90 min",
+      "category": "creative",
+      "description": "Express emotions or tell stories through poetry, an activity that can be done anywhere, anytime."
+    },
+    {
+      "name": "Bird Watching",
+      "weatherConditions": ["clear", "mild"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "1-3 hours",
+      "category": "outdoor",
+      "description": "Observe and enjoy bird species in their natural habitat, best on clear or mild days when you're in a good mood."
+    },
+    {
+      "name": "Watch a Documentary",
+      "weatherConditions": ["rain", "snow", "cloudy"],
+      "moodRange": { "min": 1, "max": 100 },
+      "duration": "60-120 min",
+      "category": "indoor",
+      "description": "Learn something new or be inspired by real-life stories, perfect for indoor days when outdoor activities are limited."
+    },
+    {
+      "name": "Organize Your Space",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 70 },
+      "duration": "1-4 hours",
+      "category": "indoor",
+      "description": "Declutter and organize your environment, which can be therapeutic and satisfying, regardless of weather or mood."
+    },
+    {
+      "name": "Stargazing",
+      "weatherConditions": ["clear"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "30-60 min",
+      "category": "outdoor",
+      "description": "Gaze at the stars and planets, a serene outdoor activity best on clear nights when you're feeling content."
+    },
+    {
+      "name": "Coloring or Adult Coloring Books",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 50 },
+      "duration": "30-90 min",
+      "category": "relaxation",
+      "description": "A simple yet effective way to unwind and be creative, suitable for any weather, especially when feeling stressed or down."
+    },
+    {
+      "name": "Play a Musical Instrument",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 30, "max": 100 },
+      "duration": "30-120 min",
+      "category": "creative",
+      "description": "Create music or practice, an enriching activity that can be enjoyed anytime, enhancing mood and creativity."
+    },
+    {
+      "name": "Go Kayaking",
+      "weatherConditions": ["clear", "mild"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "2-4 hours",
+      "category": "outdoor",
+      "description": "Explore waterways in a kayak, an adventurous and physical activity for clear or mild weather when you're feeling energetic."
+    },
+    {
+      "name": "Take a Long Bath",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 30 },
+      "duration": "30-60 min",
+      "category": "self-care",
+      "description": "A relaxing way to unwind and care for yourself, ideal for any weather when you need some comfort."
+    },
+    {
+      "name": "Visit an Art Gallery",
+      "weatherConditions": ["clear", "cloudy", "mild"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "1-2 hours",
+      "category": "cultural",
+      "description": "Appreciate art in a gallery setting, enhancing cultural knowledge and aesthetic pleasure on pleasant days."
+    },
+    {
+      "name": "Do Some Stretching",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 100 },
+      "duration": "10-30 min",
+      "category": "wellness",
+      "description": "Stretch to improve flexibility and circulation, beneficial for any mood or weather."
+    },
+    {
+      "name": "Watch the Sunrise/Sunset",
+      "weatherConditions": ["clear", "mild"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "30-60 min",
+      "category": "outdoor",
+      "description": "Enjoy the beauty of the day's beginning or end, perfect when conditions are clear for a serene experience."
+    },
+    {
+      "name": "Plan a Future Trip",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 100 },
+      "duration": "30-120 min",
+      "category": "indoor",
+      "description": "Dream about and organize future adventures, an uplifting task that can be done anytime to boost anticipation."
+    },
+    {
+      "name": "Join a Dance Class",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "60-90 min",
+      "category": "social",
+      "description": "Learn dance moves and socialize, a vibrant activity that's good for any weather, enhancing physical and social well-being."
+    },
+    {
+      "name": "Make a Scrapbook",
+      "weatherConditions": ["rain", "snow", "cloudy"],
+      "moodRange": { "min": 1, "max": 70 },
+      "duration": "1-3 hours",
+      "category": "craft",
+      "description": "Preserve memories or express creativity by assembling a scrapbook, an indoor activity for when the weather keeps you inside."
+    },
+    {
+      "name": "Go Fishing",
+      "weatherConditions": ["clear", "mild"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "2-5 hours",
+      "category": "outdoor",
+      "description": "Enjoy the tranquility and challenge of fishing, ideal on clear or mild days for relaxation and sport."
+    },
+    {
+      "name": "Call a Friend",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 100 },
+      "duration": "30-60 min",
+      "category": "social",
+      "description": "Connect with friends, sharing thoughts or catching up, an activity that can brighten any day or mood."
+    },
+    {
+      "name": "Learn a New Language",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 100 },
+      "duration": "30-120 min",
+      "category": "educational",
+      "description": "Expand your linguistic skills, which can be both mentally stimulating and globally connecting, suitable for any weather."
+    },
+    {
+      "name": "Visit a Local Farmer's Market",
+      "weatherConditions": ["clear", "sunny", "mild"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "1-2 hours",
+      "category": "outdoor",
+      "description": "Shop for fresh produce and local goods, an enjoyable outdoor activity on clear or sunny days to support local producers."
+    },
+    {
+      "name": "Indoor Gardening",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 100 },
+      "duration": "30-90 min",
+      "category": "indoor",
+      "description": "Cultivate plants inside, bringing nature into your home, a nurturing activity for all weather conditions."
+    },
+    {
+      "name": "Do a Home Workout",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 100 },
+      "duration": "30-60 min",
+      "category": "wellness",
+      "description": "Exercise at home to stay fit, adaptable to any weather or mood for maintaining health and energy."
+    },
+    {
+      "name": "Watch Live Sports",
+      "weatherConditions": ["clear", "cloudy", "mild"],
+      "moodRange": { "min": 70, "max": 100 },
+      "duration": "2-4 hours",
+      "category": "social",
+      "description": "Enjoy the excitement of sports events, either live or on TV, best under good weather conditions for an outdoor experience or comfort indoors."
+    },
+    {
+      "name": "Create a Vision Board",
+      "weatherConditions": ["any"],
+      "moodRange": { "min": 1, "max": 70 },
+      "duration": "1-2 hours",
+      "category": "self-care",
+      "description": "Visualize your goals and aspirations through a collage, reflecting on what you want to achieve, suitable for any weather."
+    },
+    {
+      "name": "Watch a Comfort Movie",
+      "description": "Pick a movie that always makes you feel better or comforted. It could be a childhood favorite or something light-hearted.",
+      "duration": "90-120 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["rain", "snow", "cloudy", "cold"],
+      "category": "entertainment"
+    },
+    {
+      "name": "Listen to Uplifting Music",
+      "description": "Create or listen to a playlist of songs that lift your spirits or calm you down.",
+      "duration": "30-60 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["any"],
+      "category": "relaxation"
+    },
+    {
+      "name": "Read a Light Book or Comic",
+      "description": "Choose something that's not too heavy or demanding, like a favorite comic, a light novel, or a short story.",
+      "duration": "30-90 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["rain", "snow", "cloudy", "cold"],
+      "category": "reading"
+    },
+    {
+      "name": "Bake Something Simple",
+      "description": "Baking can be therapeutic; try making cookies or a cake from a simple recipe. The process and the result can be uplifting.",
+      "duration": "60-120 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["rain", "snow", "cloudy", "cold"],
+      "category": "cooking"
+    },
+    {
+      "name": "Do Some Coloring",
+      "description": "Coloring can be very soothing and meditative. Use an adult coloring book or even a children's one if it resonates more with you.",
+      "duration": "30-90 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["rain", "snow", "cloudy", "cold"],
+      "category": "creative"
+    },
+    {
+      "name": "Take a Warm Bath",
+      "description": "Add some bath salts, bubbles, or essential oils. This can be a great way to relax and reset your mood.",
+      "duration": "30-60 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["any"],
+      "category": "self-care"
+    },
+    {
+      "name": "Write in a Journal",
+      "description": "Sometimes, getting your thoughts out on paper can help process feelings. Write about what's bothering you or just free-write.",
+      "duration": "15-60 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["any"],
+      "category": "self-care"
+    },
+    {
+      "name": "Play a Casual Video Game",
+      "description": "Choose a game that's not too challenging or intense, something that can provide a small sense of achievement or distraction.",
+      "duration": "30-120 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["rain", "snow", "cloudy", "cold"],
+      "category": "gaming"
+    },
+    {
+      "name": "Knit or Crochet",
+      "description": "These crafts are repetitive and can be very calming, giving you something tangible to focus on.",
+      "duration": "60-120 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["rain", "snow", "cloudy", "cold"],
+      "category": "craft"
+    },
+    {
+      "name": "Do a Small Puzzle",
+      "description": "A 100-piece puzzle or a sudoku can engage your mind without overwhelming you.",
+      "duration": "30-60 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["rain", "snow", "cloudy", "cold"],
+      "category": "puzzle"
+    },
+    {
+      "name": "Make a Comfort Food",
+      "description": "Cook something that you find comforting, like soup, pasta, or grilled cheese - something that feels like a hug in food form.",
+      "duration": "30-90 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["rain", "snow", "cloudy", "cold"],
+      "category": "cooking"
+    },
+    {
+      "name": "Look at Old Photos or Memories",
+      "description": "Revisiting happy moments through photos or scrapbooks can lift your spirits.",
+      "duration": "30-60 min",
+      "moodRange": { "min": 1, "max": 30 },
+      "weatherConditions": ["any"],
+      "category": "nostalgia"
+    }
+    ]
+  }
