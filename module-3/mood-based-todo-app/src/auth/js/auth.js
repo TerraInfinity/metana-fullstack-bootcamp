@@ -1,5 +1,7 @@
+// Authentication logic, UI updates, initialization
 // auth.js
-import { MoodTaskService } from './mood-task-service.js'; // If needed
+import { MoodTaskService } from '../../components/mood-selector/js/mood-task-service.js'; 
+
 
 
 export let currentUser = null;

@@ -1,14 +1,24 @@
-// MoodTaskService.js
+// mood-task-service.js
 export class MoodTaskService {
     static async loadTasks() {
       try {
-        const response = await fetch('/public/data/suggested-tasks-pool.json');
+        
+        // Construct the URL
+        const relativeUrl = '../public/data/suggested-tasks-pool.json';
+        const url = new URL(relativeUrl, window.location.origin).href; // Construct full URL
+        console.log('Attempting to fetch from:', url);
+
+        const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to load tasks');
         return await response.json();
       } catch (error) {
+        console.log('Failed to find response url', url);
+        console.error('Error loading tasks from URL:', url); // Updated to print the full URL
         console.error('Error loading tasks:', error);
         return { tasks: [] }; // Fallback empty array
       }
+
+
     }
   
     static async getFilteredTasks(moodValue, weather) {

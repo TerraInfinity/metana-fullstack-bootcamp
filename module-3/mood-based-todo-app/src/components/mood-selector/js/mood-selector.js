@@ -1,0 +1,69 @@
+// # Mood selector component logic
+// mood-selector.js
+
+//Imports
+import { MoodTaskService } from './mood-task-service.js'; 
+
+let moodSelector = null; // Start as null since it's not in the DOM initially
+
+export default function toggleMoodSelector() {
+    console.log("toggleMoodSelector called"); // Debug: Function call check
+    if (!moodSelector) {
+        console.log("Fetching mood selector..."); // Debug: Fetching mood selector
+
+
+        fetchMoodSelector();
+    } else {
+        console.log("Toggling mood selector visibility..."); // Debug: Toggling visibility
+        moodSelector.classList.toggle('hidden');
+    }
+}
+async function fetchMoodSelector() {
+    try {
+        console.log("Starting fetch for mood selector..."); // Debug: Fetch start
+        const response = await fetch('./src/components/mood-selector/html/mood-selector.html');
+        if (!response.ok) {
+            console.error('Failed to load mood selector'); // Debug: Fetch failed
+            throw new Error('Failed to load mood selector');
+        }
+
+        const moodHtml = await response.text();
+        console.log("Mood HTML fetched:", moodHtml); // Debug: Log fetched HTML
+
+        // Parse the HTML to get the mood-selector element
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = moodHtml;
+        moodSelector = tempDiv.querySelector('#mood-selector');
+
+        if (!moodSelector) {
+            console.error('Mood selector element not found in fetched HTML'); // Debug: Element not found
+            throw new Error('Mood selector element not found');
+        }
+
+        console.log("Mood selector found:", moodSelector); // Debug: Element found
+
+        // Insert into the DOM
+        const mainContainer = document.querySelector('main.container');
+        if (mainContainer) {
+            mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
+            console.log("Mood selector inserted into DOM"); // Debug: Insertion confirmation
+        } else {
+            console.error('Main container not found'); // Debug: Container not found
+        }
+
+        // Remove 'hidden' class to show the selector immediately
+        moodSelector.classList.remove('hidden');
+        console.log("Mood selector now visible"); // Debug: Visibility change
+
+        // Add event listener to the close button
+        const closeButton = moodSelector.querySelector('.close-button');
+        if (closeButton) {
+            closeButton.addEventListener('click', toggleMoodSelector);
+            console.log("Close button listener added"); // Debug: Event listener added
+        } else {
+            console.error('Close button not found'); // Debug: Button not found
+        }
+    } catch (error) {
+        console.error("Error in fetchMoodSelector:", error.message); // Debug: Catch errors
+    }
+}

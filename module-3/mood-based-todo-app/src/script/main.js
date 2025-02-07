@@ -1,9 +1,13 @@
-//Script.js
-// // Add at the top with other imports
-import { MoodTaskService } from './mood-task-service.js';
+//main.js
+// Slider event listener remains the same with added debug
+
+//Imports
+import toggleMoodSelector from '../components/mood-selector/js/mood-selector.js';
+import { MoodTaskService } from '../components/mood-selector/js/mood-task-service.js';
 import { 
     currentUser,
     UserService,
+
     SessionService,
     updateAuthUI,
     initializeAuth,
@@ -13,7 +17,32 @@ import {
     loadGuestTasks,
     saveGuestTasks,
     saveCurrentUserData
-} from './auth.js';
+} from '../auth/js/auth.js';
+
+
+
+const moodIcon = document.getElementById('mood-icon');
+moodIcon.addEventListener('click', toggleMoodSelector);
+
+//listeners
+document.addEventListener('input', (event) => {
+    if (event.target.id === 'mood-range') {
+        const moodValue = event.target.value;
+        console.log(`Mood value changed to: ${moodValue}`);
+    }
+});
+
+document.addEventListener('mouseup', (event) => {
+    if (event.target.id === 'mood-range') {
+        currentMood = parseInt(event.target.value);
+        debouncedUpdate();
+    }
+});
+
+
+
+
+
 
 // Log types of yourTasks and completedTasks
 console.log('yourTasks type:', typeof yourTasks);
@@ -98,20 +127,6 @@ async function updateSuggestedTasks() {
             console.log('Processing task card:', taskCard);
             handleTaskActions(taskCard); // This should be a DOM element
         });
-
-        // Remove the incorrect usage of handleTaskActions with data objects
-        // Comment out or remove the following block:
-        /*
-        suggestedTasks.forEach(task => {
-            console.log('Task being processed:', task);
-            console.log('Task type:', typeof task);
-            if (task && typeof task === 'object') {
-                handleTaskActions(task); // This line was causing the invalid taskCard error
-            } else {
-                console.error('Invalid task encountered:', task);
-            }
-        });
-        */
 
         saveTasksToLocalStorage(); // Save after updating suggested tasks
         console.log('Suggested tasks have been updated based on your current mood and weather!');
@@ -666,79 +681,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mood icon toggle
     const moodIcon = document.getElementById('mood-icon');
-    let moodSelector = null; // Start as null since it's not in the DOM initially
 
     console.log("Mood icon element:", moodIcon); // Debug: Check if moodIcon exists
 
     moodIcon.addEventListener('click', toggleMoodSelector);
 
-    function toggleMoodSelector() {
-        console.log("toggleMoodSelector called"); // Debug: Function call check
-        if (!moodSelector) {
-            console.log("Fetching mood selector..."); // Debug: Fetching mood selector
-            fetchMoodSelector();
-        } else {
-            console.log("Toggling mood selector visibility..."); // Debug: Toggling visibility
-            moodSelector.classList.toggle('hidden');
-        }
-    }
-    async function fetchMoodSelector() {
-        try {
-            console.log("Starting fetch for mood selector..."); // Debug: Fetch start
-            const response = await fetch('src/components/mood-selector.html');
-            if (!response.ok) {
-                console.error('Failed to load mood selector'); // Debug: Fetch failed
-                throw new Error('Failed to load mood selector');
-            }
-
-            const moodHtml = await response.text();
-            console.log("Mood HTML fetched:", moodHtml); // Debug: Log fetched HTML
-
-            // Parse the HTML to get the mood-selector element
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = moodHtml;
-            moodSelector = tempDiv.querySelector('#mood-selector');
-
-            if (!moodSelector) {
-                console.error('Mood selector element not found in fetched HTML'); // Debug: Element not found
-                throw new Error('Mood selector element not found');
-            }
-
-            console.log("Mood selector found:", moodSelector); // Debug: Element found
-
-            // Insert into the DOM
-            const mainContainer = document.querySelector('main.container');
-            if (mainContainer) {
-                mainContainer.insertBefore(moodSelector, mainContainer.querySelector('.dashboard-grid'));
-                console.log("Mood selector inserted into DOM"); // Debug: Insertion confirmation
-            } else {
-                console.error('Main container not found'); // Debug: Container not found
-            }
-
-            // Remove 'hidden' class to show the selector immediately
-            moodSelector.classList.remove('hidden');
-            console.log("Mood selector now visible"); // Debug: Visibility change
-
-            // Add event listener to the close button
-            const closeButton = moodSelector.querySelector('.close-button');
-            if (closeButton) {
-                closeButton.addEventListener('click', toggleMoodSelector);
-                console.log("Close button listener added"); // Debug: Event listener added
-            } else {
-                console.error('Close button not found'); // Debug: Button not found
-            }
-        } catch (error) {
-            console.error("Error in fetchMoodSelector:", error.message); // Debug: Catch errors
-        }
-    }
-
-    // Slider event listener remains the same with added debug
-    document.addEventListener('input', (event) => {
-        if (event.target.id === 'mood-range') {
-            const moodValue = event.target.value;
-            console.log(`Mood value changed to: ${moodValue}`);
-        }
-    });
 
     // Optional: Implement Debounce (if needed for further optimization)
     function debounce(fn, delay) {
@@ -751,13 +698,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Modify the 'mouseup' event listener
     const debouncedUpdate = debounce(updateSuggestedTasks, 300);
-
-    document.addEventListener('mouseup', (event) => {
-        if (event.target.id === 'mood-range') {
-            currentMood = parseInt(event.target.value);
-            debouncedUpdate();
-        }
-    });
 
     // Add modal functionality
     const loginBtn = document.getElementById('login-btn');
@@ -835,9 +775,10 @@ function saveTasksToLocalStorage() {
 
 // Call this function before or instead of loadUserData if no user is logged in
 if (!currentUser) {
-    import('./auth.js').then(({ loadGuestTasks }) => {
+    import('../auth/js/auth.js').then(({ loadGuestTasks }) => {
         loadGuestTasks();
         
+
         // Instead of direct reassignment, create new arrays:
         const newYourTasks = yourTasks.map(createTaskElement);
         const newCompletedTasks = completedTasks.map(createTaskElement);
