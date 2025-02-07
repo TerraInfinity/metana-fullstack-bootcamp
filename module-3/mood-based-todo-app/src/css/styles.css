@@ -358,11 +358,14 @@ h1, h2, h3, p, span, a, button {
     grid-template-columns: 1fr auto;
     align-items: center;
     padding: 10px;
+    overflow: hidden; /* Prevents overflow that may cause scrollbars */
 }
 
 .header-icons {
     display: flex;
     gap: 10px;
+    overflow: hidden; /* Prevents overflow that may cause scrollbars */
+    max-width: 100%; /* Ensures it doesn't exceed the container */
 }
 
 .icon-button {

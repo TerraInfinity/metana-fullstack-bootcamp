@@ -1,14 +1,35 @@
 // Authentication logic, UI updates, initialization
 // auth.js
 import { MoodTaskService } from '../../components/mood-selector/js/mood-task-service.js'; 
+import { populateTasks } from '/src/auth/js/task-management.js';
 
+// Define SessionService first
+export const SessionService = {
+    getSession() {
+        return JSON.parse(sessionStorage.getItem('currentUser'));
+    },
+    
+    setSession(user) {
+        sessionStorage.setItem('currentUser', JSON.stringify(user));
+    },
+    
+    clearSession() {
+        sessionStorage.removeItem('currentUser');
+    }
+};
 
-
+// Initialize currentUser as null
 export let currentUser = null;
 
 // Define yourTasks and completedTasks at a higher scope
 export let yourTasks = []; // Use let instead of const
 export let completedTasks = []; // Use let instead of const
+export let suggestedTasks = []; // Instead of initializing with existing DOM elements
+
+//suggestedTasks = Array.from(document.querySelector('#suggested-tasks-section .task-cards').children);
+
+// Define guestUser at a higher scope
+export const guestUser = { email: 'guest@example.com', tasks: [] }; // Example guest user object
 
 // User management
 export const UserService = {
@@ -32,20 +53,14 @@ export const UserService = {
     }
 };
 
-// Session management
-export const SessionService = {
-    getSession() {
-        return JSON.parse(sessionStorage.getItem('currentUser'));
-    },
-    
-    setSession(user) {
-        sessionStorage.setItem('currentUser', JSON.stringify(user));
-    },
-    
-    clearSession() {
-        sessionStorage.removeItem('currentUser');
-    }
-};
+// New function to initialize currentUser as guest
+export function initializeCurrentUser() {
+    const sessionUser = SessionService.getSession(); 
+    currentUser = sessionUser || guestUser; // Set to guestUser if no session user
+}
+
+// Call this function to initialize currentUser
+// initializeCurrentUser(); // Commented out to avoid direct call in module scope
 
 // Authentication logic
 export async function handleAuth(formData, isRegister) {
@@ -280,7 +295,7 @@ export function saveCurrentUserData() {
 
 export async function fetchLoginForm() {
     try {
-        const response = await fetch('login.html');
+        const response = await fetch('/src/auth/html/login.html');
         if (!response.ok) throw new Error('Failed to load login form');
         return await response.text();
     } catch (error) {
@@ -404,4 +419,42 @@ export function saveGuestTasks() {
             reject(error); // Reject if there's an error
         }
     });
+}
+
+// Ensure updateSuggestedTasks is exported
+export function updateSuggestedTasks(newTasks) {
+    suggestedTasks = newTasks;
+}
+
+// Function to fetch suggested tasks
+export async function fetchSuggestedTasks(mood, weatherCondition) {
+    try {
+        const filteredTasks = await MoodTaskService.getFilteredTasks(mood, weatherCondition);
+        updateSuggestedTasks(filteredTasks); // This updates suggestedTasks
+        return filteredTasks;
+    } catch (error) {
+        console.error('Error fetching suggested tasks:', error);
+        return [];
+    }
+}
+
+// New function to initialize the auth module
+export function initializeAuthModule() {
+    initializeCurrentUser();
+    // Any other initialization logic can go here
+}
+
+// Call this function to initialize currentUser
+// initializeCurrentUser(); // Commented out to avoid direct call in module scope
+
+// At the bottom of your auth.js file:
+let initComplete = false;
+
+// New function to initialize
+export function init() {
+    if (!initComplete) {
+        initializeCurrentUser();
+        // Other initialization code here
+        initComplete = true;
+    }
 }
