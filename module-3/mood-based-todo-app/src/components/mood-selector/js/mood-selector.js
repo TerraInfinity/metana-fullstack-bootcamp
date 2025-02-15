@@ -3,6 +3,7 @@
 
 //Imports
 import { MoodTaskService } from './mood-task-service.js'; 
+import { TaskManager } from '/src/auth/js/task-management.js'; // Import TaskManager here
 
 let moodSelector = null; // Start as null since it's not in the DOM initially
 
@@ -10,14 +11,13 @@ export default function toggleMoodSelector() {
     console.log("toggleMoodSelector called"); // Debug: Function call check
     if (!moodSelector) {
         console.log("Fetching mood selector..."); // Debug: Fetching mood selector
-
-
         fetchMoodSelector();
     } else {
         console.log("Toggling mood selector visibility..."); // Debug: Toggling visibility
         moodSelector.classList.toggle('hidden');
     }
 }
+
 async function fetchMoodSelector() {
     try {
         console.log("Starting fetch for mood selector..."); // Debug: Fetch start
@@ -63,7 +63,26 @@ async function fetchMoodSelector() {
         } else {
             console.error('Close button not found'); // Debug: Button not found
         }
+
+        // Add the mouseup event listener here
+        const debouncedUpdate = debounce(TaskManager.updateSuggestedTasks, 300); // Create a debounced version of updateSuggestedTasks
+        document.addEventListener('mouseup', (event) => {
+            if (event.target.id === 'mood-range') {
+                MoodTaskService.currentMood = parseInt(event.target.value);
+                debouncedUpdate(); // Call the debounced function
+            }
+        });
+
     } catch (error) {
         console.error("Error in fetchMoodSelector:", error.message); // Debug: Catch errors
     }
+}
+
+// Debounce function
+function debounce(fn, delay) {
+    let debounceTimer;
+    return function (...args) {
+        clearTimeout(debounceTimer); // Clear the previous timer
+        debounceTimer = setTimeout(() => fn.apply(this, args), delay); // Set a new timer
+    };
 }

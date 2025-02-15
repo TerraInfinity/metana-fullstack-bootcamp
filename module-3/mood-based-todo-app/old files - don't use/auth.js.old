@@ -1,0 +1,116 @@
+// Authentication logic, UI updates, initialization
+// auth.js
+
+import { setupLoginButton } from '/src/auth/js/loginButton.js';
+import { TaskManager } from '/src/auth/js/task-management.js';
+
+export let currentUser = null;
+
+export const SessionService = {
+    getSession: () => JSON.parse(sessionStorage.getItem('currentUser')),
+    setSession: user => sessionStorage.setItem('currentUser', JSON.stringify(user)),
+    clearSession: () => sessionStorage.removeItem('currentUser')
+};
+
+export const UserService = {
+    getUsers: () => JSON.parse(localStorage.getItem('users')) || [],
+    saveUser: user => {
+        const users = UserService.getUsers();
+        if(users.some(u => u.email === user.email)) return false;
+        localStorage.setItem('users', JSON.stringify([...users, user]));
+        return true;
+    },
+    validateUser: (email, password) => 
+        UserService.getUsers().find(u => u.email === email && u.password === password)
+};
+
+export function initializeAuth() {  
+    console.log('Initializing Authentication');
+    
+    // Check if there's an active session
+    let user = SessionService.getSession();
+
+    // If no active session, check for stored users in localStorage
+    if (!user) {
+        const storedUsers = UserService.getUsers();
+        if (storedUsers.length > 0) {
+            // Here, you might want to check for a last logged in user or something similar
+            // For now, let's just use the first user if there are any stored users
+            user = storedUsers[0]; // Or implement logic to choose the correct user
+        }
+    }
+
+    // If there's still no user, set to guest settings
+    if (!user) {
+        user = { 
+            email: 'guest',
+            tasks: []
+        };
+    }
+
+    // Set or update the current user
+    currentUser = user;
+
+    console.log('Current User:', currentUser);
+    loadUserTasks(currentUser);
+    setupLoginButton(); // Call the function to set up the login button
+    console.log('Initialized User Session:', SessionService.getSession());
+}
+
+
+export async function loadUserTasks(user) {
+    console.log("Attempting to load tasks for user:", user); // Debugging line
+    if (!user || !user.email) {
+        console.error("User object or email is undefined when loading tasks");
+        return; // Exit if user is null or email is undefined
+    }
+
+    // Retrieve all users from localStorage
+    const users = UserService.getUsers();
+    // Find the user in the users array
+    const foundUser = users.find(u => u.email === user.email);
+
+    // Check if the user was found and if they have tasks
+    if (foundUser && foundUser.tasks) {
+        // Clear existing tasks to avoid duplication
+        TaskManager.yourTasks = []; // Update to reference TaskManager
+        TaskManager.completedTasks = []; // Update to reference TaskManager
+        
+        // Populate yourTasks and completedTasks based on the found user's tasks
+        foundUser.tasks.forEach(task => {
+            if (task.completed) {
+                TaskManager.completedTasks.push(task); // Update to reference TaskManager
+            } else {
+                TaskManager.yourTasks.push(task); // Update to reference TaskManager
+            }
+        });
+
+        // Log the loaded tasks for debugging
+        console.log(`Loaded tasks for ${user.email}:`, { yourTasks: TaskManager.yourTasks, completedTasks: TaskManager.completedTasks });
+    } else {
+        // Log if no tasks were found for the user
+        console.log(`No tasks found for ${user.email || 'unknown user'}`);
+    }
+}
+
+export async function handleAuth(formData, isSignUp) {
+    console.log('Handling auth', isSignUp ? 'Sign Up' : 'Login');
+    const email = formData.get('email');
+    const password = formData.get('password');
+    alert('User validating');
+
+    // Validate user credential
+    console.log('Validating user credentials:', email, password);
+    const user = UserService.validateUser(email, password);
+    if (user) {
+        console.log('User validated:', user);
+        alert('User validated:', user);
+        SessionService.setSession(user);
+        alert('User validated Session:', SessionService.setSession(user));
+        console.log('Session after login:', SessionService.getSession());
+        currentUser = user; // Set currentUser to the logged-in user
+        await loadUserTasks(user); // Load user tasks
+    } else {
+        alert('Invalid credentials'); // Show error message
+    }
+}

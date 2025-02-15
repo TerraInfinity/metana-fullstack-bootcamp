@@ -25,6 +25,7 @@
 
 .auth-modal {
     position: fixed;
+    display: none; /* Hide the login auth modal by default */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -95,4 +96,22 @@
 
 .auth-form #toggle-form a:hover {
     color: #0056b3;
+}
+
+/* Overlay for the modal */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 999; /* Below the modal but above everything else */
+}
+
+/* Show modal and overlay when active */
+.auth-modal.active,
+.modal-overlay.active {
+    display: block;
 }

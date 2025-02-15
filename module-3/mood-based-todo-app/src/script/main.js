@@ -1,45 +1,182 @@
-//main.js
-// Slider event listener remains the same with added debug
+/**
+ * @file main.js
+ * @version 1.0.0
+ * @author Terra Infinity
+ * @description The entry point for the application, handling initialization, authentication, and coordinating UI interactions.
+ * @module MoodBasedTodoApp
+ * 
+ * Primary application entry point:
+ * - Manages initial setup and state of the application.
+ * - Initializes authentication components, UI elements, and event listeners.
+ * - Handles user authentication status on page load.
+ * - Coordinates UI updates based on user mood, theme, and tasks.
+ * 
+ * Workflow:
+ * - On page load, checks user authentication and sets up necessary components.
+ * - Manages theme toggling, mood selection, and task rendering.
+ * - Integrates with other modules for task management and user interface interactions.
+ *
+ * Note:
+ * - Authentication logic might evolve as we further integrate with auth.js.
+ * - Task management and rendering are basic; expect enhancements in task handling.
+ */
 
-//Imports
-import { 
-    currentUser,
-    UserService,
-    SessionService,
-    updateAuthUI,
-    initializeAuth,
-    loadUserTasks,
-    yourTasks,
-    completedTasks,
-    suggestedTasks,
-    loadGuestTasks,
-    saveGuestTasks,
-    saveCurrentUserData,
-    fetchSuggestedTasks,
-    updateSuggestedTasks,
-    initializeCurrentUser,
-    init
-} from '../auth/js/auth.js';
-import toggleMoodSelector from '../components/mood-selector/js/mood-selector.js';
-import {updateTaskCount, saveTasksToLocalStorage, loadUserData, populateTasks} from '../auth/js/task-management.js';
+// =============================================================================
+// =============================== Imports =====================================
+// =============================================================================
 
-import { createTaskCard, handleTaskActions } from '../components/task-component/js/task-component.js';
-import { openTaskFormModal } from '../components/task-form/js/task-form.js';
-import { generateRandomWeather } from '../components/weather/js/weather.js';
-import { updateWeatherIcon } from '../components/weather/js/weather.js';
+import toggleMoodSelector from '/src/components/mood-selector/js/mood-selector.js';
+import { TaskManager } from '/src/auth/js/task-management.js';
+import { initializeLoginButton } from '/src/auth/js/loginButton.js';
+import { initializeAuthForm } from '/src/auth/js/loginAuthForm.js';
+import { initializeAuth, getCurrentUserData } from '/src/auth/js/auth.js';
+import { initializeAddTaskButton } from '/src/components/task-form/js/addTaskButton.js';
+import { initializeTaskFormModal } from '/src/components/task-form/js/taskForm.js';
 
-// Initialize currentUser before using it
-initializeCurrentUser(); // Ensure this is called first
+// =============================================================================
+// =============================== Variables ===================================
+// =============================================================================
 
-// Now you can safely use currentUser
-console.log(currentUser); // This should not throw an error now
+// Create a single instance of TaskManager
+/** 
+ * @type {TaskManager} 
+ * @description An instance of the TaskManager class used for managing tasks in the application.
+ */
+export let systemTaskManager;
 
+/** 
+ * @type {HTMLElement} 
+ * @description The HTML element representing the mood icon, which users can click to select their mood.
+ */
 const moodIcon = document.getElementById('mood-icon');
-moodIcon.addEventListener('click', toggleMoodSelector);
 
+/** 
+ * @type {HTMLElement} 
+ * @description The HTML element for the theme toggle button, allowing users to switch between dark and light modes.
+ */
+const themeToggle = document.getElementById('theme-toggle');
+
+/** 
+ * @type {HTMLBodyElement} 
+ * @description The body element of the document, used to apply theme-related attributes.
+ */
+const body = document.body;
+
+/** 
+ * @type {number} 
+ * @description The current mood value, represented as a number (default is 50).
+ */
+let currentMood = 50; // Default mood value
+
+/** 
+ * @type {HTMLElement} 
+ * @description The HTML element representing the weather icon, which may display current weather conditions.
+ */
+const weatherIcon = document.getElementById('weather-icon'); // Move this here
+
+// Load saved theme
+/** 
+ * @type {string} 
+ * @description The saved theme from local storage, defaults to 'dark' if not found.
+ */
+const savedTheme = localStorage.getItem('theme') || 'dark';
+
+// =============================================================================
+// ========================== Misc Setup/Assignments ==========================
+// =============================================================================
+
+body.setAttribute('data-theme', savedTheme);
+
+
+// =============================================================================
+// =============================== Event Listeners ============================
+// =============================================================================
+
+// Single DOMContentLoaded event listener
+/**
+ * @event DOMContentLoaded
+ * @description This event listener is triggered when the initial HTML document has been completely loaded and parsed.
+ * It handles the initial initialization of the application, including setting up authentication, loading tasks,
+ * and making the TaskManager functions accessible globally.
+ */
+document.addEventListener('DOMContentLoaded', async () => {
+    console.info('%c ***↓↓↓*** DOM fully loaded and parsed ***↓↓↓***', 'color: purple'); 
+
+    try {
+        // Initialize systemTaskManager
+        systemTaskManager = new TaskManager();
+        // Initialize authentication and set up the login button
+        await initializeAuthForm();
+        // Initialize login button
+        initializeLoginButton();
+        // Initialize authentication
+        await initializeAuth();
+        // Initialize task form modal
+        initializeTaskFormModal();
+        // Initialize add task button
+        initializeAddTaskButton();
+    
+
+  
+
+
+        //console.debug('%c DOMContentLoaded - systemTaskManager', 'color: aqua', systemTaskManager);
+
+        // Assign current user data to systemTaskManager
+        //Object.assign(systemTaskManager, getCurrentUserData().taskManager);
+        //console.debug('%c DOMContentLoaded - systemTaskManager', 'color: aqua', systemTaskManager);
+        //console.debug('%c DOMContentLoaded - systemTaskManager', 'color: aqua', systemTaskManager.yourActiveTasks);
+
+        // Load tasks
+        //systemTaskManager.loadTasks();
+        systemTaskManager.refreshAllTaskViews();
+        console.warn('%c initializeAuth() systemTaskManager after hydrateTaskManager()', 'color: yellow', systemTaskManager);
+        console.warn('%c initializeAuth() systemTaskManager.yourActiveTasks', 'color: yellow', systemTaskManager.yourActiveTasks);
+        console.warn('%c initializeAuth() systemTaskManager.yourActiveTasks[0]', 'color: yellow', systemTaskManager.yourActiveTasks[0]);
+
+        console.debug('%c DOMContentLoaded - Tasks loaded', 'color: aqua'); 
+        
+        // Check if TaskManager is available before using it
+        // Ensure the function is accessible globally.
+        //window.populateTasks = systemTaskManager.populateTasks;
+    } catch (error) {
+        console.error('Error during initialization:', error);
+    }
 
     
-//listeners
+    console.info('%c ***↑↑↑*** DOMContentLoaded Listener Complete ***↑↑↑***', 'color: deeppink'); 
+});
+
+
+//add a listener for the show-completed
+let showCompleted = false; // Track the current view state
+
+document.getElementById('show-completed').addEventListener('click', () => {
+    showCompleted = !showCompleted; // Toggle the view state
+    const viewType = showCompleted ? 'completed' : 'active'; // Determine the view type
+    systemTaskManager.switchTaskView(viewType); // Switch the task view based on the current state
+
+    // Update button text based on the current view state
+    const buttonText = showCompleted ? 'Hide Completed' : 'Show Completed';
+    document.getElementById('show-completed').textContent = buttonText; // Change button text
+
+    // Update task section header text
+    const headerText = showCompleted ? 'Completed Tasks' : 'Your Tasks';
+    document.getElementById('task-section-header').textContent = headerText; // Change header text
+});
+
+/**
+ * @event click Event listener for the mood icon click.
+ * @description This listener triggers the mood selector when the mood icon is clicked,
+ * allowing users to select their current mood.
+ */
+moodIcon.addEventListener('click', toggleMoodSelector);
+
+/**
+ * @event input Event listener for mood range input changes.
+ * @description This listener is triggered when the mood range slider value changes.
+ * It logs the new mood value to the console, allowing for real-time feedback on mood selection.
+ */
 document.addEventListener('input', (event) => {
     if (event.target.id === 'mood-range') {
         const moodValue = event.target.value;
@@ -47,49 +184,11 @@ document.addEventListener('input', (event) => {
     }
 });
 
-// Optional: Implement Debounce (if needed for further optimization)
-// The debounce function limits the rate at which the provided function (fn) can be called.
-// It ensures that the function is only executed after a specified delay (in milliseconds)
-// has passed since the last time it was invoked. This is useful for optimizing performance
-// in scenarios where an event can trigger multiple times in quick succession, such as
-// user input or mouse movements.
-function debounce(fn, delay) {
-    let debounceTimer;
-    return function (...args) {
-        clearTimeout(debounceTimer); // Clear the previous timer
-        debounceTimer = setTimeout(() => fn.apply(this, args), delay); // Set a new timer
-    };
-}
-
-// Modify the 'mouseup' event listener
-const debouncedUpdate = debounce(updateSuggestedTasks, 300); // Create a debounced version of updateSuggestedTasks
-document.addEventListener('mouseup', (event) => {
-    if (event.target.id === 'mood-range') {
-        currentMood = parseInt(event.target.value);
-        debouncedUpdate(); // Call the debounced function, which will only execute after 300ms of inactivity
-    }
-});
-
-
-
-
-
-
-// Log types of yourTasks and completedTasks
-//console.log('yourTasks type:', typeof yourTasks);
-//console.log('completedTasks type:', typeof completedTasks);
-
-
-const themeToggle = document.getElementById('theme-toggle');
-const body = document.body;
-let currentMood = 50; // Default mood value
-let currentWeather = generateRandomWeather(); // Initialize with random weather data
-const weatherIcon = document.getElementById('weather-icon'); // Move this here
-
-// Load saved theme
-const savedTheme = localStorage.getItem('theme') || 'dark';
-body.setAttribute('data-theme', savedTheme);
-
+/**
+ * @event click Event listener for theme toggle clicks.
+ * @description This listener toggles the theme between dark and light modes.
+ * It updates the body element's data-theme attribute and local storage accordingly.
+ */
 themeToggle.addEventListener('click', () => {
     const currentTheme = body.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -99,234 +198,5 @@ themeToggle.addEventListener('click', () => {
     themeToggle.textContent = newTheme === 'dark' ? '🌓' : '🌞';
 });
 
-/*
-console.log("Before update:", suggestedTasks.length);
-async function updateSuggestedTasks() {
-    try {
-        if (!currentWeather || !currentWeather.condition) {
-            console.warn("Weather condition not set. Using 'clear' as default.");
-            currentWeather = generateRandomWeather(); // Ensure generateRandomWeather is imported
-        }
-        const condition = currentWeather.condition.toLowerCase();
-        console.log(`Updating suggested tasks with condition: ${condition}`);
-        
-        const tasks = await fetchSuggestedTasks(currentMood, condition); // Fetching tasks moved to auth.js
-        
-        // Render the tasks in the UI
-        await renderSuggestedTasks(tasks); // Rendering logic moved to auth.js
 
-        saveTasksToLocalStorage(); // This call remains, but the implementation is in auth.js
-        console.log('Suggested tasks have been updated based on your current mood and weather!');
-    } catch (error) {
-        console.error('Error updating suggestions:', error);
-        console.log('There was an error updating the suggested tasks. Please try again later.');
-    }
-}
-console.log("After update:", suggestedTasks.length);
-*/
-// Function to render tasks
-export async function renderTasks(tasks, container, isSuggested = false) {
-    container.innerHTML = ''; // Clear the container
-    if (tasks && tasks.length > 0) {
-        console.log('Rendering tasks:', tasks);
-        for (const task of tasks) {
-            console.log('Rendering task:', task);
-            const taskCard = await createTaskCard(task, isSuggested);
-            container.appendChild(taskCard);
-        }
-    } else {
-        console.log('No tasks to render');
-    }
-}
-
-// Single DOMContentLoaded event listener
-document.addEventListener('DOMContentLoaded', async () => {
-    await init();  // Call init to ensure SessionService is available
-    console.log('Current user after initialization:', currentUser); // Now you can safely use currentUser
-
-    if (currentUser) {
-        loadUserData();
-    }
-    
-    // Log initial weather for debugging
-    console.log('Initial weather:', currentWeather);
-    
-    // Ensure this is the first time currentWeather is set
-    currentWeather = generateRandomWeather(); 
-    
-    // Log after initialization for debugging
-    console.log('After initialization weather:', currentWeather);
-    
-    currentWeather = generateRandomWeather(); // Update before using in updateWeatherIcon
-    updateWeatherIcon(currentWeather, weatherIcon); // This is now after weatherIcon is defined
-    updateSuggestedTasks(); // Now currentWeather should be set
-
-    //document.querySelectorAll('.task-card').forEach(handleTaskActions);
-
-    //suggestedTasks = Array.from(document.querySelector('#suggested-tasks-section .task-cards').children);
-    
-
-    // Toggle between "Your Tasks" and "Completed Tasks"
-    document.getElementById('show-completed').addEventListener('click', function() {
-        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-        const sectionHeader = document.querySelector('.tasks-section .section-header h2');
-        const isShowingCompleted = this.textContent.includes('Hide');
-        
-        if (isShowingCompleted) {
-            // Show "Your Tasks"
-            renderTasks(yourTasks, yourTasksSection);
-            sectionHeader.textContent = 'Your Tasks';
-            this.textContent = 'Show Completed';
-        } else {
-            // Show "Completed Tasks"
-            renderTasks(completedTasks, yourTasksSection);
-            sectionHeader.textContent = 'Completed Tasks';
-            this.textContent = 'Hide Completed';
-        }
-    });
-
-    // Complete all tasks in the current view
-    document.getElementById('complete-all').addEventListener('click', function () {
-        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-
-        if (isShowingCompleted) {
-            // If showing completed tasks, clear the completedTasks array
-            completedTasks.length = 0; // Clear the array without reassigning
-            console.log('All tasks removed from completedTasks');
-        } else {
-            // If showing your tasks, move all tasks to completedTasks
-            completedTasks.push(...yourTasks); // Add all tasks to completedTasks
-            yourTasks.length = 0; // Clear yourTasks without reassigning
-            console.log('All tasks moved to completedTasks:', completedTasks);
-            console.log('yourTasks cleared:', yourTasks);
-        }
-
-        // Update the UI
-        renderTasks(isShowingCompleted ? completedTasks : yourTasks, yourTasksSection);
-
-        // Update task count
-        updateTaskCount();
-
-        // Save changes to localStorage
-        saveTasksToLocalStorage();
-    });
-
-    // Select the Add Task button and the modal
-    const addTaskBtn = document.querySelector('.btn-add-task');
-    const taskFormModal = document.querySelector('#task-form-modal');
-    const closeModalBtn = document.getElementById('close-modal');
-    const taskForm = document.getElementById('task-form');
-
-    // Open modal
-    addTaskBtn.addEventListener('click', async () => {
-        openTaskFormModal()
-    });
-
-    // Initialize weather on app load
-    currentWeather = generateRandomWeather(); 
-    updateWeatherIcon(currentWeather, weatherIcon); // Updated to pass currentWeather
-
-    // Update weather icon click handler
-    weatherIcon.addEventListener('click', () => {
-        currentWeather = generateRandomWeather();
-        console.log('Weather updated to:', currentWeather); // For debugging
-        const weatherInfo = `Current Weather:
-            - Condition: ${currentWeather.condition}
-            - Temperature: ${currentWeather.temperature}°C
-            - Humidity: ${currentWeather.humidity}%
-            - Wind: ${currentWeather.wind} m/s`;
-        
-        console.log(weatherInfo);
-        updateWeatherIcon(currentWeather, weatherIcon); // Update icon with new weather data
-        updateSuggestedTasks(); // Update tasks after weather change
-    });
-
-    
-
-    // Mood icon toggle
-    const moodIcon = document.getElementById('mood-icon');
-
-    console.log("Mood icon element:", moodIcon); // Debug: Check if moodIcon exists
-
-    moodIcon.addEventListener('click', toggleMoodSelector);
-
-
-    // Optional: Implement Debounce (if needed for further optimization)
-    function debounce(fn, delay) {
-        let debounceTimer;
-        return function (...args) {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => fn.apply(this, args), delay);
-        };
-    }
-
-    // Add modal functionality
-    const loginBtn = document.getElementById('login-btn');
-    const userIcon = document.getElementById('user-icon');
-
-    //console.log('Initial yourTasks:', yourTasks); // Log the initial state of yourTasks
-    //console.log('Initial completedTasks:', completedTasks); // Log the initial state of completedTasks
-
-});
-
-// Call this function before or instead of loadUserData if no user is logged in
-if (!currentUser) {
-    import('../auth/js/auth.js').then(({ loadGuestTasks }) => {
-        loadGuestTasks();
-        
-        // Instead of direct reassignment, create new arrays:
-        const newYourTasks = yourTasks.map(createTaskElement);
-        const newCompletedTasks = completedTasks.map(createTaskElement);
-
-        // Clear current arrays and push new elements
-        yourTasks.length = 0; // Clear existing yourTasks
-        completedTasks.length = 0; // Clear existing completedTasks
-        yourTasks.push(...newYourTasks); // Add new elements to yourTasks
-        completedTasks.push(...newCompletedTasks); // Add new elements to completedTasks
-
-        // Update UI here
-        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
-        renderTasks(yourTasks, yourTasksSection);
-
-        const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
-        if (isShowingCompleted) {
-            renderTasks(completedTasks, yourTasksSection);
-        }
-        
-        // Initialize task actions for loaded tasks
-        [...yourTasks, ...completedTasks].forEach(task => handleTaskActions(task));
-        
-        // Update task count
-        updateTaskCount();
-    });
-}
-
-// Helper function to convert data to DOM element
-function createTaskElement(task) {
-    const taskElement = document.createElement('div');
-    taskElement.className = 'task-card';
-    taskElement.innerHTML = `
-        <h3 class="task-title">${task.title}</h3>
-        <p class="task-description">${task.description}</p>
-        <p class="due-date">Due: ${task.dueDate}</p>
-    `;
-    handleTaskActions(taskElement); // Attach actions to the task element
-    return taskElement;
-}
-
- 
-// Ensure the function is accessible globally.
-window.populateTasks = populateTasks;
-
-// Function to render suggested tasks
-async function renderSuggestedTasks(tasks) {
-    const suggestedTasksSection = document.querySelector('#suggested-tasks-section .task-cards');
-    suggestedTasksSection.innerHTML = ''; // Clear existing tasks
-    const taskCards = await Promise.all(tasks.map(async (task) => createTaskCard(task, true)));
-    taskCards.forEach(taskCard => {
-        suggestedTasksSection.appendChild(taskCard);
-        handleTaskActions(taskCard);
-    });
-}
 

@@ -1,4 +1,7 @@
 // Move the generateRandomWeather function to the top
+export let currentWeather = generateRandomWeather(); // Initialize currentWeather
+
+
 export function generateRandomWeather() {
     const conditions = ['clear', 'clouds', 'rain', 'snow', 'thunderstorm', 'mist'];
     const icons = {
@@ -44,3 +47,4 @@ export function updateWeatherIcon(weatherData, weatherIconElement) {
     weatherIconElement.textContent = iconMap[iconCode] || '🌍'; // Set the icon based on the weather data
     weatherIconElement.title = `Current weather: ${weatherData.condition}, ${weatherData.temperature}°C`;
 }
+

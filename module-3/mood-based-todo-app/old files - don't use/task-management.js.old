@@ -1,0 +1,311 @@
+//task-management.js
+ /**
+ * @file Manages task objects and their interactions
+ * 
+ * This module handles task objects for both authenticated users and guests:
+ * - Manages arrays for user tasks (yourTasks, completedTasks, suggestedTasks).
+ * - Provides functionalities to load, save, and manipulate tasks.
+ * - Integrates with mood and weather conditions to suggest tasks.
+ * - Updates and renders tasks in the UI, including task count and view switching.
+ * 
+ * Note: 
+ * - Saving and loading tasks for authenticated users might be adjusted to reference 
+ *   auth.js for direct integration with local storage and user data updates.
+ * - Current functionality includes basic saving to localStorage for both guests and users,
+ *   but this might change in future updates.
+ */
+
+import { MoodTaskService } from '/src/components/mood-selector/js/mood-task-service.js';
+import { currentUser, UserService } from '/src/auth/js/auth.js';
+import { createTaskCard, handleTaskActions } from '/src/components/task-component/js/task-component.js';
+import { renderTasks } from '/src/script/main.js';
+import { generateRandomWeather, currentWeather } from '/src/components/weather/js/weather.js';
+
+export const TaskManager = {
+    yourTasks: [],
+    completedTasks: [],
+    suggestedTasks: [],
+    
+    // Function to get suggested tasks based on mood and weather
+    getSuggestedTasks: async (mood, weather) => {
+        try {
+            this.suggestedTasks = await MoodTaskService.getFilteredTasks(mood, weather);
+            return this.suggestedTasks;
+        } catch(error) {
+            console.error('Error fetching suggestions:', error);
+            return [];
+        }
+    },
+    
+    // Function to save tasks for the user
+    saveSuggestedTasks: user => {
+        const tasks = [...this.yourTasks, ...this.completedTasks];
+        user.tasks = tasks;
+        user.email === 'guest' 
+            ? localStorage.setItem('guestTasks', JSON.stringify(tasks))
+            : UserService.saveUser(user);
+    },
+    
+    loadUserTasks: user => {
+        this.yourTasks.length = 0;
+        this.completedTasks.length = 0;
+        user.tasks.forEach(task => {
+            task.completed ? this.completedTasks.push(task) : this.yourTasks.push(task);
+        });
+    },
+    
+    handleTaskAction: (taskCard, isSuggested) => {
+        const taskTitle = taskCard.querySelector('.task-title').textContent;
+        
+        if(isSuggested) {
+            this.suggestedTasks = this.suggestedTasks.filter(t => t.title !== taskTitle);
+            this.yourTasks.push({
+                title: taskTitle,
+                description: taskCard.querySelector('.task-description').textContent,
+                dueDate: taskCard.querySelector('.due-date').textContent.split(': ')[1],
+                completed: false
+            });
+        }
+        
+        this.saveSuggestedTasks(currentUser);
+    },
+
+
+    // Function to update the task count display
+    updateTaskCount: function() {
+        const taskCountElement = document.getElementById('task-count-number');
+        if (taskCountElement) {
+            taskCountElement.textContent = this.yourTasks.length; // Update with the current number of tasks
+            TaskManager.saveTasksToLocalStorage();
+        } else {
+            console.error('Task count element not found');
+        }
+    },
+
+    loadUserData: async () => {
+        console.log("Current user before loading tasks:", currentUser); // Log currentUser
+        if (currentUser) {
+            await TaskManager.loadUserTasks(currentUser); // Await if loadUserTasks is async
+            console.log(`Loaded tasks for ${currentUser.email}:`, { yourTasks: this.yourTasks, completedTasks: this.completedTasks }); // Log the loaded tasks
+            
+            // After loading tasks from localStorage, update the UI
+            const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+            renderTasks(this.yourTasks, yourTasksSection); // Render your tasks
+            
+            // Ensure completed tasks are also rendered if the user wants to see them
+            const isShowingCompleted = document.getElementById('show-completed').textContent.includes('Hide');
+            if (isShowingCompleted) {
+                renderTasks(this.completedTasks, yourTasksSection); // Render completed tasks if needed
+            }
+        } else {
+            console.log("No user logged in to load tasks for");
+        }
+        
+        // Update task count or any other UI elements that depend on task lists
+        TaskManager.updateTaskCount();
+        
+        // Handle task actions for both yourTasks and completedTasks if they are in the DOM
+        try {
+            [...this.yourTasks, ...this.completedTasks].forEach(task => {
+                console.log('Task type:', typeof task, 'Task node type:', task.nodeType);
+                if (task.nodeType === Node.ELEMENT_NODE && document.body.contains(task)) {
+                    handleTaskActions(task);
+                }
+            });
+        } catch (error) {
+            console.error('Error in task handling:', error);
+        }
+    },
+
+    // Function to save guest tasks to localStorage
+    saveGuestTasks: () => {
+        return new Promise((resolve, reject) => {
+            try {
+                localStorage.setItem('guestTasks', JSON.stringify([...TaskManager.yourTasks, ...TaskManager.completedTasks]));
+                resolve();
+            } catch(error) {
+                reject(error);
+            }
+        });
+    },
+
+    // Function to save current user data
+    saveCurrentUserData: () => {
+        return new Promise((resolve, reject) => {
+            try {
+                UserService.saveUser(currentUser);
+                resolve();
+            } catch(error) {
+                reject(error);
+            }
+        });
+    },
+
+    // Function to save tasks to localStorage
+    saveTasksToLocalStorage: () => {
+        if (currentUser) {
+            console.log('Saving for logged-in user with email:', currentUser.email);
+            TaskManager.saveCurrentUserData().then(() => {
+                console.log('Tasks saved to localStorage for user:', UserService.getUsers().find(u => u.email === currentUser.email).tasks);
+                console.log('Your tasks have been successfully saved!');
+            }).catch(error => {
+                console.error('Error in saving tasks:', error);
+                console.log('Sorry, there was an error saving your tasks. Please try again later.');
+            });
+        } else {
+            console.log('Saving for guest user');
+            TaskManager.saveGuestTasks().then(() => {
+                console.log('Guest tasks saved to localStorage');
+                console.log('Your tasks have been successfully saved!');
+            }).catch(error => {
+                console.error('Error in saving guest tasks:', error);
+                console.log('Sorry, there was an error saving your tasks. Please try again later.');
+            });
+        }
+    },
+
+    // Rename the function to reflect its purpose more clearly
+    switchTaskView: function() {
+        console.log('Switching task view');
+        const showCompletedButton = document.getElementById('show-completed');
+        if (!showCompletedButton) {
+            console.log('Show completed button not found');
+            return;
+        }
+
+        const isShowingCompleted = showCompletedButton.textContent.includes('Hide');
+        const yourTasksSection = document.querySelector('.tasks-section .task-cards');
+        
+        if (yourTasksSection) {
+            // Switch between yourTasks and completedTasks based on the current view
+            renderTasks(isShowingCompleted ? this.yourTasks : this.completedTasks, yourTasksSection);
+            
+            // Update the header and button text accordingly
+            const header = document.querySelector('.tasks-section .section-header h2');
+            if (header) {
+                header.textContent = isShowingCompleted ? 'Your Tasks' : 'Completed Tasks';
+            }
+            showCompletedButton.textContent = isShowingCompleted ? 'Show Completed' : 'Hide Completed';
+        } else {
+            console.log('Your tasks section not found');
+        }
+    },
+
+    // Function to populate tasks
+    populateTasks: tasks => {
+        // Log for debugging
+        console.log('Attempting to populate tasks', tasks);
+        
+        // Check if tasks is an array before processing
+        if (Array.isArray(tasks)) {
+            // Iterate over tasks if it's an array
+            tasks.forEach(task => createTaskCard(task, false));
+        } else {
+            // Log if tasks is not an array
+            console.warn('tasks is not an array:', tasks);
+        }
+
+        // Get DOM containers
+        const yourTasksContainer = document.querySelector('.tasks-section .task-cards');
+        if (yourTasksContainer) {
+            console.log('Rendering your tasks');
+            renderTasks(this.yourTasks, yourTasksContainer);
+            TaskManager.updateTaskCount();
+        } else {
+            console.error('Task containers not found');
+        }
+    },
+
+    // Modified updateSuggestedTasks method
+    updateSuggestedTasks: async function() {
+        try {
+            // Get current conditions
+            const currentMood = MoodTaskService.currentMood;
+            const condition = currentWeather?.condition?.toLowerCase() || 'clear';
+            
+            console.log(`Updating tasks for mood: ${currentMood}, weather: ${condition}`);
+
+            // Fetch filtered tasks
+            const filteredTasks = await MoodTaskService.getFilteredTasks(currentMood, condition);
+            this.suggestedTasks = filteredTasks;
+
+            // Clear existing suggested tasks
+            const suggestedContainer = document.querySelector('#suggested-tasks-section .task-cards');
+            suggestedContainer.innerHTML = '';
+
+            // Create and render new task cards USING IMPORTED FUNCTION
+            const taskCards = await Promise.all(
+                this.suggestedTasks.map(task => createTaskCard(task, true))
+            );
+
+            // Append cards and attach handlers
+            taskCards.forEach(card => {
+                suggestedContainer.appendChild(card);
+                this.attachTaskHandlers(card);
+            });
+
+            console.log('Suggested tasks updated successfully');
+            this.saveTasksToLocalStorage();
+        } catch (error) {
+            console.error('Error updating suggestions:', error);
+        }
+    },
+
+    // New method to handle task card interactions
+    attachTaskHandlers: function(taskCard) {
+        const isSuggested = taskCard.classList.contains('suggested');
+        const addBtn = taskCard.querySelector('.add');
+        const deleteBtn = taskCard.querySelector('.delete');
+
+        if (addBtn) {
+            // Check if the listener is already attached
+            if (!addBtn.dataset.listenerAttached) {
+                addBtn.addEventListener('click', () => this.handleAddTask(taskCard));
+                addBtn.dataset.listenerAttached = true; // Mark as attached
+            }
+        }
+
+        if (deleteBtn) {
+            if (!deleteBtn.dataset.listenerAttached) {
+                deleteBtn.addEventListener('click', () => this.handleDeleteTask(taskCard, isSuggested));
+                deleteBtn.dataset.listenerAttached = true; // Mark as attached
+            }
+        }
+    },
+
+    // Task action handlers
+    handleAddTask: function(taskCard) {
+        const taskData = {
+            title: taskCard.querySelector('.task-title').textContent,
+            description: taskCard.querySelector('.task-description').textContent,
+            dueDate: taskCard.querySelector('.due-date').textContent.split(': ')[1],
+            completed: false
+        };
+
+        this.yourTasks.push(taskData);
+        taskCard.remove();
+        this.updateTaskCount();
+        this.saveTasksToLocalStorage();
+    },
+
+    handleDeleteTask: function(taskCard, isSuggested) {
+        const title = taskCard.querySelector('.task-title').textContent;
+        
+        if (isSuggested) {
+            this.suggestedTasks = this.suggestedTasks.filter(t => t.title !== title);
+        } else {
+            const taskLists = document.getElementById('show-completed').textContent.includes('Hide') 
+                ? this.completedTasks 
+                : this.yourTasks;
+            const index = taskLists.findIndex(t => t.title === title);
+            if (index !== -1) taskLists.splice(index, 1);
+        }
+        
+        taskCard.remove();
+        this.updateTaskCount();
+        this.saveTasksToLocalStorage();
+    },
+};
+
+// Ensure the function is accessible globally.
+window.populateTasks = TaskManager.populateTasks;

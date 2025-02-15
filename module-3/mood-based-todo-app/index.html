@@ -1,19 +1,69 @@
-<!--Index.html -->
+<!--
+ * @file index.html
+ * @version 1.0.0
+ * @author Terra Infinity
+ * @description The main HTML file for the MoodTodo application, containing the structure for the home page.
+ * @module index.html
+ * 
+ * This file serves as the entry point for the MoodTodo application, providing the layout and UI components
+ * necessary for user interaction, including navigation, task management, and mood selection.
+ -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>MoodTodo - Home</title>
+    <!--============================================================
+    ======================= Meta Tags ==============================
+    =============================================================--> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoodTodo - Home</title>
+
+    <!--============================================================
+    ======================= Stylesheets ============================
+    =============================================================--> 
     <link rel="stylesheet" href="src/css/styles.css">
     <link rel="stylesheet" href="src/css/components.css">
     <!-- Add jQuery UI CSS -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">  
+    <!-- Add Font Awesome CSS (for icons)-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .footer-link {
+            text-decoration: none; /* Remove underline from links */
+        }
+
+
+        @media (max-width: 600px) {
+            .modal-content {
+                width: 100%; /* Full width on small screens */
+                height: auto; /* Auto height */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--============================================================
+    ======================= Scripts ================================
+    =============================================================--> 
     <!-- Add jQuery and jQuery UI JS -->
+    <!-- 
+        The following scripts are essential for the MoodTodo application:
+        - auth.js: Handles user authentication, including login, registration, and session management.
+        - main.js: Manages the main application logic, including UI interactions, task management, and mood selection.
+    -->
+
+    <script type="module" src="src/auth/js/auth.js"></script>
+    <script type="module" src="src/script/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-</head>
-<body>
+
+  
+    <!--============================================================    
+    ======================= Main Navigation =========================
+    =============================================================--> 
+
     <nav class="main-nav">
         <div class="nav-container">
             <a href="index.html" class="logo">🏠 MoodTodo</a>
@@ -24,53 +74,167 @@
         </div>
     </nav>
 
+    <!--============================================================
+    ======================= Main Content ==========================
+    =============================================================--> 
+
     <main class="container">
-        <!-- Main Content -->
+        <!-- Main Container -->
         <div class="dashboard-grid">
-            <!-- Header Section -->
+            <!-- Dashboard Header Section -->
             <header class="dashboard-header">
+                <!-- Greeting Section -->
                 <div class="greeting" id="greeting-section">
-                    <h1 class="text-bordered">Welcome, Guest.</h1>
-                    <p class="task-count text-bordered" id="task-count">Ready for today? You have <span id="task-count-number">3</span> tasks planned</p>
+                    <!-- Greeting Text Updates When Logged In-->
+                    <h1 class="text-bordered" id="greeting-text">Welcome, Guest.</h1>
+                    <!-- Task Count Updates When Tasks Are Added/Loaded -->
+                    <p class="task-count text-bordered" id="task-count">Ready for today? You have <span id="task-count-number">#</span> tasks planned</p>
                 </div>
+                <!-- Header Icons Section -->
                 <div class="header-icons">            
+                    <!-- Mood Icon - Click to Open Mood Slider -->
                     <button class="icon-button" id="mood-icon">😊</button>
+                    <!-- Weather Icon - Click to Refresh Current Weather -->
                     <button class="icon-button" id="weather-icon" title="Current Weather">⛅</button>
+                    <!-- User Icon - Click to Open User Menu or Login if Not Logged In -->
                     <button class="icon-button" id="user-icon">👤</button>
                 </div>
             </header>
-            <!-- Your Tasks Section -->
+
+            <!--============================================================
+            ======================= Main Task Section ======================
+            ===== Active Tasks & Completed Tasks & Suggested Tasks =========
+            =============================================================--> 
+            <!-- 
+                Main Task Section within Main Container 
+                Contains:
+                - Your Tasks or Completed Tasks Section (With a Button to Toggle Between Sections)
+                - The Suggested Tasks Section (Which Changes Based on the User's Mood And Weather)
+            -->             
             <section class="tasks-section">
+                <!-- Main Task Section Header -->
                 <div class="section-header">
-                    <h2 class="text-bordered">Your Tasks</h2>
+                    
+                    <!-- Main Tasks Section Header - Updates To Completed Tasks When The Button Is Clicked -->
+                    <h2 class="text-bordered" id="task-section-header">Your Tasks</h2>
+                    <!-- Controls Section - Contains Buttons To Complete All Tasks Or Toggle between Your Active Tasks Completed Tasks -->
                     <div class="controls">
+                        <!-- Add Task Button -->
+                        <button class="btn-add-task" id="add-task-btn">
+                            <span>+</span> Add
+                        </button>
+                        <!-- Complete All Tasks Button in current view - either your active tasks or completed tasks -->
                         <button id="complete-all" class="btn-secondary btn-complete-all" style="text-align: center">Complete All</button>
+                        <!-- Toggle Between Active Tasks And Completed Tasks Button -->
                         <button id="show-completed" class="btn-secondary btn-show-completed" style="text-align: center">Show Completed</button>
                     </div>
                 </div>
 
-                <!-- Task Cards -->
-                <div class="task-cards">
-                    
-                </div>
+                <!-- Task Cards Section - Contains The Task Cards For The Current View (Either Your Active Tasks Or Completed Tasks) -->
+                <div class="task-cards"></div>
             </section>
 
             <!-- Suggested Tasks -->
             <section class="suggested-tasks" id="suggested-tasks-section">
+                <!-- Suggested Tasks Section Header -->
                 <h2 class="text-bordered">Suggested Tasks</h2>
-                <div class="task-cards">
-
-                </div>
+                <!-- Suggested Tasks Task Cards Section - Contains The Task Cards For The Suggested Tasks -->
+                <div class="task-cards"></div>
             </section>
         </div>
 
-        <!-- Add Task Button -->
-        <button class="btn-add-task">
-            <span>+</span> Add Task
-        </button>
     </main>
-    <script type="module" src="src/auth/js/auth.js"></script>
-    <script type="module" src="src/script/main.js"></script>
+
+    <!-- Modal Container - 
+     Manages:
+     - The Hidden Modal For The Login/Register Form 
+     - The Hidden Modal for Adding/Editing A New Task form
+     -->
+     <div id="authModalContainer" class="modalContainer"></div>
+     <div id="addTaskModalContainer" class="modalContainer"></div>
+
+    <!-- Add Modal for YouTube Video -->
+    <div id="youtubeModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <iframe id="youtubeFrame" width="100%" height="315" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!--============================================================
+    ======================= Footer ==============================
+    =============================================================--> 
+    <footer class="footer">
+        <div class="footer-content" style="display: block;align-items: center;">
+            <p class="footer-text-right" style="margin: 0; text-align: center;">Follow us on 
+                <a href="https://x.com/BambiCloudPod" class="footer-link"><i class="fab fa-twitter"></i></a>
+                <a href="https://github.com/TerraInfinity" class="footer-link"><i class="fab fa-github"></i></a> 
+                <a href="https://www.instagram.com/terra8infinity/" class="footer-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/terra-hunter-70263063" class="footer-link"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@CrystalCloudPodcast" class="footer-link"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="footer-link" id="youtube-link">👽</a>
+                <br>
+                <a id="music-toggle-badwolf" class="footer-link" style="cursor: help;">Baď̸̨͇͓̙̣͔͙̎̈́̿̓̇̄̏͜🐺Wol̴̝̮̍̓f</a>
+                <br>
+                <a id="music-toggle-rose" class="footer-link" style="cursor: help;">🌹</a>
+            </p>
+        </div>
+    </footer>
+
+
+    <!--============================================================
+    ========================= Music ================================
+    =============================================================--> 
+    <audio id="Rose42" src="public/data/music/Rose42.mp3" preload="auto"></audio>
+    <audio id="BadWolf137" src="public/data/music/BadWolf137.mp3" preload="auto"></audio>
+    <script>
+        // Function to toggle music playback
+        document.getElementById('music-toggle-rose').addEventListener('click', function() {
+            const roseAudio = document.getElementById('Rose42');
+            const badWolfAudio = document.getElementById('BadWolf137');
+            if (roseAudio.paused) {
+                roseAudio.play();
+                badWolfAudio.pause(); // Pause the other audio if needed
+            } else {
+                roseAudio.pause();
+            }
+        });
+
+        document.getElementById('music-toggle-badwolf').addEventListener('click', function() {
+            const badWolfAudio = document.getElementById('BadWolf137');
+            const roseAudio = document.getElementById('Rose42');
+            if (badWolfAudio.paused) {
+                badWolfAudio.play();
+                roseAudio.pause(); // Pause the other audio if needed
+            } else {
+                badWolfAudio.pause();
+            }
+        });
+
+        // Open YouTube modal
+        document.getElementById('youtube-link').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            const youtubeFrame = document.getElementById('youtubeFrame');
+            youtubeFrame.src = "https://www.youtube.com/embed/93U3qZIVCKI?si=EG5dhOUTVQHlaCvy&autoplay=1"; // Set the video source with autoplay
+            document.getElementById('youtubeModal').style.display = "flex"; // Show the modal
+        });
+
+        // Close modal functionality
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('youtubeModal').style.display = "none"; // Hide the modal
+            document.getElementById('youtubeFrame').src = ""; // Stop the video
+        });
+
+        // Close modal when clicking outside of the modal content
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('youtubeModal')) {
+                document.getElementById('youtubeModal').style.display = "none"; // Hide the modal
+                document.getElementById('youtubeFrame').src = ""; // Stop the video
+            }
+        };
+    </script>
 
 </body>
 </html>
+
+

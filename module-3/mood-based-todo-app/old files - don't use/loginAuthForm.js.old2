@@ -1,0 +1,147 @@
+// loginAuthForm.js - Manages authentication form interactions
+/**
+ * @file Manages authentication form interactions.
+ * 
+ * - Handles form submission, input collection, and initial validation.
+ * - Communicates with auth.js for actual authentication processing.
+ * 
+ * Workflow:
+ * - Collects user credentials when form is submitted.
+ * - Calls auth.js to validate credentials.
+ * - If successful, hides modal, resets form, and signals main.js to update UI.
+ */
+import { login, register } from '/src/auth/js/auth.js';
+
+export async function initializeAuthForm() {
+    // Load the login template
+    //const response = await fetch('/src/auth/html/login.html');
+    //const template = await response.text();
+    
+
+    // Parse and inject the template
+    //const parser = new DOMParser();
+    //const doc = parser.parseFromString(template, 'text/html');
+    
+    // Clone BOTH elements from the template
+    //const authModal = doc.querySelector('.auth-modal')?.cloneNode(true);
+    //const modalOverlay = doc.querySelector('.modal-overlay')?.cloneNode(true);
+
+    //if (!authModal || !modalOverlay) {
+    //    console.error('Auth modal or overlay template not found');
+    //    return;
+    //}
+
+    // Add to DOM and initialize
+    //document.body.appendChild(authModal.cloneNode(true));
+    initializeFormLogic(); // Call to initialize form logic
+    initializeModalBehavior(); // This will expose showModal to the global scope
+}
+
+function initializeFormLogic() {
+    /*const authForm = document.querySelector('.auth-form');
+    const toggleFormLink = document.getElementById('toggle-form');
+    const formTitle = document.getElementById('form-title');
+    const submitButton = document.getElementById('submit-btn');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    let isLoginForm = true; // Tracks whether the form is in login or registration mode
+
+    // Check if toggleFormLink exists before adding event listener
+    if (toggleFormLink) {
+      // Toggle between login and registration forms
+      toggleFormLink.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent the link from navigating
+
+        isLoginForm = !isLoginForm; // Toggle the form mode
+
+        // Update the form title and button text
+        if (isLoginForm) {
+          formTitle.textContent = 'Welcome Back';
+          submitButton.textContent = 'Login';
+          toggleFormLink.innerHTML = 'Don\'t have an account? <a href="#">Sign up</a>';
+        } else {
+          formTitle.textContent = 'Create Account';
+          submitButton.textContent = 'Register';
+          toggleFormLink.innerHTML = 'Already have an account? <a href="#">Login</a>';
+        }
+      });
+    } else {
+      console.error('Element with ID "toggle-form" not found');
+    }
+
+    // Handle form submission
+    authForm.addEventListener('submit', (e) => {
+      e.preventDefault(); // Prevent the form from submitting
+
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      if (isLoginForm) {
+        // Login logic
+        if (login(email, password)) {
+          window.location.href = '/'; // Redirect to the main page after successful login
+        } else {
+          alert('Invalid credentials. Please try again or register.');
+        }
+      } else {
+        // Registration logic
+        if (register(email, password)) {
+          alert('Registration successful! Please log in.');
+          // Reset the form and switch back to login mode
+          authForm.reset();
+          isLoginForm = true;
+          formTitle.textContent = 'Welcome Back';
+          submitButton.textContent = 'Login';
+          toggleFormLink.innerHTML = 'Don\'t have an account? <a href="#">Sign up</a>';
+        } else {
+          alert('User already exists. Please log in.');
+        }
+      }
+    });*/
+}
+
+
+export function initializeModalBehavior() {
+    /*const authModal = document.querySelector('.auth-modal');
+    const modalOverlay = document.querySelector('.modal-overlay');
+    const closeModalButton = document.querySelector('.close-modal');
+
+
+    // Ensure modal and overlay are present
+    if (!authModal || !modalOverlay) {
+        console.error('Auth modal or overlay not found');
+        return;
+    }
+
+    // Show modal and overlay
+    function showModal() {
+        authModal.classList.add('active');
+        modalOverlay.classList.add('active');
+    }
+
+    // Hide modal and overlay
+    function hideModal() {
+        authModal.classList.remove('active');
+        modalOverlay.classList.remove('active');
+    }
+
+    // Close modal when clicking outside
+    modalOverlay.addEventListener('click', hideModal);
+
+    // Close modal when clicking the close button
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', hideModal);
+    }
+
+    // Close modal on form submission
+    const authForm = document.querySelector('.auth-form');
+    if (authForm) {
+        authForm.addEventListener('submit', hideModal);
+    }
+
+    // Expose show/hide functions for the login button
+    window.showAuthModal = showModal;
+    window.hideAuthModal = hideModal;
+    */
+}

@@ -1,0 +1,35 @@
+//loginAuthForm.js
+
+
+export function toggleAuthForm(form, isLogin) {
+    const title = form.querySelector('#form-title');
+    const submitBtn = form.querySelector('#submit-btn');
+    const toggleLink = form.querySelector('#toggle-form');
+    
+    if (isLogin) {
+        title.textContent = 'Welcome Back';
+        submitBtn.textContent = 'Login';
+        toggleLink.innerHTML = 'Don\'t have an account? <a href="#">Sign up</a>';
+    } else {
+        title.textContent = 'Create Account';
+        submitBtn.textContent = 'Sign Up';
+        toggleLink.innerHTML = 'Already have an account? <a href="#">Login</a>';
+    }
+}
+export function handleAuthSubmit(e, isLogin) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    window.alert('User validating');
+
+    // Log form data for debugging
+    console.log('Form data:', [...formData.entries()]); 
+    handleAuth(formData, !isLogin); // Call the authentication function
+
+    // Close the modal after successful authentication
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
