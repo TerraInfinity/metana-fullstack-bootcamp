@@ -343,9 +343,8 @@ export class TaskCard {
             // Event listener for adding a new task
             addButton.addEventListener('click', async () => {
                 try {
+                    console.info('%c *** setAddButtonListener() Moving task to active: ***', 'color: lightgreen', this.task);
                     systemTaskManager.moveTask(this.task, 'active'); // Move the task to 'active' type
-                    // Initializing the Task Card will refresh the Task Card UI and buttons / listeners.
-                    await this.initializeTaskCard(this.task); // Await the asynchronous call to initializeTaskCard
                 } catch (error) {
                     // Log any errors that occur during the task addition process
                     console.error('Error moving task to active:', error.message);
@@ -377,12 +376,8 @@ export class TaskCard {
             // Attach a click event listener to the edit button
             editButton.addEventListener('click', async () => {
                 try {
-                    // Open the edit modal and wait for the user to submit the form
-                    const data = await this.openEditModal();
-                    // Log the form data received from the modal for debugging
-                    console.log(data); // Here `data` contains the updated task details
-                    // Update the task in the task manager with the new values
-                    systemTaskManager.editTask(this.task, data.title, data.description, data.duration, data.dueDate);
+                    console.info('%c *** setEditButtonListener() Opening edit modal: ***', 'color: lightgreen', this.task);
+                    showTaskFormModal();
                 } catch (error) {
                     // Log any errors that occur during the editing process
                     console.error('Error updating task:', error.message);
@@ -415,9 +410,8 @@ export class TaskCard {
             // Attach a click event listener to the complete button
             completeButton.addEventListener('click', async () => {
                 try {
+                    console.info('%c *** setCompleteButtonListener() Moving task to completed: ***', 'color: lightgreen', this.task);
                     systemTaskManager.moveTask(this.task, 'completed'); // Move the task to 'completed' type
-                    // Initializing the Task Card will refresh the Task Card UI and buttons / listeners.
-                    await this.initializeTaskCard(this.task); // Await the asynchronous call to initializeTaskCard
                 } catch (error) {
                     // Log any errors that occur during the task completion process
                     console.error('Error moving task to completed:', error.message);
@@ -447,6 +441,7 @@ export class TaskCard {
             // Attach a click event listener to the delete button
             deleteButton.addEventListener('click', () => {
                 try {
+                    console.info('%c *** setDeleteButtonListener() Removing task: ***', 'color: lightgreen', this.task);
                     systemTaskManager.removeTask(this.task); // Remove the task from the task manager
                 } catch (error) {
                     // Log any errors that occur during the task deletion process

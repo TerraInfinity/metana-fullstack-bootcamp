@@ -26,7 +26,7 @@
 // =============================================================================
 
 import toggleMoodSelector from '/src/components/mood-selector/js/mood-selector.js';
-import { TaskManager } from '/src/auth/js/task-management.js';
+import { TaskManager } from '/src/auth/js/taskManager.js';
 import { initializeLoginButton } from '/src/auth/js/loginButton.js';
 import { initializeAuthForm } from '/src/auth/js/loginAuthForm.js';
 import { initializeAuth, getCurrentUserData } from '/src/auth/js/auth.js';
@@ -127,9 +127,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         //console.debug('%c DOMContentLoaded - systemTaskManager', 'color: aqua', systemTaskManager);
         //console.debug('%c DOMContentLoaded - systemTaskManager', 'color: aqua', systemTaskManager.yourActiveTasks);
 
+        
         // Load tasks
-        //systemTaskManager.loadTasks();
+        systemTaskManager.loadTasks();
+        alert('systemTaskManager after loadTasks(): ' + JSON.stringify(systemTaskManager, null, 2));
         systemTaskManager.refreshAllTaskViews();
+        //alert('systemTaskManager after hydrateTaskManager(): ' + JSON.stringify(systemTaskManager, null, 2));
         console.warn('%c initializeAuth() systemTaskManager after hydrateTaskManager()', 'color: yellow', systemTaskManager);
         console.warn('%c initializeAuth() systemTaskManager.yourActiveTasks', 'color: yellow', systemTaskManager.yourActiveTasks);
         console.warn('%c initializeAuth() systemTaskManager.yourActiveTasks[0]', 'color: yellow', systemTaskManager.yourActiveTasks[0]);

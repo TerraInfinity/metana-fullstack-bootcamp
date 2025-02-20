@@ -33,7 +33,7 @@
 // =============================================================================
 // ========================= Import Functions ==================================
 // =============================================================================
-import { TaskManager } from '/src/auth/js/task-management.js';
+import { TaskManager } from '/src/auth/js/TaskManager.js';
 import { updateUI as updateLoginButtonUI } from '/src/auth/js/loginButton.js';
 import { systemTaskManager } from '/src/script/main.js';
 import { TaskCard } from '/src/components/task-component/js/taskCard.js';
@@ -169,19 +169,18 @@ export function login(email, password) {
   console.info('%c ↓ Starting login() ↓', 'color: lightgray', email);
   const users = JSON.parse(localStorage.getItem(LOCAL_STORAGE_USERS_KEY)) || [];
   const user = users.find(u => u.email === email && u.password === password);
-  const verifiedUser = verifyDataFormat(user);
+  //const verifiedUser = verifyDataFormat(user);
 
-  if (verifiedUser) {
+  if (user.email && user.password) {
       // Save the current user to sessionStorage
       console.debug('%c login() user', 'color: aqua', user);
-      console.debug('%c login() verifiedUser', 'color: aqua', verifiedUser);
 
-      sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(verifiedUser));
+      sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(user));
       console.debug('%c login() current user now set in sessionStorage', 'color: aqua', sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
       console.info('%c login() Login successful for user:', 'color: lightgreen', email); // Log success
 
       updateUI(); // Call updateUI for logged-in user
-      console.debug('%c login() userData Object:', 'color: aqua', verifiedUser);
+      console.debug('%c login() userData Object:', 'color: aqua', user);
       console.info('%c ↑ login() complete ↑', 'color: darkgray');
       return { success: true, message: 'Login successful' }; // Return success message
   } else {
@@ -388,6 +387,9 @@ export function getGuestUserData() {
       return defaultGuestData; // Return the default data
     } else{
       console.debug('%c getGuestUserData() currentUser is either a guest or a registered user', 'color: aqua', currentUserData);
+      console.debug('%c getGuestUserData() currentUserData.email', 'color: orange', currentUserData.email);
+      console.debug('%c getGuestUserData() currentUserData.password', 'color: orange', currentUserData.password);
+      console.debug('%c getGuestUserData() currentUserData.taskManager', 'color: orange', currentUserData.taskManager);
       if (currentUserData.email.toLowerCase() == 'guest'){
         console.debug('%c getGuestUserData() currentUser is a guest', 'color: aqua');
         return currentUserData;
@@ -464,15 +466,30 @@ export function getGuestUserEmail() {
  */
 export function saveCurrentUserData(data) {
   console.info('%c ↓ saveCurrentUserData() Starting ↓', 'color: lightgray');
-
-  console.debug('%c saveCurrentUserData() data', 'color: aqua', data);
-  const verifiedData = verifyDataFormat(data); // Data is User Data with Task Manager Instance
-  console.debug('%c saveCurrentUserData() verifiedData', 'color: aqua', verifiedData);
+  var savingData = {email: null, password: null, taskManager: null};
+  if (!data.email){
+    console.warn('%c saveCurrentUserData() Data user email data missing, grabbing from getCurrentUserData()', 'color: yellow');
+    const currentUserData = getCurrentUserData();
+    savingData.email = currentUserData.email;
+    savingData.password = currentUserData.password;
+    savingData.taskManager = TaskManager.fromObject(data); // assumes the data incoming is a task manager object only (broken or not)
+    console.debug('%c saveCurrentUserData() savingData.taskManager', 'color: orange', savingData.taskManager);
+    console.debug('%c saveCurrentUserData() data', 'color: orange', data);
+  } else if (data.email){
+    console.debug('%c saveCurrentUserData() Data user email data found, using provided data', 'color: aqua');
+    savingData.email = data.email;
+    savingData.password = data.password;
+    savingData.taskManager = data.taskManager;
+  } else {
+    console.error('%c saveCurrentUserData() Data is missing email', 'color: red');
+    throw new Error('Data is invalid');
+  }
+  
   try {
-    sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(verifiedData)); // Save current user data
+    sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(savingData)); // Save current user data
     console.debug('%c saveCurrentUserData() saved into sessionStorage:', 'color: aqua', sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
 
-    localStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(verifiedData)); // Save current user data
+    localStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(savingData)); // Save current user data
     console.debug('%c saveCurrentUserData() saved into localStorage:', 'color: aqua', localStorage.getItem(CURRENT_USER_SESSION_KEY));
 
     const checkingdata = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY)); // Convert stringified JSON to object
@@ -503,13 +520,13 @@ export function saveCurrentUserData(data) {
  */
 export function saveUserData(email, data) {
   // Verify the format of the provided data
-  const verifiedData = verifyDataFormat(data, false); // Validate data format, excluding credentials (false flag). This ensures verifiedData does not include email and password.
+  //const verifiedData = verifyDataFormat(data, false); // Validate data format, excluding credentials (false flag). This ensures verifiedData does not include email and password.
   try {
     const users = getAllUsers();
     const userIndex = users.findIndex(u => u.email === email);
     if (userIndex > -1) {
       const specifiedUserData = users[userIndex]; // Get the specified user data
-      const mergedData = { ...specifiedUserData, ...verifiedData }; // Merge verified data over specified user data. This ensure email and password of the specifiedUserData are not overwritten.
+      const mergedData = { ...specifiedUserData, ...data }; // Merge data over specified user data. This ensure email and password of the specifiedUserData are not overwritten.
       users[userIndex] = mergedData; // Update the users array with merged data
       localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(users)); // Save updated users list
     }
@@ -553,17 +570,36 @@ export function migrateGuestDataToUser(email) {
 // =============================================================================
 // ====================== Data Verification Functions ==========================
 // =============================================================================
+
+/**
+ * Verifies the format of the provided userData object.
+ * 
+ * @param {Object} userData - The userData object to verify.
+ * @returns {void}
+ */
+export function verifyDataFormat(userData) {
+  console.info('%c ↓ verifyDataFormat() ↓ Starting ', 'color: lightgray');
+
+  console.debug('%c verifyDataFormat() userData:', 'color: aqua', userData);
+
+  console.info('%c ↑ verifyDataFormat() ↑ Complete ', 'color: darkgray');
+}
+
+
+
+
+
+
+
+
 /**
  * Verifies the format of the provided data object based on whether user credentials should be included.
  * 
- * This function checks if the provided data object is valid and contains the required properties.
- * If the data object is a TaskManager instance, it will return it as is. Otherwise, it will ensure
- * that the email and password are valid and that the taskManager is an instance of TaskManager.
- * 
- * @param {Object} data - The data object to verify. It can either be a TaskManager instance or an object containing:
- *                        - {string} email - The user's email address.
- *                        - {string} password - The user's password.
- *                        - {TaskManager} taskManager - An instance of TaskManager.
+ * This function ensures that the data object contains valid email, password, and a TaskManager instance.
+ * It handles various formats of TaskManager data due to serialization/deserialization.
+ *
+ * @param {Object|TaskManager} data - The data object to verify. Can either be a TaskManager instance or an object 
+ *                                    containing email, password, and taskManager properties.
  * 
  * @returns {Object} - Returns an object containing:
  *                     - {string} email - The verified email address.
@@ -572,77 +608,53 @@ export function migrateGuestDataToUser(email) {
  * 
  * @throws {Error} Throws an error if the data object is invalid or missing required properties.
  */
+/*
 export function verifyDataFormat(data) {
-  console.info('%c ↓ verifyDataFormat() ↓ Starting ', 'color: lightgray');  
+  console.info('%c ↓ verifyDataFormat() ↓ Starting ', 'color: lightgray');
+  
   if (!data) {
-    throw new Error('Data object is required for verification.'); // Check if data is provided
+    console.error('%c Data is null or undefined, throwing error', 'color: red');
+    throw new Error('Data object is required for verification.');
   }
 
   console.debug('%c verifyDataFormat() data:', 'color: aqua', data);
 
-  // Check if data is just a TaskManager instance
-  const taskManagerDataOnlyFlag = data instanceof TaskManager; // true or false 
+  let email, password, taskManager;
 
-  console.debug('%c verifyDataFormat() taskManagerDataOnlyFlag:', 'color: aqua', taskManagerDataOnlyFlag);
+  // Check if data is just a TaskManager instance or an object with taskManager property
+  if (data instanceof TaskManager || data.taskManager) {
+    // Handle TaskManager whether it's an instance or an object needing conversion
+    taskManager = ofObject(data instanceof TaskManager ? data : data.taskManager);
+    console.debug('%c TaskManager handled:', 'color: orange', taskManager);
 
-  if (!taskManagerDataOnlyFlag) {
-    // Data is not just a TaskManager instance, check for required properties
-    let { email, password, taskManager } = data;
-    
-    console.debug('%c verifyDataFormat() inputEmail:', 'color: aqua', email);
-    console.debug('%c verifyDataFormat() inputPassword:', 'color: aqua', password);
-    console.debug('%c verifyDataFormat() taskManagerInput:', 'color: aqua', taskManager);
-
-    // Ensure taskManager is an instance of TaskManager but keep the original data
-    let validatedTaskManager;
-
-    // 1. Validate TaskManager instance
-    if (taskManager) {
-      if (taskManager instanceof TaskManager) {
-        console.debug('%c verifyDataFormat() taskManager is an instance of TaskManager, no need to repopulate tasks', 'color: lightgreen');
-        validatedTaskManager = taskManager;
-      } else { // taskManager is not an instance of TaskManager, but exists as an object
-
-        console.debug('%c verifyDataFormat() taskManager is not an instance of TaskManager, but exists as an object - need to repopulate tasks and reinstate objects', 'color: aqua');
-        validatedTaskManager = new TaskManager();
-        console.debug('%c verifyDataFormat() taskManager:', 'color: aqua', taskManager);
-        Object.assign(validatedTaskManager, taskManager);
-        console.debug('%c verifyDataFormat() validatedTaskManager:', 'color: aqua', validatedTaskManager);
-        console.debug('%c verifyDataFormat() validatedTaskManager:', 'color: aqua', validatedTaskManager);
-
-
-      }
-    } else { // taskManager is undefined
-      console.error('%c verifyDataFormat() taskManager is undefined, unexpected error...', 'color: red');
-      throw new Error('TaskManager is undefined');
+    // Fetch email and password from current user data if not provided
+    if (!data.email) {
+      const currentUserData = getCurrentUserData();
+      email = currentUserData.email;
+      password = currentUserData.password;
+      console.debug('%c Email and Password fetched from current user:', 'color: green', { email, password });
+    } else {
+      email = data.email;
+      password = data.password || ''; // Assuming password might be optional if email is provided
+      console.debug('%c Email and Password directly from data:', 'color: green', { email, password });
     }
-
-
-
-     // 3. Handle email/password fallback
-     if (!email || email.toLowerCase() === "guest") {
-       const currentUserData = getCurrentUserData();
-       if (currentUserData) {
-         email = currentUserData.email;
-         password = currentUserData.password;
-       }
-     }
-     const result = { email, password, taskManager: validatedTaskManager };
-     console.info('%c ↑ verifyDataFormat() ↑ Complete ', 'color: darkgray', result);  
-     return result;
-  
   } else {
-    // Handle TaskManager-only input    
-    const taskManager = data;
-
-    const currentUserData = getCurrentUserData();
-    return {
-      email: currentUserData.email,
-      password: currentUserData.password,
-      taskManager: taskManager
-    };
+    // If data does not contain a taskManager in any form, throw an error
+    console.error('%c No TaskManager found in data, throwing error', 'color: red');
+    throw new Error('TaskManager is required in the data object.');
   }
+
+  // Ensure taskManager is an instance after ofObject (should always be true if ofObject works correctly)
+  if (!(taskManager instanceof TaskManager)) {
+    console.error('%c TaskManager is not an instance after processing, throwing error', 'color: red');
+    throw new Error('Failed to ensure TaskManager instance after processing.');
+  }
+
+  const result = { email, password, taskManager };
+  console.info('%c ↑ verifyDataFormat() ↑ Complete ', 'color: darkgray', result);
+  return result;
 }
+  */
 
 // =============================================================================
 // ========================= Update UI Functions ==============================

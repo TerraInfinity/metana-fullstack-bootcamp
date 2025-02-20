@@ -3,7 +3,7 @@
 
 //Imports
 import { MoodTaskService } from './mood-task-service.js'; 
-import { TaskManager } from '/src/auth/js/task-management.js'; // Import TaskManager here
+import { TaskManager } from '/src/auth/js/taskManager.js'; // Import TaskManager here
 
 let moodSelector = null; // Start as null since it's not in the DOM initially
 

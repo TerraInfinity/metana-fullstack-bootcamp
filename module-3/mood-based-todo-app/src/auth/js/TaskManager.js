@@ -38,12 +38,11 @@
 // =============================== Imports =====================================
 // =============================================================================  
 
- // task-management.js - Enhanced with auth integration
+ // TaskManager.js - Enhanced with auth integration
 import { systemTaskManager } from '/src/script/main.js';
 import { 
     getCurrentUserData, // Retrieves the current user's data from sessionStorage
     saveCurrentUserData, // Saves the current user's data to sessionStorage
-    verifyDataFormat, // Verifies the format of the user data
     migrateGuestDataToUser, // Migrates guest user data to an authenticated user
     isAuthenticated // Checks if the user is currently authenticated
 } from '/src/auth/js/auth.js';
@@ -95,53 +94,28 @@ export class TaskManager {
      * 
      * @returns {void} - This method does not return a value.
      */
-    loadTasks() {
+    loadTasks(taskManager = systemTaskManager) {
       console.info('%c ↓ loadTasks() Starting ↓', 'color: lightgray');
-      
 
       try {
         // Retrieve current user data or guest user data
         const userData = getCurrentUserData();
         console.debug('%c loadTasks() getCurrentUserData() user data found.', 'color: aqua', userData); 
-        const verifiedDataFormat = verifyDataFormat(userData);
-        console.debug('%c loadTasks() verifyDataFormat() verified data format.', 'color: aqua', verifiedDataFormat);
-
-        if (isAuthenticated()) {
-          console.debug('%c loadTasks() Is authenticated.', 'color: aqua'); // Debugging: log the authentication status
-        } else {
-          console.debug('%c loadTasks() Not authenticated. Loading guest tasks.', 'color: aqua'); 
-        }      
-
-      
-        console.debug('%c loadTasks() Current systemTaskManager state.', 'color: aqua', systemTaskManager);
-      
-        
 
         // Check if userData is null or undefined
-        if (!verifiedDataFormat) {
+        if (!userData) {
           console.error('%c loadTasks() No user data found. Task arrays will remain empty.', 'color: error'); // Log a warning if no user data is found
           return; // Exit the method if no user data is available
         }
-        console.debug('%c loadTasks() Verified data format is:', 'color: aqua', verifiedDataFormat);
-        console.debug('%c loadTasks() VerifiedDataFormat.taskManager is:', 'color: aqua', verifiedDataFormat.taskManager);
-        console.debug('Type of taskManager:', Object.getPrototypeOf(verifiedDataFormat.taskManager).constructor.name);
-        // Check if userData contains taskManager (an instance of TaskManager) and validate its structure
-        if (verifiedDataFormat.taskManager instanceof TaskManager) {
-          console.debug('%c loadTasks() Verified data format is a valid TaskManager instance.', 'color: aqua');
-          this.yourActiveTasks = verifiedDataFormat.taskManager.yourActiveTasks || []; // Load active tasks
-          this.yourCompleteTasks = verifiedDataFormat.taskManager.yourCompleteTasks || []; // Load completed tasks  
-          console.debug('%c loadTasks() Active tasks loaded systemTaskManager.yourActiveTasks:', 'color: aqua', systemTaskManager.yourActiveTasks); // Debugging: log loaded active tasks
-          console.debug('%c loadTasks() Completed tasks loaded systemTaskManager.yourCompleteTasks:', 'color: aqua', systemTaskManager.yourCompleteTasks); // Debugging: log loaded completed tasks
-          console.debug('%c loadTasks() Refreshed all task views.', 'color: aqua');
-        } else {
-          console.error('%c loadTasks() Invalid user data structure. Expected taskManager instance of TaskManager.', 'color: red'); // Error if taskManager is not valid
-          console.error('%c loadTasks() See user data with missing taskManager:', 'color: red', verifiedDataFormat); // Print user data before handling
-        }
+        // Update the properties of taskManager (which is referencing systemTaskManager)
+        console.debug('%c loadTasks() Old user data details of taskManager:', 'color: orange', userData.taskManager);
+        Object.assign(taskManager, TaskManager.fromObject(userData.taskManager));
+        console.debug('%c loadTasks() New user data details of taskManager:', 'color: orange', taskManager);
+       
       } catch (error) {
         console.error('%c loadTasks() Error loading tasks:', 'color: red', error); // Log any errors that occur during loading
       }
       console.info('%c ↑ loadTasks() Complete ↑', 'color: darkgray');
-
     }
   
 
@@ -158,16 +132,15 @@ export class TaskManager {
       try {
         // Prepare the task data object containing active and completed tasks
         const taskData = this // Current state of the TaskManager instance
-       
-       
+
         saveCurrentUserData(taskData); // Save for authenticated user
         console.debug('%c saveTasks() User data saved for authenticated user:', 'color: aqua', taskData); // Debugging: log saved data
         
       } catch (error) {
         console.error('%c Error saving tasks:', 'color: red', error); // Log any errors that occur during saving
       }
-      console.debug('%c saveTasks() this systemTaskManager instance:', 'color: aqua', systemTaskManager);
-      console.debug('%c saveTasks() this getCurrentUserData() instance:', 'color: aqua', getCurrentUserData());
+      //console.debug('%c saveTasks() this systemTaskManager instance:', 'color: aqua', systemTaskManager);
+      //console.debug('%c saveTasks() this getCurrentUserData() instance:', 'color: aqua', getCurrentUserData());
 
       console.info('%c ↑ saveTasks() Complete ↑', 'color: darkgray');
     }
@@ -690,5 +663,31 @@ export class TaskManager {
       });
       console.debug('%c hydrateTaskManager() systemTaskManager after task.create()', 'color: aqua', systemTaskManager);
       console.info('%c ↑ hydrateTaskManager() Complete ↑', 'color: darkgray');
+    }
+
+    // Static method to create an instance from a plain object
+    static fromObject(obj) {
+      const taskManager = new TaskManager();
+      console.debug('%c TaskManager.fromObject() obj', 'color: aqua', obj);
+      console.debug('%c TaskManager.fromObject() obj.yourActiveTasks', 'color: aqua', obj.yourActiveTasks);
+      try {
+        // Assuming 'yourActiveTasks' is an array of task objects
+        if (Array.isArray(obj.yourActiveTasks)) {
+          taskManager.yourActiveTasks = obj.yourActiveTasks; // Populate tasks
+        }
+        // Assuming 'yourCompleteTasks' is an array of task objects
+        if (Array.isArray(obj.yourCompleteTasks)) {
+          taskManager.yourCompleteTasks = obj.yourCompleteTasks; // Populate tasks
+        }
+        // Assuming 'yourActiveSuggestedTasks' is an array of task objects
+        if (Array.isArray(obj.yourActiveSuggestedTasks)) {
+          taskManager.yourActiveSuggestedTasks = obj.yourActiveSuggestedTasks; // Populate tasks
+        }
+        // Populate other properties if needed
+      } catch (error) {
+        console.error('%c Error creating TaskManager from object:', 'color: red', error); // Log the error
+        return false; // Return false in case of an error
+      }
+      return taskManager;
     }
 }
