@@ -81,7 +81,7 @@ async function fetchMoodSelector() {
 }
 
 // Assuming updateSuggestedTasks is defined somewhere in your code
-async function updateSuggestedTasks() {
+export async function updateSuggestedTasks() {
     systemTaskManager.yourActiveSuggestedTasks = await MoodTaskService.getFilteredTasks(MoodTaskService.currentMood, currentWeather);
     systemTaskManager.updateSuggestedTasksView();
 }

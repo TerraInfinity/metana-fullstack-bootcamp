@@ -28,18 +28,23 @@ export class MoodTaskService {
 
 
 
+    static async initializeSuggestedTasks() {
+        await this.getFilteredTasks(this.currentMood, this.currentWeather);
+        console.debug('%c MoodTaskService initialized suggested tasks', 'color: aqua');
+    }
+
     // =============================================================================
     // =============================== Load Tasks ==================================
     // =============================================================================
 
-  
+
     /**
      * Loads tasks from a JSON file based on the current mood and weather conditions.
      * 
      * @returns {Promise<Object>} A promise that resolves to an object containing an array of tasks.
      * @throws {Error} Throws an error if the tasks cannot be loaded.
      */
-    static async loadTasks() {
+    static async loadTasksFromJSON() {
 
       try {
         // Construct the URL for fetching tasks
@@ -76,7 +81,7 @@ export class MoodTaskService {
       let tasks; // Declare tasks variable to hold loaded tasks
 
       try {
-        const response = await this.loadTasks(); // Load tasks from the JSON file
+        const response = await this.loadTasksFromJSON(); // Load tasks from the JSON file
         tasks = response.tasks; // Extract tasks from the response
         console.debug(`%c Loaded ${tasks.length} tasks from the JSON file.`, 'color: aqua'); // Log number of tasks loaded
       } catch (error) {

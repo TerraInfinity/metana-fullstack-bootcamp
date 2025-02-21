@@ -103,7 +103,7 @@ export class TaskManager {
         try {
             const userEmail = getCurrentUserEmail(); // Get the current user's email
             const data = await loadCurrentUserTasks(userEmail); // Load tasks for the user
-            console.debug('%c loadTasks() data before hydrateTasks()', 'color: orange', data);
+            console.debug('%c loadTasks() data before hydrateTasks()', 'color: aqua', data);
             
             if (data) {
                 // Convert raw objects to Task instances
@@ -111,7 +111,7 @@ export class TaskManager {
                 this.yourCompleteTasks = await this.hydrateTasks(data.yourCompleteTasks);
                 this.yourActiveSuggestedTasks = await this.hydrateTasks(data.yourActiveSuggestedTasks);
             }
-            console.debug('%c loadTasks() data after hydrateTasks()', 'color: orange', this);
+            console.debug('%c loadTasks() data after hydrateTasks()', 'color: aqua', this);
         } catch (error) {
             console.error('Error loading tasks:', error); // Log any errors that occur during loading
         }
@@ -236,7 +236,7 @@ export class TaskManager {
      */
     renderTaskCards(container, tasks) {
       console.info('%c ↓ renderTaskCards() Starting ↓', 'color: lightgray');
-      console.warn('%c renderTaskCards() systemTaskManager', 'color: aqua', systemTaskManager);
+      console.debug('%c renderTaskCards() systemTaskManager', 'color: aqua', systemTaskManager);
 
      try {
         // Check if the container is a valid DOM element
@@ -407,7 +407,7 @@ export class TaskManager {
      */
     switchTaskView(viewType) {
       console.info('%c ↓ switchTaskView() Starting ↓', 'color: lightgray');
-      console.warn('%c switchTaskView() Task View Set to:', 'color: yellow', viewType);
+      console.debug('%c switchTaskView() Task View Set to:', 'color: aqua', viewType);
       // Validate the provided viewType
       if (!['active', 'completed'].includes(viewType)) {
         throw new Error('Invalid view type'); // Handle invalid view type

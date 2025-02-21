@@ -261,6 +261,7 @@ async function handleAuthFormSubmit(event, isLogin = true) {
             // Additional UI updates can be handled here
         } else {
             console.error('%c Operation failed:', 'color: red', response.message); // Log failure message
+            alert('Operation failed: ' + response.message);
             // Show error to user, maybe update UI to reflect failure
         }
     } catch (error) {

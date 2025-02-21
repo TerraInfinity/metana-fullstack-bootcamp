@@ -155,10 +155,17 @@ export function register(email, password) {
  */
 export function logout() {
   console.info('%c ↓ logout() Starting ↓', 'color: lightgray');
-  
+  const currentUserData = getCurrentUserData();
   try {
-    saveCurrentUserData(); // Save current user data.
-    sessionStorage.removeItem(CURRENT_USER_SESSION_KEY); // Remove current user session
+    saveCurrentUserData(currentUserData) // Save current user data.
+        .then(() => {
+            sessionStorage.removeItem(CURRENT_USER_SESSION_KEY); // Remove current user session
+        })
+        .catch(error => {
+            console.error('%c Error during logout process:', 'color: red', error); // Log any errors that occur during saving
+        });
+    //alert('currentUserData: ' + JSON.stringify(getCurrentUserData()));
+
     updateUI(); // Update UI to reflect logged-out state
     console.info('%c ↑ logout() complete ↑', 'color: darkgray');
   } catch (error) {
@@ -217,6 +224,7 @@ export function getAllUsers() {
 export function getCurrentUserData() {
   try {
     const currentUserData = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY)) || null; // Retrieve current user data
+    
     if ((!currentUserData) || (currentUserData.email == null)) {
       console.debug('%c getCurrentUserData() Current user data not found, defaulting to guest user data.', 'color: aqua'); // Log message when switching to guest user data
       const guestUserData = getGuestUserData();

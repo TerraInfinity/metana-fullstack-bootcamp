@@ -56,8 +56,9 @@ export function initializeLoginButton() {
           showLoginModal(); // Show the login modal (calls loginAuthForm.js showLoginModal function)
       } else if (loginButton.textContent === 'Logout') {
         console.log('%c Logging out...', 'color: lightblue'); // Log the logout action
+        //alert('getCurrentUserData(): ' + JSON.stringify(getCurrentUserData()));
+
         logout(); // Log the user out (calls auth.js logout function)   
-        updateUI(isAuthenticated());
       } else {
         console.warn('%c Unexpected button text: ' + loginButton.textContent, 'color: red'); // Warn for unexpected text
       }

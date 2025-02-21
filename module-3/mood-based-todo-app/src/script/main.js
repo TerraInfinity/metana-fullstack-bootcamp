@@ -29,10 +29,11 @@ import toggleMoodSelector from '/src/components/mood-selector/js/mood-selector.j
 import { TaskManager } from '/src/auth/js/taskManager.js';
 import { initializeLoginButton } from '/src/auth/js/loginButton.js';
 import { initializeAuthForm } from '/src/auth/js/loginAuthForm.js';
-import { initializeAuth, getCurrentUserData } from '/src/auth/js/auth.js';
+import { initializeAuth } from '/src/auth/js/auth.js';
 import { initializeAddTaskButton } from '/src/components/task-form/js/addTaskButton.js';
 import { initializeTaskFormModal } from '/src/components/task-form/js/taskForm.js';
 import { initializeCompleteAllButton } from '/src/components/task-component/js/completeAllButton.js';
+import { updateSuggestedTasks } from '/src/components/mood-selector/js/mood-selector.js';
 // =============================================================================
 // =============================== Variables ===================================
 // =============================================================================
@@ -101,16 +102,23 @@ body.setAttribute('data-theme', savedTheme);
  */
 document.addEventListener('DOMContentLoaded', async () => {
     console.info('%c ***↓↓↓*** DOM fully loaded and parsed ***↓↓↓***', 'color: purple'); 
-
     try {
         // Initialize systemTaskManager
         systemTaskManager = new TaskManager();
         // Initialize authentication and set up the login button
-        await initializeAuthForm();
+        try {
+            await initializeAuthForm();
+        } catch (error) {
+            console.error('Error initializing auth form:', error);
+        }
         // Initialize login button
         initializeLoginButton();
         // Initialize authentication
-        await initializeAuth();
+        try {
+            await initializeAuth();
+        } catch (error) {
+            console.error('Error during authentication initialization:', error);
+        }
         // Initialize task form modal
         initializeTaskFormModal();
         // Initialize add task button
@@ -118,10 +126,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Initialize complete all button
         initializeCompleteAllButton();
         // Load tasks
-        await systemTaskManager.loadTasks();
+        try {
+            await systemTaskManager.loadTasks();
+        } catch (error) {
+            console.error('Error loading tasks:', error);
+        }
+        
+        // Initialize suggested tasks
+        try {
+            await updateSuggestedTasks();
+        } catch (error) {
+            console.error('Error initializing suggested tasks:', error);
+        }
+        
         console.debug('%c DOMContentLoaded - systemTaskManager after loadTasks()', 'color: lightgreen', systemTaskManager);
         systemTaskManager.refreshAllTaskViews();
-
         
         // Check if TaskManager is available before using it
         // Ensure the function is accessible globally.
