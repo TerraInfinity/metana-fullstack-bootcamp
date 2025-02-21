@@ -1,7 +1,7 @@
 // taskCard.js
 
 import { systemTaskManager } from '/src/script/main.js'; // Import the taskManager instance
-
+import { showTaskFormModal } from '/src/components/task-form/js/taskForm.js';
 /**
  * Represents a UI component for displaying and managing tasks in various states (active, completed, suggested).
  * This class handles:
@@ -33,6 +33,9 @@ export class TaskCard {
      */
     constructor(task, type = 'active') {
         console.info('%c *↓↓ TaskCard constructor() Starting ↓↓*', 'color: lightgray');
+        // Add flag for hydration
+        this._isHydrating = false;
+
         try {
             if (!task || typeof task !== 'object') {
                 throw new Error('Invalid task object provided.'); // Validate the task object
@@ -74,6 +77,8 @@ export class TaskCard {
      * @throws {Error} Throws an error if the task card cannot be updated.
      */
     async initializeTaskCard(task) {
+        // Check if the task card is currently being hydrated
+        if (this._isHydrating) return;
         console.info('%c ↓ initializeTaskCard() Starting ↓', 'color: lightgray');
         try {
             if (!task) {
@@ -92,35 +97,34 @@ export class TaskCard {
             }   
 
 
-            console.debug('%c initializeTaskCard() Setting task.name', 'color: aqua', task.name);
             // Set the task name, using 'name' as a fallback if task.name is undefined
             this.taskCardElement.querySelector('.task-name').textContent = task.name || 'undefined';
-
             // Update the task description:
             // - If the task is 'suggested', clear the description
             // - Otherwise, use the task's description if available, or an empty string
-            console.debug('%c initializeTaskCard() Setting task.description', 'color: aqua', task.description);
             this.taskCardElement.querySelector('.task-description').textContent = 
                 task.type === 'suggested' ? '' : (task.description || '');
 
+            // Set the title attribute for the tooltip
+            this.taskCardElement.querySelector('.task-description').setAttribute('title', 
+                task.type === 'suggested' ? '' : (task.description || ''));
+
             // Set the due date, only if it exists
-            console.debug('%c initializeTaskCard() Setting task.dueDate', 'color: aqua', task.dueDate);
-            this.taskCardElement.querySelector('.due-date').textContent = 
+            this.taskCardElement.querySelector('.task-due-date').textContent = 
                 this.dueDate ? `Due: ${task.dueDate}` : '';
 
             // Set the task duration, only if it's specified
-            console.debug('%c initializeTaskCard() Setting task.duration', 'color: aqua', task.duration);
             this.taskCardElement.querySelector('.task-duration').textContent = 
                 this.duration ? `Duration: ${task.duration}` : '';
 
             // Display the type of the task
-            console.debug('%c initializeTaskCard() Setting task.type', 'color: aqua', task.type);
             this.taskCardElement.querySelector('.task-type').textContent = task.type;
 
             // Reinitialize buttons which might depend on the task type or other attributes
-            console.info('%c initializeTaskCard() Task Card Details Set', 'color: aqua', 
+            console.info('%c initializeTaskCard() Task Card Details Set', 'color: lightgreen', 
                 `Name: ${task.name}, Description: ${task.description}, Due Date: ${task.dueDate}, Duration: ${task.duration}, Type: ${task.type}`);
             console.debug('%c initializeTaskCard() Reinitializing buttons', 'color: aqua');
+
             await this.initializeHTMLButtons(task); 
 
             systemTaskManager.refreshAllTaskViews();
@@ -142,8 +146,6 @@ export class TaskCard {
      * - Fetches an HTML template for the task card.
      * - Populates the template with task data (though not shown in this snippet, it's implied).
      * - Adds appropriate buttons for task interactions.
-
-     * - Sets up event listeners for user interactions (not shown but implied).
      * 
      * If an error occurs during the fetching or processing of the template,
      * it logs the error message to the console for debugging purposes.
@@ -153,6 +155,9 @@ export class TaskCard {
      * @throws {Error} If the HTML template cannot be fetched or processed.
      */
     async createTaskCardHTMLTemplate() {
+        // Skip if the task card element already exists
+        if (this.taskCardElement) return;
+
         console.info('%c ↓ createTaskCardHTMLTemplate() Starting ↓', 'color: lightgray');
         try {
             console.debug('%c createTaskCardHTMLTemplate() Fetching Task Card HTML Template from taskCard.html', 'color: aqua');
@@ -174,8 +179,6 @@ export class TaskCard {
             this.taskCardElement = taskCardHTML; 
             console.debug('%c createTaskCardHTMLTemplate() Task Card HTML Created & inserted into taskCardElement:', 'color: lightgreen', this.taskCardElement);
 
-            // Here you would typically add logic to populate taskCard with data, 
-            // add buttons, and set up event listeners, but it's not shown in this snippet
             console.info('%c ↑ createTaskCardHTMLTemplate() Complete ↑', 'color: lightgray');
         } catch (fetchError) {
             console.error('Error fetching task card HTML template:', fetchError.message);
@@ -194,7 +197,6 @@ export class TaskCard {
      * This method performs the following actions:
      * - Checks for the existence of a container for task action buttons.
      * - Clears any existing buttons in the container to ensure a fresh UI.
-
      * - Adds appropriate buttons based on the task's current type: 'active', 'completed', or 'suggested'.
      * - Applies relevant CSS classes to the task card for visual distinction.
      * - Sets up event listeners for each button added to handle user interactions.
@@ -213,7 +215,7 @@ export class TaskCard {
             console.warn("%c initializeHTMLButtons() Task actions div not found. Buttons cannot be added.", 'color: red');
             return; // Exit if the container is not found
         }
-        
+
         // Clear any existing buttons to reset the UI
         console.info('%c initializeHTMLButtons() Clearing existing buttons', 'color: aqua');
         taskActions.innerHTML = ''; // Remove all child elements
@@ -225,7 +227,7 @@ export class TaskCard {
                 // Set the class for active tasks to apply specific styles
                 this.taskCardElement.classList.add('active');
                 this.taskCardElement.classList.remove('suggested', 'completed');
-                
+
 
                 // Create buttons for editing, completing, and deleting the task
                 console.info('%c initializeHTMLButtons() Creating buttons', 'color: aqua');
@@ -239,9 +241,10 @@ export class TaskCard {
                 
                 // Attach event listeners to each button for handling actions
                 console.info('%c initializeHTMLButtons() Attaching event listeners', 'color: aqua');
-                this.setEditButtonListener();
-                this.setCompleteButtonListener();
-                this.setDeleteButtonListener();
+
+                this.setEditButtonListener(task);
+                this.setCompleteButtonListener(task);
+                this.setDeleteButtonListener(task);
 
             } else if (task.type === 'completed') {
                 // Set the class for completed tasks to apply specific styles
@@ -249,14 +252,18 @@ export class TaskCard {
                 this.taskCardElement.classList.add('completed');
                 this.taskCardElement.classList.remove('suggested', 'active');
                 
-                // Only a delete button is necessary for completed tasks
-                console.info('%c initializeHTMLButtons() Creating delete button', 'color: aqua');
+                // Only a delete button and a return button are necessary for completed tasks
+                console.info('%c initializeHTMLButtons() Creating delete and return buttons', 'color: aqua');
+                const returnButton = this.createButton('return', '↩️'); // Return button with an arrow emoji
+
                 const deleteButton = this.createButton('delete', '🗑️');
-                taskActions.append(deleteButton); // Add the delete button
                 
-                // Attach event listener for the delete action
-                console.info('%c initializeHTMLButtons() Attaching delete button event listener', 'color: aqua');
-                this.setDeleteButtonListener();
+                taskActions.append( returnButton, deleteButton); // Add the delete and return buttons
+                
+                // Attach event listeners for the delete and return actions
+                console.info('%c initializeHTMLButtons() Attaching delete and return button event listeners', 'color: aqua');
+                this.setDeleteButtonListener(task);
+                this.setReturnButtonListener(task); // New listener for the return button
 
             } else if (task.type === 'suggested') {
                 // Set the class for suggested tasks to apply specific styles
@@ -275,8 +282,8 @@ export class TaskCard {
                 
                 // Attach event listeners for add and delete actions
                 console.info('%c initializeHTMLButtons() Attaching add and delete event listeners', 'color: aqua');
-                this.setAddButtonListener();
-                this.setDeleteButtonListener();
+                this.setAddButtonListener(task);
+                this.setDeleteButtonListener(task);
             }
         } catch (error) {
             // Log any errors that occur during button creation or event listener attachment
@@ -299,7 +306,7 @@ export class TaskCard {
     createButton(action, content) {
         console.debug('%c ↓ createButton() Starting ↓', 'color: wheat');
         // Validate the action type
-        const validActions = ['add', 'edit', 'complete', 'delete'];
+        const validActions = ['add', 'edit', 'complete', 'delete', 'return'];
         if (!validActions.includes(action)) {
             throw new Error(`Invalid action type: ${action}`); // Throw an error for invalid action type
         }
@@ -333,18 +340,18 @@ export class TaskCard {
      * @private
      * @throws {Error} Throws an error if the task card is not available or if the task cannot be moved.
      */
-    setAddButtonListener() {
+    setAddButtonListener(task) {
         // Ensure the task card is available before proceeding
-        if (!this.taskCard) return;
+        if (!this.taskCardElement) return;
 
         // Select the add button from the task card
-        const addButton = this.taskCard.querySelector('.btn-action.add');
-        if (addButton && this.task.type === 'suggested') {
+        const addButton = this.taskCardElement.querySelector('.btn-action.add');
+        if (addButton && task.type === 'suggested') {
             // Event listener for adding a new task
             addButton.addEventListener('click', async () => {
                 try {
-                    console.info('%c *** setAddButtonListener() Moving task to active: ***', 'color: lightgreen', this.task);
-                    systemTaskManager.moveTask(this.task, 'active'); // Move the task to 'active' type
+                    console.info('%c *** setAddButtonListener() Moving task to active: ***', 'color: lightgreen', task);
+                    systemTaskManager.moveTask(task, 'active'); // Move the task to 'active' type
                 } catch (error) {
                     // Log any errors that occur during the task addition process
                     console.error('Error moving task to active:', error.message);
@@ -365,19 +372,19 @@ export class TaskCard {
      * @private
      * @throws {Error} Throws an error if the task card is not available or if the modal fails to open.
      */
-    setEditButtonListener() {
+    setEditButtonListener(task) {
         // Ensure the task card is available before proceeding to avoid errors
-        if (!this.taskCard) return;
+        if (!this.taskCardElement) return;
 
         // Select the edit button from the task card's action buttons
-        const editButton = this.taskCard.querySelector('.btn-action.edit');
-        // Check if the edit button exists and if the task is currently active
-        if (editButton && this.task.type === 'active') {
+        const editButton = this.taskCardElement.querySelector('.btn-action.edit');
+        // Check if the task is currently active
+        if (task.type === 'active') {
             // Attach a click event listener to the edit button
             editButton.addEventListener('click', async () => {
                 try {
-                    console.info('%c *** setEditButtonListener() Opening edit modal: ***', 'color: lightgreen', this.task);
-                    showTaskFormModal();
+                    console.info('%c *** setEditButtonListener() Opening edit modal: ***', 'color: lightgreen', task);
+                    showTaskFormModal(task);
                 } catch (error) {
                     // Log any errors that occur during the editing process
                     console.error('Error updating task:', error.message);
@@ -400,18 +407,18 @@ export class TaskCard {
      * @private
      * @throws {Error} Throws an error if the task card is not available or if the task cannot be moved.
      */
-    setCompleteButtonListener() {
+    setCompleteButtonListener(task) {
         // Ensure the task card is available before proceeding
-        if (!this.taskCard) return;
+        if (!this.taskCardElement) return;
 
         // Select the complete button from the task card
-        const completeButton = this.taskCard.querySelector('.btn-action.complete');
-        if (completeButton && this.task.type === 'active') {
+        const completeButton = this.taskCardElement.querySelector('.btn-action.complete');
+        if (completeButton && task.type === 'active') {
             // Attach a click event listener to the complete button
             completeButton.addEventListener('click', async () => {
                 try {
-                    console.info('%c *** setCompleteButtonListener() Moving task to completed: ***', 'color: lightgreen', this.task);
-                    systemTaskManager.moveTask(this.task, 'completed'); // Move the task to 'completed' type
+                    console.info('%c *** setCompleteButtonListener() Moving task to completed: ***', 'color: lightgreen', task);
+                    systemTaskManager.moveTask(task, 'completed'); // Move the task to 'completed' type
                 } catch (error) {
                     // Log any errors that occur during the task completion process
                     console.error('Error moving task to completed:', error.message);
@@ -431,21 +438,43 @@ export class TaskCard {
      * @private
      * @throws {Error} Throws an error if the task card is not available or if the task cannot be removed.
      */
-    setDeleteButtonListener() {
+    setDeleteButtonListener(task) {
         // Ensure the task card is available before proceeding
-        if (!this.taskCard) return;
+        
+        if (!this.taskCardElement) return;
 
         // Select the delete button from the task card
-        const deleteButton = this.taskCard.querySelector('.btn-action.delete');
+        const deleteButton = this.taskCardElement.querySelector('.btn-action.delete');
         if (deleteButton) {
             // Attach a click event listener to the delete button
             deleteButton.addEventListener('click', () => {
                 try {
-                    console.info('%c *** setDeleteButtonListener() Removing task: ***', 'color: lightgreen', this.task);
-                    systemTaskManager.removeTask(this.task); // Remove the task from the task manager
+                    console.info('%c *** setDeleteButtonListener() Removing task: ***', 'color: lightgreen', task);
+                    systemTaskManager.removeTask(task, true); // Remove the task from the task manager
                 } catch (error) {
                     // Log any errors that occur during the task deletion process
                     console.error('Error removing task:', error.message);
+                }
+            });
+        }
+    }
+
+    // New method to handle the return button listener
+    setReturnButtonListener(task) {
+        // Ensure the task card is available before proceeding
+        if (!this.taskCardElement) return;
+
+        // Select the return button from the task card
+        const returnButton = this.taskCardElement.querySelector('.btn-action.return');
+        if (returnButton) {
+            // Attach a click event listener to the return button
+            returnButton.addEventListener('click', () => {
+                try {
+                    console.info('%c *** setReturnButtonListener() Moving task back to active: ***', 'color: lightgreen', task);
+                    systemTaskManager.moveTask(task, 'active'); // Move the task back to 'active' type
+                } catch (error) {
+                    // Log any errors that occur during the task return process
+                    console.error('Error moving task back to active:', error.message);
                 }
             });
         }
@@ -462,7 +491,6 @@ export class TaskCard {
      * This method fetches the HTML template for the modal, populates it with the current task's data,
      * and handles user interactions for updating the task.
      * 
-
      * If an error occurs during the fetching of the modal template or while updating the task,
      * it logs the error message to the console for debugging purposes.
      * 
@@ -470,90 +498,6 @@ export class TaskCard {
      * @returns {Promise<Object>} A promise that resolves with an object containing the form data when the modal is closed.
      * @throws {Error} Throws an error if the modal template fails to load or if the task update fails.
      */
-    async openEditModal() {
-        try {
-            // Fetch the HTML template for the modal from the specified path
-            const response = await fetch('/src/components/task-form/html/task-form.html');
-            if (!response.ok) {
-                throw new Error('Failed to load modal template'); // Throw an error if the template fails to load
-            }
-            const modalHtml = await response.text(); // Get the text content of the fetched HTML
-
-        // Create a modal element and set its inner HTML to the fetched template
-        const modal = document.createElement('div');
-        modal.id = 'editTaskModal'; // Assign an ID to the modal for identification
-        modal.innerHTML = modalHtml; // Set the modal's inner HTML to the fetched template
-
-        // Pre-fill the modal fields with the current task data
-        modal.querySelector('#edit-task-title').value = this.task.title; // Set the title input
-        modal.querySelector('#edit-duration').value = this.task.duration; // Set the duration input
-        modal.querySelector('#edit-date').value = this.task.dueDate; // Set the due date input
-
-        // Append the modal to the body of the document
-        document.body.appendChild(modal);
-
-        // Get the close button element within the modal
-        const span = modal.getElementsByClassName("close")[0]; // Select the close button
-        const form = modal.querySelector('#edit-task-form'); // Select the form element
-
-        // Display the modal to the user
-        modal.style.display = "block"; // Make the modal visible
-
-        // Create a closure to store the form data
-        let formData = {}; // Initialize an object to hold the form data
-
-        // Close Modal functionality: when the close button is clicked
-        span.onclick = function() {
-            modal.style.display = "none"; // Hide the modal
-            document.body.removeChild(modal); // Remove the modal from the DOM
-        };
-
-        // Close the modal when the user clicks outside of it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none"; // Hide the modal
-                document.body.removeChild(modal); // Remove the modal from the DOM
-            }
-        };
-
-            // Handle form submission for updating the task
-            form.onsubmit = (e) => {
-                e.preventDefault(); // Prevent the default form submission behavior
-                // Collect form data into formData
-                formData = {
-                    title: document.getElementById('edit-task-title').value, // Get the title value
-                    description: document.getElementById('edit-description').value, // Get the description value
-                    duration: document.getElementById('edit-duration').value, // Get the duration value
-                    dueDate: document.getElementById('edit-date').value // Get the due date value
-                };
-                
-                // Update the task with the new data
-                try {
-                    this.task.update(formData.title, formData.description, formData.duration, formData.dueDate);
-                } catch (error) {
-                    console.error('Error updating task:', error.message); // Log any errors during the update
-                    return; // Exit if the update fails
-                }
-                
-                // Hide the modal after submission
-                modal.style.display = "none"; // Hide the modal
-                document.body.removeChild(modal); // Remove the modal from the DOM
-            };
-
-            // Return a promise that resolves with the form data when the modal is closed
-            return new Promise(resolve => {
-                const checkModalClosed = setInterval(() => {
-                    if (modal.style.display === "none") {
-                        clearInterval(checkModalClosed); // Stop checking if the modal is closed
-                        resolve(formData); // Resolve the promise with the collected form data
-                    }
-                }, 100); // Check every 100 milliseconds if the modal is closed
-            });
-        } catch (error) {
-            console.error('Error in openEditModal:', error.message); // Log any errors that occur
-            throw error; // Rethrow the error for further handling
-        }
-    }
 
     // ===========================================================================
     // ========================= Helper Functions ==============================
@@ -567,6 +511,25 @@ export class TaskCard {
      */     
     getTaskFromID(taskId) {
         return systemTaskManager.getTask(taskId);
+    }
+
+    serialize() {
+        return {
+            taskID: this.taskID,
+            // Add other non-DOM properties if needed
+        };
+    }
+
+    // Add the hydrate method to the TaskCard class
+    static async hydrate(data) {
+        const taskCard = new TaskCard(data.task);
+        taskCard.taskID = data.taskID;
+        
+        // Recreate DOM elements
+        await taskCard.createTaskCardHTMLTemplate();
+        await taskCard.initializeTaskCard(data.task);
+        
+        return taskCard;
     }
 
 }

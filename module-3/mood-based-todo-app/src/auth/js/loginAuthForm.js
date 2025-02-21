@@ -15,8 +15,8 @@
  * - Provides error handling for failed submissions and loading issues.
  */
 
-import { login, register } from '/src/auth/js/auth.js';
-
+import { login, register, isAuthenticated } from '/src/auth/js/auth.js';
+import { updateUI as loginButtonUpdateUI} from '/src/auth/js/loginButton.js';
 // Common elements reference
 let authForm, toggleForm, submitButton, formTitle;
 
@@ -256,6 +256,7 @@ async function handleAuthFormSubmit(event, isLogin = true) {
 
         if (response.success) {
             closeAuthModal(); // Close modal on success
+            loginButtonUpdateUI(isAuthenticated());
             console.info('%c Authentication successful', 'color: lightgreen'); // Log success message
             // Additional UI updates can be handled here
         } else {

@@ -2,6 +2,7 @@
     "tasks": [
     {
       "name": "Read a book",
+      "dueDate": "today",
       "weatherConditions": ["rain", "snow"],
       "moodRange": { "min": 0, "max": 100 },
       "duration": "30-60 min",
@@ -10,6 +11,7 @@
     },
     {
       "name": "Go for a run",
+      "dueDate": "tomorrow",
       "weatherConditions": ["clear", "sunny"],
       "moodRange": { "min": 60, "max": 100 },
       "duration": "45 min",
@@ -18,6 +20,7 @@
     },
     {
       "name": "Practice yoga",
+      "dueDate": "this week",
       "weatherConditions": ["any"],
       "moodRange": { "min": 0, "max": 50 },
       "duration": "30 min",
@@ -26,6 +29,7 @@
     },
     {
       "name": "Watch a Movie",
+      "dueDate": "today",
       "weatherConditions": ["rain", "snow", "cloudy"],
       "moodRange": { "min": 0, "max": 100 },
       "duration": "90-120 min",
@@ -34,6 +38,7 @@
     },
     {
       "name": "Go Hiking",
+      "dueDate": "tomorrow",
       "weatherConditions": ["clear", "sunny", "mild"],
       "moodRange": { "min": 50, "max": 100 },
       "duration": "2-4 hours",
@@ -42,6 +47,7 @@
     },
     {
       "name": "Bake Cookies",
+      "dueDate": "this week",
       "weatherConditions": ["cold", "rain", "snow"],
       "moodRange": { "min": 20, "max": 80 },
       "duration": "1-2 hours",
@@ -50,6 +56,7 @@
     },
     {
       "name": "Play Board Games",
+      "dueDate": "today",
       "weatherConditions": ["any"],
       "moodRange": { "min": 40, "max": 100 },
       "duration": "60-120 min",
@@ -58,6 +65,7 @@
     },
     {
       "name": "Garden",
+      "dueDate": "tomorrow",
       "weatherConditions": ["clear", "sunny", "mild"],
       "moodRange": { "min": 30, "max": 90 },
       "duration": "1-3 hours",
@@ -66,6 +74,7 @@
     },
     {
       "name": "Meditate",
+      "dueDate": "today",
       "weatherConditions": ["any"],
       "moodRange": { "min": 0, "max": 100 },
       "duration": "10-30 min",
@@ -74,6 +83,7 @@
     },
     {
       "name": "Visit a Museum",
+      "dueDate": "this week",
       "weatherConditions": ["clear", "cloudy", "mild"],
       "moodRange": { "min": 50, "max": 100 },
       "duration": "2-3 hours",
@@ -82,6 +92,7 @@
     },
     {
       "name": "Paint or Draw",
+      "dueDate": "today",
       "weatherConditions": ["rain", "snow", "cloudy"],
       "moodRange": { "min": 10, "max": 100 },
       "duration": "1-3 hours",
@@ -90,6 +101,7 @@
     },
     {
       "name": "Photography Walk",
+      "dueDate": "tomorrow",
       "weatherConditions": ["clear", "mild", "sunset"],
       "moodRange": { "min": 60, "max": 100 },
       "duration": "1-2 hours",
@@ -98,6 +110,7 @@
     },
     {
       "name": "Cook a New Recipe",
+      "dueDate": "this week",
       "weatherConditions": ["rain", "snow", "cloudy"],
       "moodRange": { "min": 40, "max": 100 },
       "duration": "1-2 hours",
@@ -106,6 +119,7 @@
     },
     {
       "name": "Listen to Music",
+      "dueDate": "today",
       "weatherConditions": ["any"],
       "moodRange": { "min": 0, "max": 100 },
       "duration": "30-120 min",
@@ -114,6 +128,7 @@
     },
     {
       "name": "Write in a Journal",
+      "dueDate": "today",
       "weatherConditions": ["any"],
       "moodRange": { "min": 0, "max": 100 },
       "duration": "15-60 min",
@@ -122,6 +137,7 @@
     },
     {
       "name": "Swim",
+      "dueDate": "tomorrow",
       "weatherConditions": ["hot", "sunny", "mild"],
       "moodRange": { "min": 50, "max": 100 },
       "duration": "30-90 min",
@@ -130,6 +146,7 @@
     },
     {
       "name": "Play Video Games",
+      "dueDate": "today",
       "weatherConditions": ["rain", "snow", "cloudy"],
       "moodRange": { "min": 30, "max": 100 },
       "duration": "1-4 hours",
@@ -138,6 +155,7 @@
     },
     {
       "name": "Attend a Concert",
+      "dueDate": "this week",
       "weatherConditions": ["clear", "mild"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "2-4 hours",
@@ -146,6 +164,7 @@
     },
     {
       "name": "Knit or Crochet",
+      "dueDate": "today",
       "weatherConditions": ["rain", "snow", "cold"],
       "moodRange": { "min": 10, "max": 90 },
       "duration": "1-3 hours",
@@ -154,6 +173,7 @@
     },
     {
       "name": "Volunteer",
+      "dueDate": "this week",
       "weatherConditions": ["any"],
       "moodRange": { "min": 40, "max": 100 },
       "duration": "2-4 hours",
@@ -162,6 +182,7 @@
     },
     {
       "name": "Visit the Zoo",
+      "dueDate": "tomorrow",
       "weatherConditions": ["clear", "sunny", "mild"],
       "moodRange": { "min": 60, "max": 100 },
       "duration": "3-5 hours",
@@ -170,6 +191,7 @@
     },
     {
       "name": "Take a Nature Walk",
+      "dueDate": "today",
       "weatherConditions": ["clear", "sunny", "mild"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "1-2 hours",
@@ -178,6 +200,7 @@
     },
     {
       "name": "Start a Puzzle",
+      "dueDate": "today",
       "weatherConditions": ["rain", "snow", "cloudy"],
       "moodRange": { "min": 1, "max": 30 },
       "duration": "30-120 min",
@@ -186,6 +209,7 @@
     },
     {
       "name": "Write Poetry",
+      "dueDate": "tomorrow",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 100 },
       "duration": "30-90 min",
@@ -194,6 +218,7 @@
     },
     {
       "name": "Bird Watching",
+      "dueDate": "this week",
       "weatherConditions": ["clear", "mild"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "1-3 hours",
@@ -202,6 +227,7 @@
     },
     {
       "name": "Watch a Documentary",
+      "dueDate": "today",
       "weatherConditions": ["rain", "snow", "cloudy"],
       "moodRange": { "min": 1, "max": 100 },
       "duration": "60-120 min",
@@ -210,6 +236,7 @@
     },
     {
       "name": "Organize Your Space",
+      "dueDate": "tomorrow",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 70 },
       "duration": "1-4 hours",
@@ -218,6 +245,7 @@
     },
     {
       "name": "Stargazing",
+      "dueDate": "this week",
       "weatherConditions": ["clear"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "30-60 min",
@@ -226,6 +254,7 @@
     },
     {
       "name": "Coloring or Adult Coloring Books",
+      "dueDate": "today",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 50 },
       "duration": "30-90 min",
@@ -234,6 +263,7 @@
     },
     {
       "name": "Play a Musical Instrument",
+      "dueDate": "tomorrow",
       "weatherConditions": ["any"],
       "moodRange": { "min": 30, "max": 100 },
       "duration": "30-120 min",
@@ -242,6 +272,7 @@
     },
     {
       "name": "Go Kayaking",
+      "dueDate": "this week",
       "weatherConditions": ["clear", "mild"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "2-4 hours",
@@ -250,6 +281,7 @@
     },
     {
       "name": "Take a Long Bath",
+      "dueDate": "today",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 30 },
       "duration": "30-60 min",
@@ -258,6 +290,7 @@
     },
     {
       "name": "Visit an Art Gallery",
+      "dueDate": "tomorrow",
       "weatherConditions": ["clear", "cloudy", "mild"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "1-2 hours",
@@ -266,6 +299,7 @@
     },
     {
       "name": "Do Some Stretching",
+      "dueDate": "today",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 100 },
       "duration": "10-30 min",
@@ -274,6 +308,7 @@
     },
     {
       "name": "Watch the Sunrise/Sunset",
+      "dueDate": "tomorrow",
       "weatherConditions": ["clear", "mild"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "30-60 min",
@@ -282,6 +317,7 @@
     },
     {
       "name": "Plan a Future Trip",
+      "dueDate": "this week",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 100 },
       "duration": "30-120 min",
@@ -290,6 +326,7 @@
     },
     {
       "name": "Join a Dance Class",
+      "dueDate": "this week",
       "weatherConditions": ["any"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "60-90 min",
@@ -298,6 +335,7 @@
     },
     {
       "name": "Make a Scrapbook",
+      "dueDate": "tomorrow",
       "weatherConditions": ["rain", "snow", "cloudy"],
       "moodRange": { "min": 1, "max": 70 },
       "duration": "1-3 hours",
@@ -306,6 +344,7 @@
     },
     {
       "name": "Go Fishing",
+      "dueDate": "this week",
       "weatherConditions": ["clear", "mild"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "2-5 hours",
@@ -314,6 +353,7 @@
     },
     {
       "name": "Call a Friend",
+      "dueDate": "today",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 100 },
       "duration": "30-60 min",
@@ -322,6 +362,7 @@
     },
     {
       "name": "Learn a New Language",
+      "dueDate": "tomorrow",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 100 },
       "duration": "30-120 min",
@@ -330,6 +371,7 @@
     },
     {
       "name": "Visit a Local Farmer's Market",
+      "dueDate": "this week",
       "weatherConditions": ["clear", "sunny", "mild"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "1-2 hours",
@@ -338,6 +380,7 @@
     },
     {
       "name": "Indoor Gardening",
+      "dueDate": "today",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 100 },
       "duration": "30-90 min",
@@ -346,6 +389,7 @@
     },
     {
       "name": "Do a Home Workout",
+      "dueDate": "tomorrow",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 100 },
       "duration": "30-60 min",
@@ -354,6 +398,7 @@
     },
     {
       "name": "Watch Live Sports",
+      "dueDate": "this week",
       "weatherConditions": ["clear", "cloudy", "mild"],
       "moodRange": { "min": 70, "max": 100 },
       "duration": "2-4 hours",
@@ -362,6 +407,7 @@
     },
     {
       "name": "Create a Vision Board",
+      "dueDate": "tomorrow",
       "weatherConditions": ["any"],
       "moodRange": { "min": 1, "max": 70 },
       "duration": "1-2 hours",
@@ -370,6 +416,7 @@
     },
     {
       "name": "Watch a Comfort Movie",
+      "dueDate": "today",
       "description": "Pick a movie that always makes you feel better or comforted. It could be a childhood favorite or something light-hearted.",
       "duration": "90-120 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -378,6 +425,7 @@
     },
     {
       "name": "Listen to Uplifting Music",
+      "dueDate": "today",
       "description": "Create or listen to a playlist of songs that lift your spirits or calm you down.",
       "duration": "30-60 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -386,6 +434,7 @@
     },
     {
       "name": "Read a Light Book or Comic",
+      "dueDate": "tomorrow",
       "description": "Choose something that's not too heavy or demanding, like a favorite comic, a light novel, or a short story.",
       "duration": "30-90 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -394,6 +443,7 @@
     },
     {
       "name": "Bake Something Simple",
+      "dueDate": "this week",
       "description": "Baking can be therapeutic; try making cookies or a cake from a simple recipe. The process and the result can be uplifting.",
       "duration": "60-120 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -402,6 +452,7 @@
     },
     {
       "name": "Do Some Coloring",
+      "dueDate": "today",
       "description": "Coloring can be very soothing and meditative. Use an adult coloring book or even a children's one if it resonates more with you.",
       "duration": "30-90 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -410,6 +461,7 @@
     },
     {
       "name": "Take a Warm Bath",
+      "dueDate": "today",
       "description": "Add some bath salts, bubbles, or essential oils. This can be a great way to relax and reset your mood.",
       "duration": "30-60 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -418,6 +470,7 @@
     },
     {
       "name": "Write in a Journal",
+      "dueDate": "today",
       "description": "Sometimes, getting your thoughts out on paper can help process feelings. Write about what's bothering you or just free-write.",
       "duration": "15-60 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -426,6 +479,7 @@
     },
     {
       "name": "Play a Casual Video Game",
+      "dueDate": "today",
       "description": "Choose a game that's not too challenging or intense, something that can provide a small sense of achievement or distraction.",
       "duration": "30-120 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -434,6 +488,7 @@
     },
     {
       "name": "Knit or Crochet",
+      "dueDate": "today",
       "description": "These crafts are repetitive and can be very calming, giving you something tangible to focus on.",
       "duration": "60-120 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -442,6 +497,7 @@
     },
     {
       "name": "Do a Small Puzzle",
+      "dueDate": "today",
       "description": "A 100-piece puzzle or a sudoku can engage your mind without overwhelming you.",
       "duration": "30-60 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -450,6 +506,7 @@
     },
     {
       "name": "Make a Comfort Food",
+      "dueDate": "today",
       "description": "Cook something that you find comforting, like soup, pasta, or grilled cheese - something that feels like a hug in food form.",
       "duration": "30-90 min",
       "moodRange": { "min": 1, "max": 30 },
@@ -458,6 +515,7 @@
     },
     {
       "name": "Look at Old Photos or Memories",
+      "dueDate": "this week",
       "description": "Revisiting happy moments through photos or scrapbooks can lift your spirits.",
       "duration": "30-60 min",
       "moodRange": { "min": 1, "max": 30 },

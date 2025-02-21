@@ -65,7 +65,7 @@ function setupTaskFormModal() {
 
 
 
-export function showTaskFormModal() {
+export function showTaskFormModal(task = null) {
     console.info('%c <↓↓↓| showTaskFormModal() starting |↓↓↓>', 'color: wheat');
 
     const modal = document.getElementById("addTaskModal"); // Get the login modal element
@@ -76,15 +76,30 @@ export function showTaskFormModal() {
     // Initialize common elements
     taskForm = document.getElementById('task-form'); // Get the task form element
     console.debug('%c showTaskFormModal() taskForm', 'color: aqua', taskForm);
-    //const toggleForm = taskForm.getElementById("duration-toggle"); // Get the duration toggle form element
 
     formTitle = document.getElementById("task-form-title"); // Get the form title element
-    //const taskDescription = taskForm.querySelector('#task-description'); // Get the task description element
     durationInput = document.getElementById('duration-input'); // This is the number input for the duration
     durationToggleButton = document.getElementById('duration-toggle'); // This is the button to toggle the duration units
     submitButton = document.getElementById("submit-task-form-btn"); // Get the submit button element
 
-    
+    // If a task is provided, populate the form with its details
+    if (task) {
+        formTitle.textContent = "Edit Task"; // Change title for editing
+        submitButton.textContent = "Update Task";
+        taskForm.querySelector('#task-name').value = task.name || ''; // Set task name
+        taskForm.querySelector('#task-description').value = task.description || ''; // Set task description
+        taskForm.querySelector('#datepicker').value = task.dueDate || new Date().toISOString().split('T')[0]; // Set due date to today's date if not provided
+        durationInput.value = task.duration || ''; // Set duration
+    } else {
+        formTitle.textContent = "Add New Task"; // Default title for adding a new task
+        submitButton.textContent = "Create Task";
+        taskForm.querySelector('#task-name').value = ''; // Set task name
+        taskForm.querySelector('#task-description').value = ''; // Set task description
+        taskForm.querySelector('#datepicker').value = new Date().toISOString().split('T')[0] || ''; // Set due date to today's date if not provided
+        durationInput.value = ''; // Set duration
+
+    }
+
     const durationUnits = ['Minutes', 'Hours', 'Days']; // This is the array of duration units
     let currentUnitIndex = 0; // Initialize current unit index to 0
 
@@ -94,9 +109,6 @@ export function showTaskFormModal() {
         durationInput.placeholder = `Duration (${durationUnits[currentUnitIndex]})`; // Update placeholder
     });
 
-
-    //taskForm.querySelector('#datepicker').value = taskForm.querySelector('.due-date').textContent.split(': ')[1];
-
     const datepickerEl = modal.querySelector('#datepicker');
     $(datepickerEl).datepicker({
         minDate: 0,
@@ -104,19 +116,16 @@ export function showTaskFormModal() {
         defaultDate: new Date()
     });
 
-    
-
-
-    
-
-    // Reset the form to its default state
-    ///updateFormState(true); // Default to login mode
     modal.style.display = "flex"; // Show the modal
     console.info('%c showTaskFormModal() Task form modal displayed', 'color: lightgreen');
-    
+
     // Setup form submission
     if (taskForm) {
-        taskForm.onsubmit = async (event) => handleTaskFormSubmit(event); // Pass the form object to handleTaskFormSubmit
+        taskForm.onsubmit = async (event) => {
+            // If a task is provided, edit the task
+            await handleTaskFormSubmit(event, task); // Pass true to indicate editing
+
+        }; // Pass the form object and task to handleTaskFormSubmit
     } else {
         console.error('%c showTaskFormModal() Task form not found', 'color: red'); // Log error if form is not found
     }
@@ -126,9 +135,11 @@ export function showTaskFormModal() {
 
 
 
-async function handleTaskFormSubmit(event) {
+async function handleTaskFormSubmit(event, task = null) {
     event.preventDefault(); // Prevent default form submission behavior
     console.info('%c <↓↓↓| handleTaskFormSubmit() starting |↓↓↓>', 'color: wheat');
+
+    var isEditing = !!task; // true if task is provided, false otherwise
     
     console.debug('%c handleTaskFormSubmit() Current taskForm:', 'color: aqua', taskForm); // Debugging line
     const formData = new FormData(taskForm); // Collect form data
@@ -143,36 +154,32 @@ async function handleTaskFormSubmit(event) {
     };
 
     console.debug('%c handleTaskFormSubmit() creating task. Details:', 'color: aqua', taskDetails);
-    (async () => {
+
+    if (isEditing) {
+        // If editing, update the existing task
+        try {
+            
+            systemTaskManager.editTask(task.id, taskDetails, true); // Edit the existing task
+
+            console.info('%c *** handleTaskFormSubmit() Task edited successfully ***', 'color: lightgreen', taskDetails); // Log success message
+        } catch (error) {
+            console.error('%c handleTaskFormSubmit() An error occurred during editing:', 'color: red', error); // Log any errors encountered
+        }
+    } else {
+        // If creating a new task
         try {
             const task = await Task.create(taskDetails.name, taskDetails.description, taskDetails.duration, taskDetails.dueDate, taskDetails.type);
-            // Add the newly created task to the system task manager
             systemTaskManager.addTask(task.type, task, true); // Add the new task to the system task manager
-            systemTaskManager.saveTasks(); 
+            systemTaskManager.switchTaskView('active');
             console.info('%c *** handleTaskFormSubmit() Task created successfully ***', 'color: lightgreen', task); // Log success message
         } catch (error) {
             console.error('%c handleTaskFormSubmit() An error occurred during operation:', 'color: red', error); // Log any errors encountered
         }
-    })();
+    }
+    closeTaskFormModal();
     console.info('%c <↑↑↑| handleTaskFormSubmit() complete |↑↑↑>', 'color: lime');
 }
 
-
-function updateFormState(state = 0) {
-    /*// Update the toggle form link text based on the current mode
-    toggleForm.innerHTML = isLoginState 
-        ? "Don't have an account? <a href='#'>Sign up</a>" // Text for login mode
-        : 'Already have an account? <a href="#">Log in</a>'; // Text for registration mode
-
-    // Change the submit button text based on the current mode
-    submitButton.innerText = isLoginState ? "Login" : "Register"; // Set button text
-
-    // Update the form title based on the current mode
-    formTitle.innerText = isLoginState ? "Welcome Back" : "Registration"; // Set form title
-    */
-   console.info('%c <↓↓↓| updateFormState() starting |↓↓↓>', 'color: wheat');
-   console.info('%c <↑↑↑| updateFormState() complete |↑↑↑>', 'color: lime');
-}
 
 
 /**

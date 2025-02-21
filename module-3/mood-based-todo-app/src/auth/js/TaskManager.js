@@ -44,10 +44,14 @@ import {
     getCurrentUserData, // Retrieves the current user's data from sessionStorage
     saveCurrentUserData, // Saves the current user's data to sessionStorage
     migrateGuestDataToUser, // Migrates guest user data to an authenticated user
-    isAuthenticated // Checks if the user is currently authenticated
+    isAuthenticated, // Checks if the user is currently authenticated
+    getCurrentUserEmail, // Retrieves the current user's email
+    loadCurrentUserTasks // Loads tasks for the current user
+
 } from '/src/auth/js/auth.js';
 import { TaskCard } from '/src/components/task-component/js/taskCard.js';
 import { Task } from '/src/auth/js/task.js';
+import { dbManager } from '/src/auth/js/indexedDBManager.js'; // Updated import statement
 
 // =============================================================================
 // =============================== Task Manager Class ==========================
@@ -94,55 +98,48 @@ export class TaskManager {
      * 
      * @returns {void} - This method does not return a value.
      */
-    loadTasks(taskManager = systemTaskManager) {
+    async loadTasks() {
       console.info('%c ↓ loadTasks() Starting ↓', 'color: lightgray');
-
-      try {
-        // Retrieve current user data or guest user data
-        const userData = getCurrentUserData();
-        console.debug('%c loadTasks() getCurrentUserData() user data found.', 'color: aqua', userData); 
-
-        // Check if userData is null or undefined
-        if (!userData) {
-          console.error('%c loadTasks() No user data found. Task arrays will remain empty.', 'color: error'); // Log a warning if no user data is found
-          return; // Exit the method if no user data is available
+        try {
+            const userEmail = getCurrentUserEmail(); // Get the current user's email
+            const data = await loadCurrentUserTasks(userEmail); // Load tasks for the user
+            console.debug('%c loadTasks() data before hydrateTasks()', 'color: orange', data);
+            
+            if (data) {
+                // Convert raw objects to Task instances
+                this.yourActiveTasks = await this.hydrateTasks(data.yourActiveTasks);
+                this.yourCompleteTasks = await this.hydrateTasks(data.yourCompleteTasks);
+                this.yourActiveSuggestedTasks = await this.hydrateTasks(data.yourActiveSuggestedTasks);
+            }
+            console.debug('%c loadTasks() data after hydrateTasks()', 'color: orange', this);
+        } catch (error) {
+            console.error('Error loading tasks:', error); // Log any errors that occur during loading
         }
-        // Update the properties of taskManager (which is referencing systemTaskManager)
-        console.debug('%c loadTasks() Old user data details of taskManager:', 'color: orange', userData.taskManager);
-        Object.assign(taskManager, TaskManager.fromObject(userData.taskManager));
-        console.debug('%c loadTasks() New user data details of taskManager:', 'color: orange', taskManager);
-       
-      } catch (error) {
-        console.error('%c loadTasks() Error loading tasks:', 'color: red', error); // Log any errors that occur during loading
-      }
-      console.info('%c ↑ loadTasks() Complete ↑', 'color: darkgray');
+        console.info('%c ↑ loadTasks() Complete ↑', 'color: darkgray');
     }
   
-
-
     /**
      * Save the current task state to the appropriate storage.
      * This method checks if the user is authenticated or a guest and saves the task data accordingly.
      * 
      * @returns {void} - This method does not return a value.
      */
-    saveTasks() {
-      console.info('%c ↓ saveTasks() Starting ↓', 'color: lightgray');
-      console.debug('%c saveTasks() this TaskManager instance:', 'color: aqua', this);
-      try {
-        // Prepare the task data object containing active and completed tasks
-        const taskData = this // Current state of the TaskManager instance
+    async saveTasks() {
+        try {
+            const taskData = {
+                yourActiveTasks: this.yourActiveTasks.map(task => task.serialize()), // Serialize active tasks
+                yourCompleteTasks: this.yourCompleteTasks.map(task => task.serialize()), // Serialize completed tasks
+                yourActiveSuggestedTasks: this.yourActiveSuggestedTasks.map(task => task.serialize()), // Serialize suggested tasks
+                currentTaskView: this.currentTaskView // Save current task view
+            };
 
-        saveCurrentUserData(taskData); // Save for authenticated user
-        console.debug('%c saveTasks() User data saved for authenticated user:', 'color: aqua', taskData); // Debugging: log saved data
-        
-      } catch (error) {
-        console.error('%c Error saving tasks:', 'color: red', error); // Log any errors that occur during saving
-      }
-      //console.debug('%c saveTasks() this systemTaskManager instance:', 'color: aqua', systemTaskManager);
-      //console.debug('%c saveTasks() this getCurrentUserData() instance:', 'color: aqua', getCurrentUserData());
-
-      console.info('%c ↑ saveTasks() Complete ↑', 'color: darkgray');
+            const userEmail = getCurrentUserEmail(); // Get the current user's email
+            await dbManager.saveTasks(userEmail, taskData); // Save tasks to IndexedDB
+            
+            
+        } catch (error) {
+            console.error('Error saving tasks:', error); // Log any errors that occur during saving
+        }
     }
   
     // ===========================================================================
@@ -239,62 +236,69 @@ export class TaskManager {
      */
     renderTaskCards(container, tasks) {
       console.info('%c ↓ renderTaskCards() Starting ↓', 'color: lightgray');
-      console.warn('%c renderTaskCards() systemTaskManager', 'color: purple', systemTaskManager);
-      console.warn('%c renderTaskCards() systemTaskManager.yourActiveTasks', 'color: purple', systemTaskManager.yourActiveTasks);
-      console.warn('%c renderTaskCards() systemTaskManager.yourActiveTasks[0]', 'color: purple', systemTaskManager.yourActiveTasks[0]);
-      try {
+      console.warn('%c renderTaskCards() systemTaskManager', 'color: aqua', systemTaskManager);
+
+     try {
         // Check if the container is a valid DOM element
         if (!(container instanceof HTMLElement)) {
           throw new Error('Invalid container element provided.'); // Handle invalid container
         }
         console.debug('%c renderTaskCards() Valid container element provided.', 'color: aqua');
-        
+
         // Clear the container's current content
         container.innerHTML = '';
         console.debug('%c renderTaskCards() container.innerHTML cleared.', 'color: aqua');
 
-
-        //console.log("%c renderTaskCards() JSON.stringify(tasks, null, 2)", 'color: orange', JSON.stringify(tasks, null, 2)); // This will give a structured view of tasks
-
-
-        //console.debug('%c renderTaskCards() tasks.hasOwnProperty(0)', 'color: purple', tasks.hasOwnProperty(0)); // This should return true if there's an object at index 0
-
-        console.debug('%c renderTaskCards() tasks', 'color: aqua', tasks);
-        console.debug('%c renderTaskCards() tasks[0]', 'color: aqua', tasks[0]);
          // Iterate over the tasks array and create a card for each task
         tasks.forEach(task => {
           console.debug('%c renderTaskCards() attempting to append task into container:', 'color: aqua', task);
           
-          // Check if taskCard exists and is properly instantiated
           if (!task.taskCard || !(task.taskCard.taskCardElement instanceof HTMLElement) || 
               Object.keys(task.taskCard.taskCardElement).length === 0) {
-            console.warn('%c renderTaskCards() taskCard is not properly instantiated. Initializing...', 'color: aqua');
-            console.debug('%c renderTaskCards() task.taskCard:', 'color: aqua', task.taskCard);
-          
-            // Ensure taskCard is defined and properly instantiated
-            if (!task.taskCard || !(task.taskCard instanceof TaskCard)) {
-                task.taskCard = new TaskCard(task, task.type); // Create a new instance of TaskCard
-            }
-            console.debug('%c renderTaskCards() Type of task.taskCard:', 'color: aqua', typeof task.taskCard);
-            console.debug('%c renderTaskCards() Is task.taskCard an instance of TaskCard?', 'color: aqua', task.taskCard instanceof TaskCard);
 
+            console.debug('%c renderTaskCards() task.taskCard:', 'color: aqua', task.taskCard);        
+            if (!task.taskCard || !(task.taskCard instanceof TaskCard)) {
+              task.taskCard = new TaskCard(task, task.type); // Create a new instance of TaskCard
+            }
           }
           if (task.taskCard.taskCardElement instanceof HTMLElement) {
             console.debug('%c renderTaskCards() taskCardElement is a valid DOM element:', 'color: green', task.taskCard.taskCardElement);
           } else {
             console.error('%c renderTaskCards() taskCardElement is not a valid DOM element:', 'color: red', task.taskCard.taskCardElement);
           }
-
           // Validate the taskCardElement after initialization
           if (!(task.taskCard.taskCardElement instanceof HTMLElement) || 
               !(task.taskCard.taskCardElement.tagName === 'ARTICLE' && 
-                task.taskCard.taskCardElement.classList.contains('task-card') && 
-                task.taskCard.taskCardElement.classList.contains('active'))) {
+                task.taskCard.taskCardElement.classList.contains('task-card'))) {
             console.error('%c renderTaskCards() task.taskCard.taskCardElement is not a valid DOM element or does not match the required structure:', 'color: red', task.taskCard.taskCardElement);
             return; // Exit the method if the task card element is not a valid DOM element or does not match the required structure
           }
           console.debug('%c renderTaskCards() Appending task.taskCard.taskCardElement to container:', 'color: aqua', task.taskCard.taskCardElement);
+          
+          const taskNameElement = task.taskCard.taskCardElement.querySelector('.task-name');
+          const taskDescriptionElement = task.taskCard.taskCardElement.querySelector('.task-description');
+          const taskDueDateElement = task.taskCard.taskCardElement.querySelector('.task-due-date');
+          const taskDurationElement = task.taskCard.taskCardElement.querySelector('.task-duration');
+          const taskPriorityElement = task.taskCard.taskCardElement.querySelector('.task-priority');
+          const taskTypeElement = task.taskCard.taskCardElement.querySelector('.task-type');
+          taskNameElement.textContent = task.name;
+          taskNameElement.title= task.name;
+          taskDescriptionElement.textContent = task.description;
+          taskDescriptionElement.title = task.description;
+          taskDueDateElement.textContent = task.dueDate;
+          taskDurationElement.textContent = task.duration;
+          taskPriorityElement.textContent = task.priority;
+          taskTypeElement.textContent = task.type;
           container.appendChild(task.taskCard.taskCardElement); //TaskCard should already exist in the task object during its construction
+
+          //console.debug('%c renderTaskCards() taskNameElement:', 'color: aqua', taskNameElement);
+          //console.debug('%c renderTaskCards() taskDescriptionElement:', 'color: aqua', taskDescriptionElement);
+          //console.debug('%c renderTaskCards() taskDueDateElement:', 'color: aqua', taskDueDateElement);
+          //console.debug('%c renderTaskCards() taskDurationElement:', 'color: aqua', taskDurationElement);
+          //console.debug('%c renderTaskCards() taskPriorityElement:', 'color: aqua', taskPriorityElement);
+          //console.debug('%c renderTaskCards() taskStatusElement:', 'color: aqua', taskStatusElement);
+          //alert('updateMainTaskView() container' + container.outerHTML);
+
           console.debug('%c renderTaskCards() card appended to container.', 'color: aqua');
 
 
@@ -315,21 +319,20 @@ export class TaskManager {
      */
     updateMainTaskView() {
       console.info('%c ↓ updateMainTaskView() Starting ↓', 'color: lightgray');
+      
       try {
         // Select the container element where task cards will be rendered
         const container = document.querySelector('.tasks-section .task-cards');
-        
         // Check if the container exists
         if (!container) {
           throw new Error('Task cards container not found.'); // Handle missing container
         }
 
-        // Determine the tasks to display based on the current view state
-        
+        // Determine the tasks to display based on the current view state        
         const tasks = this.currentTaskView === 'active' 
           ? this.yourActiveTasks // Use active tasks if the current view is 'active'
           : this.yourCompleteTasks; // Use completed tasks otherwise
-        
+
         this.renderTaskCards(container, tasks); // Render the determined tasks in the container
       } catch (error) {
         console.error('%c Error updating main task view:', 'color: red', error); // Log any errors that occur during the update
@@ -411,6 +414,13 @@ export class TaskManager {
       }
       
       this.currentTaskView = viewType; // Update the current task view
+
+      // Update the header text based on the current view type
+      const headerElement = document.getElementById('task-section-header');
+      if (headerElement) {
+          headerElement.textContent = viewType === 'completed' ? 'Completed Tasks' : 'Your Tasks';
+      }
+
       this.updateMainTaskView(); // Refresh the main task view
       console.info('%c ↑ switchTaskView() Complete ↑', 'color: darkgray');
     }
@@ -439,45 +449,19 @@ export class TaskManager {
     refreshAllTaskViews() {
       console.info('%c ↓ refreshAllTaskViews() Starting ↓', 'color: lightgray');
       try {
-        this.updateMainTaskView(); // Refresh the main task view
-        this.updateSuggestedTasksView(); // Refresh the suggested tasks view
-        this.updateTaskCount(); // Update the active task count display 
-        
+        this.saveTasks()
+            .then(() => {
+                this.updateMainTaskView(); // Refresh the main task view
+                this.updateSuggestedTasksView(); // Refresh the suggested tasks view
+                this.updateTaskCount(); // Update the active task count display
+            })
+            .catch(error => console.error('Error during task save and update:', error)); // Handle any errors
       } catch (error) {
         console.error('%c Error refreshing task views:', 'color: red', error); // Log any errors that occur during the refresh
       }
       console.info('%c ↑ refreshAllTaskViews() Complete ↑', 'color: darkgray');
     }
-  
-    // ===========================================================================
-    // ========================= Migration Methods ===============================
-    // ===========================================================================
-  
-    /**
-     * Migrate guest tasks to an authenticated user.
-     * This method transfers the tasks from a guest user to an authenticated user
-     * based on the provided email address. It reloads the tasks and refreshes
-     * the task views after migration.
-     * 
-     * @param {string} email - User email to migrate tasks to.
-     * @throws {Error} Throws an error if the email is invalid or migration fails.
-     * @returns {void} - This method does not return a value.
-     */
-    migrateGuestTasks(email) {
-      console.info('%c ↓ migrateGuestTasks() Starting ↓', 'color: lightgray');
-      try {
-        if (typeof email !== 'string' || !email.includes('@')) {
-          throw new Error('Invalid email address provided.'); // Validate the email format
-        }
-        
-        migrateGuestDataToUser(email); // Migrate guest data to the authenticated user
-        this.loadTasks(); // Reload tasks after migration
-        this.refreshAllTaskViews(); // Refresh the UI to reflect the updated task state
-      } catch (error) {
-        console.error('%c Error migrating guest tasks:', 'color: red', error); // Log any errors that occur during migration
-      }
-      console.info('%c ↑ migrateGuestTasks() Complete ↑', 'color: darkgray');
-    }
+
 
     /**
      * Removes a task from the corresponding array based on its type.
@@ -495,6 +479,7 @@ export class TaskManager {
      */
     removeTask(task, refreshTaskView = true) {
       console.info('%c ↓ removeTask() Starting ↓', 'color: lightgray');
+      //alert('removeTask() task' + task);
         // Validate the task object
         if (!task || typeof task.id !== 'string' || !['active', 'completed', 'suggested'].includes(task.type)) {
             throw new Error('Invalid task object provided.'); // Handle invalid task object
@@ -533,7 +518,7 @@ export class TaskManager {
      * @throws {Error} Throws an error if the task object is invalid or missing required properties.
      * @returns {void} - This method does not return a value.
      */
-    moveTask(task, newType = 'active') {
+    moveTask(task, newType = 'active', refreshTaskView = true) {
         console.info('%c ↓ moveTask() Starting ↓', 'color: lightgray');
         // Validate the task object
         if (!task || typeof task.id !== 'string' || !['active', 'completed', 'suggested'].includes(task.type)) {
@@ -542,7 +527,8 @@ export class TaskManager {
 
         // Check if the current task type is the same as the new type
         if (task.type === newType) {
-            console.log(`Task is already of type '${newType}'. No move needed.`); // Log message for no action
+            console.log(`Task is already of type '${newType}'. No move needed, removing task.`); // Log message for no action
+            this.removeTask(task, refreshTaskView);            
             return; // Exit the method if the types are the same
         }
         
@@ -553,7 +539,8 @@ export class TaskManager {
         task.type = newType; // Change the task type to the new type
 
         // Add the task to the new array based on the new type
-        this.addTask(newType, task, true); // refreshTaskView is set to true to refresh the task views after the move
+        task.taskCard.initializeHTMLButtons(task);
+        this.addTask(newType, task, refreshTaskView); // refreshTaskView is set to true to refresh the task views after the move
         console.info('%c ↑ moveTask() Complete ↑', 'color: darkgray');
     }
 
@@ -574,120 +561,64 @@ export class TaskManager {
      * @throws {Error} Throws an error if the task object is invalid or missing required properties.
      * @returns {void} - This method does not return a value.
      */
-    editTask(task, newTitle, newDescription, newDuration, newDueDate) {
-        console.info('%c ↓ editTask() Starting ↓', 'color: lightgray');
-        // Validate the task object
-        if (!task || typeof task.id !== 'string') {
-            throw new Error('Invalid task object provided.'); // Handle invalid task object
-        }
+    editTask(task, data, refreshTaskView = true) {
+      console.info('%c ↓ editTask() Starting ↓', 'color: lightgray');
 
+      // If the task is a taskID(string), get the task object using the task ID. Otherwise, use the task object provided.
+      if (typeof task === 'string') {
+          const taskId = task; 
+          task = this.getTask(taskId); 
+      }
         // Update the task details
-        task.title = newTitle; // Update the task title
-        task.description = newDescription; // Update the task description
-        task.duration = newDuration; // Update the task duration
-        task.dueDate = newDueDate; // Update the task due date
-        
-        this.refreshAllTaskViews(); // Refresh the UI to reflect the updated task details
+        task.name = data.name; // Update the task name
+        task.description = data.description; // Update the task description
+        task.duration = data.duration; // Update the task duration
+        task.dueDate = data.dueDate; // Update the task due date
+
+        if (refreshTaskView) {
+            this.refreshAllTaskViews(); // Refresh the UI to reflect the updated task details
+        }
         console.info('%c ↑ editTask() Complete ↑', 'color: darkgray');
+
     }
     
+    async hydrateTasks(tasks) {
+        return Promise.all(tasks.map(async (taskData) => {
+            return Task.create(
+                taskData.name,
+                taskData.description,
+                taskData.duration,
+                taskData.dueDate,
+                taskData.type,
+                taskData.id
+            );
+        }));
+    }
 
     /**
-     * Hydrate the task manager with the old task manager data object, which is likely uninstantiated (just a plain object) after being loaded from sessionStorage/localStorage.
-     * This method is crucial for rebuilding the task manager when user data is first loaded, especially if the task manager object has been corrupted due to JSON serialization/deserialization issues.
+     * completeAllTasks()
+     * If the current view is 'active', it moves all active tasks to completed.
+     * If the current view is 'completed', it removes all completed tasks.
      * 
-     * During the initialization process in auth.js, this method is called with the extracted task manager object to manually reconstruct the task manager.
-     * It recreates the tasks and their associated task cards, ensuring that the system task manager (instantiated in main.js) is updated with the correct task data.
-     * 
-     * @param {Object} originalTaskManager - The old task manager object containing task data.
-     * @returns {Promise<void>} - This method returns a promise that resolves when the hydration is complete.
+     * @returns {void} - This method does not return a value.
      */
-    static async hydrateTaskManager(originalTaskManager) {
-      console.info('%c ↓ hydrateTaskManager() Starting ↓', 'color: lightgray');
-
-      // Log the original task manager data for debugging purposes
-      console.debug('%c initializeAuth() originalTaskManager', 'color: aqua', originalTaskManager);
-    
-      // Filter out unwanted items (e.g., Promises) from the task arrays.
-      // These unwanted items can arise due to JSON serialization/deserialization of session and local storage.
-      const cleanActiveTasks = originalTaskManager.yourActiveTasks.filter(task => {
-        // Exclude Promises or invalid tasks to ensure only valid task objects are processed
-        return !(task instanceof Promise); // Adjust this condition as needed
-      });
-    
-      // Filter out unwanted items from completedTasks
-      const cleanYourCompleteTasks = originalTaskManager.yourCompleteTasks.filter(task => {
-        // Exclude Promises or invalid tasks
-        return !(task instanceof Promise); // Adjust this condition as needed
-      });
-    
-      // Filter out unwanted items from suggestedTasks
-      const cleanYourActiveSuggestedTasks = originalTaskManager.yourActiveSuggestedTasks.filter(task => {
-        // Exclude Promises or invalid tasks
-        return !(task instanceof Promise); // Adjust this condition as needed
-      });
-    
-      // Log the cleaned task arrays for debugging purposes
-      console.debug('%c hydrateTaskManager() cleanActiveTasks', 'color: aqua', cleanActiveTasks);
-      console.debug('%c hydrateTaskManager() cleanYourCompleteTasks', 'color: aqua', cleanYourCompleteTasks);
-      console.debug('%c hydrateTaskManager() cleanYourActiveSuggestedTasks', 'color: aqua', cleanYourActiveSuggestedTasks);
-    
-      // Create a new instance of TaskManager to hold the cleaned task data
-      const cleanedTaskManager = new TaskManager();
-      // Manual clone the object arrays into the new task manager instance
-      cleanedTaskManager.yourActiveTasks = cleanActiveTasks; // Assign cleaned active tasks
-      cleanedTaskManager.yourCompleteTasks = cleanYourCompleteTasks; // Add cleaned completed tasks
-      cleanedTaskManager.yourActiveSuggestedTasks = cleanYourActiveSuggestedTasks; // Add cleaned suggested tasks
-      
-      // Log the state of the cleaned task manager for debugging purposes
-      console.debug('%c hydrateTaskManager() cleanedTaskManager', 'color: aqua', cleanedTaskManager);
-      console.debug('%c hydrateTaskManager() cleanedTaskManager.yourActiveTasks', 'color: aqua', cleanedTaskManager.yourActiveTasks);
-      console.debug('%c hydrateTaskManager() cleanedTaskManager.yourCompleteTasks', 'color: aqua', cleanedTaskManager.yourCompleteTasks);
-      console.debug('%c hydrateTaskManager() cleanedTaskManager.yourActiveSuggestedTasks', 'color: aqua', cleanedTaskManager.yourActiveSuggestedTasks);
-
-      // Iterate over each array name returned by getArrays() to process tasks
-      cleanedTaskManager.getArrays().forEach(arrayName => {
-          const tasks = cleanedTaskManager[arrayName]; // Access the tasks using the array name
-          tasks.forEach(async task => {
-            // Log each task being processed for debugging purposes
-            console.debug('%c hydrateTaskManager() task:', 'color: aqua', task);
-            console.debug('%c hydrateTaskManager() systemTaskManager before task.create()', 'color: aqua', systemTaskManager);
-            
-            // Create a new Task instance from the task data
-            const newTask = await Task.create(task.name, task.description, task.duration, task.dueDate, task.type, task.id);
-            console.debug('%c hydrateTaskManager() newTask', 'color: aqua', newTask);
-            
-            // Add the newly created task to the system task manager
-            systemTaskManager.addTask(newTask.type, newTask, false); // Add the new task to the system task manager
-          });
-      });
-      console.debug('%c hydrateTaskManager() systemTaskManager after task.create()', 'color: aqua', systemTaskManager);
-      console.info('%c ↑ hydrateTaskManager() Complete ↑', 'color: darkgray');
-    }
-
-    // Static method to create an instance from a plain object
-    static fromObject(obj) {
-      const taskManager = new TaskManager();
-      console.debug('%c TaskManager.fromObject() obj', 'color: aqua', obj);
-      console.debug('%c TaskManager.fromObject() obj.yourActiveTasks', 'color: aqua', obj.yourActiveTasks);
-      try {
-        // Assuming 'yourActiveTasks' is an array of task objects
-        if (Array.isArray(obj.yourActiveTasks)) {
-          taskManager.yourActiveTasks = obj.yourActiveTasks; // Populate tasks
+    completeAllTasks() {
+        console.info('%c ↓ manageTasksBasedOnView() Starting ↓', 'color: lightgray');
+        try {
+            if (this.currentTaskView === 'active') {
+                // Move all active tasks to completed
+                this.yourActiveTasks.forEach(task => {
+                    this.moveTask(task, 'completed', true); // Move to completed with refreshing view
+                });
+            } else if (this.currentTaskView === 'completed') {
+                // Remove all completed tasks
+                this.yourCompleteTasks.forEach(task => {
+                    this.removeTask(task, true); // Remove with refreshing view
+                });
+            }
+        } catch (error) {
+            console.error('%c Error managing tasks based on view:', 'color: red', error); // Log any errors that occur during management
         }
-        // Assuming 'yourCompleteTasks' is an array of task objects
-        if (Array.isArray(obj.yourCompleteTasks)) {
-          taskManager.yourCompleteTasks = obj.yourCompleteTasks; // Populate tasks
-        }
-        // Assuming 'yourActiveSuggestedTasks' is an array of task objects
-        if (Array.isArray(obj.yourActiveSuggestedTasks)) {
-          taskManager.yourActiveSuggestedTasks = obj.yourActiveSuggestedTasks; // Populate tasks
-        }
-        // Populate other properties if needed
-      } catch (error) {
-        console.error('%c Error creating TaskManager from object:', 'color: red', error); // Log the error
-        return false; // Return false in case of an error
-      }
-      return taskManager;
+        console.info('%c ↑ manageTasksBasedOnView() Complete ↑', 'color: darkgray');
     }
 }

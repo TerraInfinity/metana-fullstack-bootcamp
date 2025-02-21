@@ -17,7 +17,7 @@
 // =============================== Imports =====================================
 // =============================================================================
 import { showLoginModal } from '/src/auth/js/loginAuthForm.js';
-import { logout } from '/src/auth/js/auth.js';
+import { logout, isAuthenticated } from '/src/auth/js/auth.js';
 
 // =============================================================================
 // =============================== Initialization ==============================
@@ -48,7 +48,7 @@ export function initializeLoginButton() {
       console.error('%c Login button not found', 'color: red');
       return; // Exit if the button is not found
   }
-
+  updateUI(isAuthenticated());
   // Add click event listener to the login button
   loginButton.addEventListener('click', () => {
       // Check the current text content of the button
@@ -57,10 +57,12 @@ export function initializeLoginButton() {
       } else if (loginButton.textContent === 'Logout') {
         console.log('%c Logging out...', 'color: lightblue'); // Log the logout action
         logout(); // Log the user out (calls auth.js logout function)   
+        updateUI(isAuthenticated());
       } else {
         console.warn('%c Unexpected button text: ' + loginButton.textContent, 'color: red'); // Warn for unexpected text
       }
   });
+
   console.info('%c <↑↑↑| initializeLoginButton() complete |↑↑↑>', 'color: lime'); // Add this line
 }
 
@@ -78,7 +80,7 @@ export function initializeLoginButton() {
  */
 export function updateUI(isLoggedIn = true) { // Called by auth.js during login/logout
   const loginButton = document.getElementById('login-btn');
-  
+
   // Check if the login button exists before updating UI
   if (!loginButton) {
       console.error('%c Login button not found for UI update', 'color: red');
@@ -87,8 +89,8 @@ export function updateUI(isLoggedIn = true) { // Called by auth.js during login/
 
   // Update button text based on login status
   if (isLoggedIn === true) {
-      loginButton.textContent = 'Login'; // Set text for logged in state
+      loginButton.textContent = 'Logout'; // Set text for logged in state
   } else {
-      loginButton.textContent = 'Logout'; // Set text for logged out state
+      loginButton.textContent = 'Login'; // Set text for logged out state
   }
 }

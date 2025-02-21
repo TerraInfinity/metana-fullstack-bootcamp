@@ -33,28 +33,74 @@
     font-size: 0.9rem;
 }
 
-
 .task-timestamp {
     color: #666;
     font-size: 0.8rem;
     margin-top: 0.5rem;
 }
 
-/* Special Task Types */
-.run-task {
-    border-left: 4px solid #4CAF50;
+/* Additional Task Card Styles from styles.css */
+.task-description {
+    display: -webkit-box; /* Use flexbox for multi-line truncation */
+    -webkit-box-orient: vertical; /* Set the orientation to vertical */
+    font-style: italic;
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
 }
 
-.meditation-task {
-    border-left: 4px solid #2196F3;
+.task-description:hover {
+    cursor: help; /* Change cursor to indicate information availability */
 }
 
-.alert-task {
-    border-left: 4px solid #ff5252;
+.task-due-date {
+    text-decoration: underline;
 }
 
-.cooking-task {
-    border-left: 4px solid #ff9800;
+
+@media (max-width: 768px) {
+    .task-description {
+        -webkit-line-clamp: 2; /* Limit to 2 lines */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 900px) {
+    .task-description {
+        -webkit-line-clamp: 4; /* Limit to 4 lines */
+    }
+}
+
+@media (min-width: 1000px) and (max-width: 1280px) {
+    .task-description {
+        -webkit-line-clamp: 3; /* Limit to 3 lines */
+    }
+}
+@media (min-width: 1280px) {
+    .task-description {
+        -webkit-line-clamp: 2; /* Limit to 2 lines */
+    }
+}
+
+.task-actions {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 0.5rem; /* Space between buttons */
+    align-items: flex-end; /* Center buttons in the column */
+    min-width: 60px; /* Ensure a minimum width for the button container */
+}
+
+.task-actions button {
+    width: 2.5rem; /* Set a fixed width for buttons in rem */
+    height: 2.5rem; /* Set a fixed height for buttons in rem */
+    border: none; /* Remove border */
+    background-color: transparent; /* Make background transparent */
+    cursor: pointer; /* Change cursor to indicate information availability */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1000px) {
+    .task-card {
+        grid-template-columns: 1fr; /* Single column on smaller screens */
+    }
 }
 
 /* Suggested Tasks */
@@ -299,7 +345,7 @@
     background: var(--bg-color);
     padding: 20px;
     border-radius: 8px;
-    width: 300px;
+
     text-align: center;
     position: relative;
 }

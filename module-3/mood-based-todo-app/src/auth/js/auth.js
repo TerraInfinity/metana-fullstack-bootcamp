@@ -33,10 +33,8 @@
 // =============================================================================
 // ========================= Import Functions ==================================
 // =============================================================================
-import { TaskManager } from '/src/auth/js/TaskManager.js';
 import { updateUI as updateLoginButtonUI } from '/src/auth/js/loginButton.js';
-import { systemTaskManager } from '/src/script/main.js';
-import { TaskCard } from '/src/components/task-component/js/taskCard.js';
+import { dbManager } from '/src/auth/js/indexedDBManager.js'; // Updated import statement
 
 // =============================================================================
 // ============================== Variables ====================================
@@ -52,6 +50,12 @@ const LOCAL_STORAGE_USERS_KEY = 'users';
  * @constant {string}
  */
 const CURRENT_USER_SESSION_KEY = 'currentUser';
+
+/**
+ * The key used to store and retrieve the guest user session from localStorage.
+ * @constant {string}
+ */
+const GUEST_USER_KEY = 'guestUser';
 
 
 // =============================================================================
@@ -73,78 +77,12 @@ const CURRENT_USER_SESSION_KEY = 'currentUser';
  * @returns {void} - This function does not return a value.
  */
 export async function initializeAuth() {
-  console.info('%c <↓↓↓| initializeAuth() starting |↓↓↓>', 'color: wheat');
-  //console.debug('%c initializeAuth() sessionStorage.getItem(CURRENT_USER_SESSION_KEY)', 'color: aqua', JSON.parse(JSON.stringify(sessionStorage.getItem(CURRENT_USER_SESSION_KEY))));
-
- 
-
-  // Deep clone the object
-  //const clonedObject = JSON.parse(JSON.stringify(loadedSessionDataParsed));
-  //console.debug('%c initializeAuth() clonedObject', 'color: aqua', clonedObject);
-
-  //const loadedSessionData = JSON.parse(JSON.stringify(sessionStorage.getItem(CURRENT_USER_SESSION_KEY)));
-  //console.debug('%c initializeAuth() loadedSessionData', 'color: aqua', loadedSessionData);
-
-  //const loadedSessionDataParsed = JSON.parse(loadedSessionData);
-
-  //const currentTaskManager = JSON.parse(JSON.stringify(loadedSessionDataParsed)).taskManager;
-  //console.debug('%c initializeAuth() currentTaskManager', 'color: aqua', currentTaskManager);
-  //console.debug('%c initializeAuth() loadedSessionDataParsed', 'color: aqua', loadedSessionDataParsed);
-
-  // Set the taskManager from currentUserData to currentTaskManager
-  //let newObject = {}
-  //Object.assign(newObject, loadedSessionDataParsed); // merge the taskManager from currentUserData into currentTaskManager
-  //currentTaskManager = loadedSessionDataParsed.taskManager; // Update currentTaskManager with taskManager from currentUserData
-  //console.debug('%c initializeAuth() newObject', 'color: aqua', newObject);
-  //console.debug('%c initializeAuth() newObject.taskManager', 'color: aqua', newObject.taskManager);
-  //var currentTaskManager = newObject.taskManager;
-  //const currentTaskManager = new TaskManager();
-  //Object.assign(currentTaskManager, newObject.taskManager);
-  //console.debug('%c initializeAuth() currentTaskManager', 'color: aqua', currentTaskManager);
-
-  // Retrieve and parse data
-  if (!(sessionStorage.getItem(CURRENT_USER_SESSION_KEY))) {
-    console.warn('%c initializeAuth() sessionStorage.getItem(CURRENT_USER_SESSION_KEY) is null', 'color: aqua');
-    const localStorageData = localStorage.getItem(CURRENT_USER_SESSION_KEY);
-    if (!localStorageData) {
-      console.warn('%c initializeAuth() localStorage.getItem(CURRENT_USER_SESSION_KEY) is null', 'color: aqua');
-      const defaultGuestData = {
-        email: 'Guest',
-        password: null
-      };
-        sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify({
-        email: defaultGuestData.email,
-        password: null,
-        taskManager:  new TaskManager()
-      }));
-      
-    } else {
-      sessionStorage.setItem(CURRENT_USER_SESSION_KEY, localStorageData);
-    }
+  let currentUser = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
+  if (!currentUser) {
+    currentUser = { email: 'Guest', password: null }; // Default guest user
+    sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(currentUser));
   }
-  const loadedSessionData = (JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY))).taskManager;
-  // Hydrate the task manager with the old task manager data object, which is likely uninstantiated (just a plain object) after being loaded from sessionStorage/localStorage.     * This method hydrates the task manager with the old task manager.  
-  await TaskManager.hydrateTaskManager(loadedSessionData);  
-  //systemTaskManager.refreshAllTaskViews();
-  //systemTaskManager.loadTasks();
-
-  //console.debug('%c initializeAuth() systemTaskManager.yourActiveTasks[0].taskCard', 'color: yellow', systemTaskManager.yourActiveTasks[0].taskCard);
-  //console.debug('%c initializeAuth() systemTaskManager.yourActiveTasks[0].taskCard.taskCardElement', 'color: yellow', systemTaskManager.yourActiveTasks[0].taskCard.taskCardElement);
-
-
-  //console.debug('%c initializeAuth() currentUserData', 'color: green', clonedTaskManager);
-
- 
-  // Check if current user session exists
-  /*if (currentUserData) {
-      console.debug('%c User Found in initializeAuth()', 'color: lightgreen', currentUserData.email);
-      updateUI(); // Call updateUI for logged-in user
-  } else {
-      console.error('%c initializeAuth() currentUserSession not found', 'color: red');
-      throw new Error('Current user session not found');
-  }*/
-
-  console.info('%c <↑↑↑| initializeAuth() complete |↑↑↑>', 'color: lime');
+  return currentUser;
 }
 
 
@@ -166,27 +104,13 @@ export async function initializeAuth() {
  *                     - {string} message - A message providing additional information.
  */
 export function login(email, password) {
-  console.info('%c ↓ Starting login() ↓', 'color: lightgray', email);
-  const users = JSON.parse(localStorage.getItem(LOCAL_STORAGE_USERS_KEY)) || [];
-  const user = users.find(u => u.email === email && u.password === password);
-  //const verifiedUser = verifyDataFormat(user);
-
-  if (user.email && user.password) {
-      // Save the current user to sessionStorage
-      console.debug('%c login() user', 'color: aqua', user);
-
-      sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(user));
-      console.debug('%c login() current user now set in sessionStorage', 'color: aqua', sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
-      console.info('%c login() Login successful for user:', 'color: lightgreen', email); // Log success
-
-      updateUI(); // Call updateUI for logged-in user
-      console.debug('%c login() userData Object:', 'color: aqua', user);
-      console.info('%c ↑ login() complete ↑', 'color: darkgray');
-      return { success: true, message: 'Login successful' }; // Return success message
-  } else {
-      console.warn('%c login() Login failed for user:', 'color: red', email); // Log failure
-      return { success: false, message: 'Invalid email or password' }; // Return error message
+  const allUsers = getAllUsers();
+  const user = allUsers.find(u => u.email === email && u.password === password);
+  if (user) {
+    sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(user));
+    return { success: true, user };
   }
+  return { success: false, message: 'Invalid credentials' };
 }
 
 
@@ -207,39 +131,15 @@ export function login(email, password) {
  *                     - {string} message - A message providing additional information.
  */
 export function register(email, password) {
-  console.info('%c ↓ Starting register() ↓', 'color: lightgray', email);
-  const users = JSON.parse(localStorage.getItem(LOCAL_STORAGE_USERS_KEY)) || [];
-  console.debug('%c register() Current users in localStorage before registration in auth.js:', 'color: aqua', users); // Log current users
-
-  try {
-    // Check if the user already exists in the users array
-    if (users.some(u => u.email === email)) {
-        console.warn('%c register() User already exists:', 'color: aqua', email); // Warn if the user already exists
-        return { success: false, message: 'User already exists' }; // Return an object indicating failure
-    }
-
-    // Add the new user to the users array
-    users.push({ email, password });
-    localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(users)); // Save updated users list to localStorage
-    console.debug('%c register() User registered successfully: ', 'color: lightgreen', email); // Log successful registration
-    
-    console.debug('%c register() Attempting automatic login after registration: ', 'color: aqua', email); // Log successful registration
-    // Automatically log in the user after successful registration
-    const loginResult = login(email, password); // Log the user in
-    if (!loginResult.success) {
-        console.warn('%c register() Registration succeeded, but login failed:', 'color: aqua', loginResult.message); // Log if login fails
-    }else {
-      console.info('%c register() Registration successful, login successful:', 'color: lightgreen', email); // Log if login succeeds
-    }
-
-    console.info('%c ↑ register() complete ↑', 'color: darkgray');
-    return { success: true, message: 'Registration successful' }; // Return an object indicating success
-
-  } catch (error) {
-    console.error('%c register() Error registering user in auth.js:', 'color: red', error); // Log any errors that occur during registration
-    return { success: false, message: 'Registration failed due to an error' }; // Return an object indicating failure
+  const allUsers = getAllUsers();
+  if (allUsers.some(u => u.email === email)) {
+    return { success: false, message: 'Email already in use' };
   }
   
+  const newUser = { email, password };
+  allUsers.push(newUser);
+  localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(allUsers));
+  return login(email, password);
 }
 
 
@@ -277,22 +177,8 @@ export function logout() {
  *                      false otherwise.
  */
 export function isAuthenticated() {
-  try {
-    const currentUserEmail = getCurrentUserEmail();
-    const guestUserEmail = getGuestUserEmail();
-
-    // Check if user is not a guest and guest data does not exist
-    if (currentUserEmail !== guestUserEmail) {
-        console.debug('%c isAuthenticated() currentUserEmail', 'color: aqua', currentUserEmail); 
-        return true; // User is authenticated
-    } else {
-        console.debug('%c isAuthenticated() guestUserEmail', 'color: aqua', guestUserEmail); 
-        return false; // User is not authenticated
-    }
-  } catch (error) {
-    console.error('%c Error checking authentication status:', 'color: red', error); // Log any errors that occur during the check
-    return false; // Return false in case of an error
-  }
+  const currentUser = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
+  return currentUser && currentUser.email !== 'Guest'; // Check if the user is not a guest
 }
 
 
@@ -353,66 +239,12 @@ export function getCurrentUserData() {
  * @returns {Object|null} - The guest user data object if successfully retrieved or initialized, otherwise null.
  */
 export function getGuestUserData() {  
-  console.debug('%c ↓ getGuestUserData() Starting ↓', 'color: lightgray');
-  try {
-    // Attempt to get the guest user data from sessionStorage
-    const currentUserData = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
-
-    console.debug('%c getGuestUserData() current user Data:', 'color: aqua', currentUserData);
-
-    // Handle condition if guestUser hasn't been defined in the sessionStorage yet.
-    if (currentUserData === null || currentUserData.email === null) {
-      // If no data is found, log this and initialize with defaults
-      console.debug('%c getGuestUserData() No guest user data found. Initializing guest user data for first time.', 'color: aqua');
-      
-      // Create default guest data; taskManager is instantiated as a TaskManager object
-      const defaultGuestData = {
-        email: 'Guest',
-        password: null,
-        taskManager: new TaskManager()
-      };
-
-      // Store data in sessionStorage with metadata for class reconstruction
-      sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify({
-        email: defaultGuestData.email,
-        password: null,
-        taskManager: {
-          __class: 'TaskManager', // Marker to identify the class type for later instance recreation
-          ...defaultGuestData.taskManager // Spread the TaskManager's properties into the object for storage
-        }
-      }));
-      console.debug('%c getGuestUserData() sessionStorage Set. It looks like:', 'color: lightgreen', sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
-      
-      console.debug('%c ↑ getGuestUserData() Returning defaultGuestData ↑', 'color: darkgray');
-      return defaultGuestData; // Return the default data
-    } else{
-      console.debug('%c getGuestUserData() currentUser is either a guest or a registered user', 'color: aqua', currentUserData);
-      console.debug('%c getGuestUserData() currentUserData.email', 'color: orange', currentUserData.email);
-      console.debug('%c getGuestUserData() currentUserData.password', 'color: orange', currentUserData.password);
-      console.debug('%c getGuestUserData() currentUserData.taskManager', 'color: orange', currentUserData.taskManager);
-      if (currentUserData.email.toLowerCase() == 'guest'){
-        console.debug('%c getGuestUserData() currentUser is a guest', 'color: aqua');
-        return currentUserData;
-      } else {
-        console.debug('%c getGuestUserData() currentUser is a registered user', 'color: aqua');
-
-        const users = JSON.parse(localStorage.getItem(LOCAL_STORAGE_USERS_KEY)) || [];
-        const guestUser = users.find(user => user.email === 'Guest');
-        if (guestUser) {
-          console.debug('%c getGuestUserData() Guest user found in users', 'color: lightgreen', guestUser);
-          console.debug('%c ↑ getGuestUserData() Returning guestData ↑', 'color: darkgray');
-          return guestUser;
-        } else {
-          console.error('%c getGuestUserData() No guest user found in users', 'color: red');
-          return null;
-        }
-      }
-    }
-  } catch (error) {
-    // If there's an error during JSON parsing or data retrieval, log it and return null
-    console.error('%c getGuestUserData() Error retrieving guest user data:', 'color: red', error);
-    return null;
+  let guestUser = JSON.parse(sessionStorage.getItem(GUEST_USER_KEY));
+  if (!guestUser) {
+    guestUser = { email: 'Guest', password: null };
+    sessionStorage.setItem(GUEST_USER_KEY, JSON.stringify(guestUser));
   }
+  return guestUser;
 }
 
 // =============================================================================
@@ -464,43 +296,17 @@ export function getGuestUserEmail() {
  * @param {Object} [data] - The data of the current user to be saved. Optional.
  * @throws {Error} Throws an error if the data cannot be saved or if the data format is invalid.
  */
-export function saveCurrentUserData(data) {
-  console.info('%c ↓ saveCurrentUserData() Starting ↓', 'color: lightgray');
-  var savingData = {email: null, password: null, taskManager: null};
-  if (!data.email){
-    console.warn('%c saveCurrentUserData() Data user email data missing, grabbing from getCurrentUserData()', 'color: yellow');
-    const currentUserData = getCurrentUserData();
-    savingData.email = currentUserData.email;
-    savingData.password = currentUserData.password;
-    savingData.taskManager = TaskManager.fromObject(data); // assumes the data incoming is a task manager object only (broken or not)
-    console.debug('%c saveCurrentUserData() savingData.taskManager', 'color: orange', savingData.taskManager);
-    console.debug('%c saveCurrentUserData() data', 'color: orange', data);
-  } else if (data.email){
-    console.debug('%c saveCurrentUserData() Data user email data found, using provided data', 'color: aqua');
-    savingData.email = data.email;
-    savingData.password = data.password;
-    savingData.taskManager = data.taskManager;
-  } else {
-    console.error('%c saveCurrentUserData() Data is missing email', 'color: red');
-    throw new Error('Data is invalid');
-  }
+export async function saveCurrentUserData(userData) {
+  if (!userData || !userData.email) throw new Error('Invalid user data format');
   
-  try {
-    sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(savingData)); // Save current user data
-    console.debug('%c saveCurrentUserData() saved into sessionStorage:', 'color: aqua', sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
-
-    localStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(savingData)); // Save current user data
-    console.debug('%c saveCurrentUserData() saved into localStorage:', 'color: aqua', localStorage.getItem(CURRENT_USER_SESSION_KEY));
-
-    const checkingdata = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY)); // Convert stringified JSON to object
-    
-    console.debug('%c saveCurrentUserData() checkingdata', 'color: green', checkingdata);
-    console.debug('%c saveCurrentUserData() getCurrentUserData()', 'color: aqua', getCurrentUserData());
-  } catch (error) {
-    console.error('%c saveCurrentUserData() Error saving current user data:', 'color: red', error); // Log any errors that occur during saving
-    throw new Error('Failed to save current user data'); // Throw an error if saving fails
-  }
-  console.info('%c ↑ saveCurrentUserData() ↑ Complete ', 'color: darkgray');
+  // Save to IndexedDB for all users including guests
+  await dbManager.saveTasks(userData.email, userData.taskManager);
+  
+  // Only save credentials to sessionStorage
+  sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify({
+    email: userData.email,
+    password: userData.password
+  }));
 }
   
 /**
@@ -550,20 +356,19 @@ export function saveUserData(email, data) {
  * @param {string} email - The email of the user to whom the guest data will be migrated.
  * @throws {Error} Throws an error if the migration process fails.
  */
-export function migrateGuestDataToUser(email) {
+export async function migrateGuestDataToUser(email) {
   try {
-    const guestData = getGuestUserData(); // Load guest user data
-    if (guestData) {
-      console.log('Migrating guest data to user:', email); // Log migration process
-      saveUserData(email, guestData); // Save guest data to user account
-      //localStorage.removeItem(CURRENT_USER_SESSION_KEY); // Remove guest user data from localStorage
-      console.log('Guest data migrated successfully.'); // Log successful migration
-    } else {
-      console.log('No guest data found to migrate.'); // Log if no guest data is found
-    }
+    const guestData = await dbManager.loadTasks('Guest');
+    const userData = await dbManager.loadTasks(email);
+    
+    await dbManager.transaction(async () => { // Ensure this method exists
+      if (guestData) await dbManager.saveTasks(email, guestData);
+      await dbManager.deleteTasks('Guest'); // Ensure this method exists
+    });
+    
   } catch (error) {
-    console.error('Error migrating guest data to user:', error); // Log any errors that occur during migration
-    throw new Error('Failed to migrate guest data to user'); // Throw an error if migration fails
+    console.error('Migration failed:', error);
+    throw new Error('Data migration rolled back due to errors');
   }
 }
  
@@ -584,77 +389,6 @@ export function verifyDataFormat(userData) {
 
   console.info('%c ↑ verifyDataFormat() ↑ Complete ', 'color: darkgray');
 }
-
-
-
-
-
-
-
-
-/**
- * Verifies the format of the provided data object based on whether user credentials should be included.
- * 
- * This function ensures that the data object contains valid email, password, and a TaskManager instance.
- * It handles various formats of TaskManager data due to serialization/deserialization.
- *
- * @param {Object|TaskManager} data - The data object to verify. Can either be a TaskManager instance or an object 
- *                                    containing email, password, and taskManager properties.
- * 
- * @returns {Object} - Returns an object containing:
- *                     - {string} email - The verified email address.
- *                     - {string} password - The verified password.
- *                     - {TaskManager} taskManager - The validated TaskManager instance.
- * 
- * @throws {Error} Throws an error if the data object is invalid or missing required properties.
- */
-/*
-export function verifyDataFormat(data) {
-  console.info('%c ↓ verifyDataFormat() ↓ Starting ', 'color: lightgray');
-  
-  if (!data) {
-    console.error('%c Data is null or undefined, throwing error', 'color: red');
-    throw new Error('Data object is required for verification.');
-  }
-
-  console.debug('%c verifyDataFormat() data:', 'color: aqua', data);
-
-  let email, password, taskManager;
-
-  // Check if data is just a TaskManager instance or an object with taskManager property
-  if (data instanceof TaskManager || data.taskManager) {
-    // Handle TaskManager whether it's an instance or an object needing conversion
-    taskManager = ofObject(data instanceof TaskManager ? data : data.taskManager);
-    console.debug('%c TaskManager handled:', 'color: orange', taskManager);
-
-    // Fetch email and password from current user data if not provided
-    if (!data.email) {
-      const currentUserData = getCurrentUserData();
-      email = currentUserData.email;
-      password = currentUserData.password;
-      console.debug('%c Email and Password fetched from current user:', 'color: green', { email, password });
-    } else {
-      email = data.email;
-      password = data.password || ''; // Assuming password might be optional if email is provided
-      console.debug('%c Email and Password directly from data:', 'color: green', { email, password });
-    }
-  } else {
-    // If data does not contain a taskManager in any form, throw an error
-    console.error('%c No TaskManager found in data, throwing error', 'color: red');
-    throw new Error('TaskManager is required in the data object.');
-  }
-
-  // Ensure taskManager is an instance after ofObject (should always be true if ofObject works correctly)
-  if (!(taskManager instanceof TaskManager)) {
-    console.error('%c TaskManager is not an instance after processing, throwing error', 'color: red');
-    throw new Error('Failed to ensure TaskManager instance after processing.');
-  }
-
-  const result = { email, password, taskManager };
-  console.info('%c ↑ verifyDataFormat() ↑ Complete ', 'color: darkgray', result);
-  return result;
-}
-  */
 
 // =============================================================================
 // ========================= Update UI Functions ==============================
@@ -680,3 +414,9 @@ function updateUI() {
     updateLoginButtonUI(true); // Update UI to reflect logged-in status
   }
 }
+
+export async function loadCurrentUserTasks(email) {
+  return dbManager.loadTasks(email);
+}
+
+

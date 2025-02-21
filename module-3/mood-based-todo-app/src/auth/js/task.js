@@ -58,7 +58,10 @@ export class Task {
         this.duration = duration; // Duration of the task
         this.dueDate = dueDate; // Due date of the task
         this.type = type; // Type of the task: 'active', 'completed', or 'suggested'
-        this.taskCard = new TaskCard(this);  // Create a TaskCard instance associated with this Task
+        // Only create new TaskCard if none exists
+        if (!this.taskCard) {
+            this.taskCard = new TaskCard(this); // Create a TaskCard instance associated with this Task
+        }
         //systemTaskManager.addTask(type, this, false);
         console.info('%c *** constructor() New Task() Object constructed successfully ***', 'color: aqua', this); // Log success message
     }
@@ -83,26 +86,36 @@ export class Task {
      * @returns {Promise<Task>} A promise that resolves to the initialized Task instance.
      * @throws {Error} Throws an error if task initialization fails.
      */
-    static async create(name, description, duration, dueDate, type = 'active', id=Date.now().toString()) {
+    static async create(name, description, duration, dueDate, type = 'active', id = Date.now().toString()) {
         console.info('%c ↓ create() starting task object creation: ↓', 'color: wheat', name);
         try {
-            // Validate input parameters
-            if (!name || !description || !duration || !dueDate) {
-                throw new Error('All parameters (name, description, duration, dueDate) are required.');
+            // Handle both new and hydrated tasks
+            const isHydration = typeof name === 'object';
+            const data = isHydration ? name : {
+                name, description, duration, dueDate, type, id
+            };
+
+            const task = new Task(
+                data.name,
+                data.description,
+                data.duration,
+                data.dueDate,
+                data.type,
+                data.id
+            );
+
+            // Preserve existing taskCard if hydrating
+            if (!data.taskCard) {
+                await task.taskCard.initializeTaskCard(task);
+            } else {
+                task.taskCard = data.taskCard;
             }
 
-            const task = new Task(name, description, duration, dueDate, type, id);
-            console.debug('%c create() task before taskCard initialization:', 'color: aqua', task);
-            await task.taskCard.initializeTaskCard(task); // Initialize the TaskCard
-
-            //console.debug('%c create() Task created successfully, now saving the systemTaskManager into sessionStorage', 'color: purple');
-            //console.debug('%c create() getCurrentUserData() (current user data insessionStorage):', 'color: purple', getCurrentUserData());
-            //console.debug('%c create() systemTaskManager.saveTasks() getCurrentUserData() (current user data insessionStorage):', 'color: purple', getCurrentUserData());
             console.info('%c ↑ create() finished task object creation: ↑', 'color: lightgreen', task);
-            return task; // Return the initialized Task instance
+            return task;
         } catch (error) {
-            console.error('Error creating Task:', error); // Log the error
-            throw error; // Rethrow the error for further handling
+            console.error('Error creating Task:', error);
+            throw error;
         }
     }
 
@@ -125,4 +138,15 @@ export class Task {
         this.dueDate = dueDate; // Update the due date
     }
 
+    serialize() {
+        return {
+            id: this.id,
+            name: this.name,
+            description: this.description,
+            duration: this.duration,
+            dueDate: this.dueDate,
+            type: this.type,
+            // Exclude taskCardElement as it will be recreated
+        };
+    }
 }

@@ -7,6 +7,9 @@
  * It includes methods for loading tasks, filtering them based on mood and weather, and utility functions.
  */
 
+
+import { Task } from '/src/auth/js/task.js';
+
 // =============================================================================
 // =============================== Task Class ==================================
 // =============================================================================
@@ -37,12 +40,12 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the tasks cannot be loaded.
      */
     static async loadTasks() {
+
       try {
         // Construct the URL for fetching tasks
         const relativeUrl = '../public/data/suggested-tasks-pool.json';
         const url = new URL(relativeUrl, window.location.origin).href; // Construct full URL
         console.debug('%c Attempting to fetch from:', 'color: aqua', url);
-
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to load tasks'); // Throw error if response is not OK
         return await response.json(); // Return the parsed JSON data
@@ -68,19 +71,21 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if tasks cannot be loaded or filtered.
      */
     static async getFilteredTasks(moodValue, weather) {
+      console.group("%c ↓↓↓ getFilteredTasks() ↓↓↓", 'color: lightgray');
       this.currentMood = moodValue; // Update currentMood when filtering tasks
       let tasks; // Declare tasks variable to hold loaded tasks
 
       try {
         const response = await this.loadTasks(); // Load tasks from the JSON file
         tasks = response.tasks; // Extract tasks from the response
+        console.debug(`%c Loaded ${tasks.length} tasks from the JSON file.`, 'color: aqua'); // Log number of tasks loaded
       } catch (error) {
-        console.error('Error loading tasks:', error); // Log error if loading fails
+        console.error('%c Error loading tasks:', 'color: red', error); // Log error if loading fails
         throw new Error('Unable to load tasks for filtering.'); // Rethrow error with a user-friendly message
       }
 
       // Log current mood and weather before filtering
-      console.log(`Current Mood: ${moodValue}, Current Weather: ${weather}`);
+      console.debug(`%c Current Mood: ${moodValue}, Current Weather: ${weather}`, 'color: aqua');
 
       // Filter tasks based on mood and weather conditions
       const filteredTasks = tasks.filter(task => 
@@ -88,29 +93,24 @@ export class MoodTaskService {
         this.matchesWeather(task, weather)
       );
 
-      // Ensure all tasks have a title, even if it was missing or null in the JSON
-      const filtered = filteredTasks.map(task => ({
-        ...task,
-        title: task.name || task.title || 'Untitled Task', // Use 'name' (json uses name) if available, fallback to 'title' or default
-        description: task.description || '', // Default description if not provided
-        dueDate: task.dueDate || task.duration || 'No Due Date' // Use 'dueDate' if available, otherwise use 'duration' (JSON mostly uses duration)
-      }));
+      console.debug(`%c Filtered down to ${filteredTasks.length} tasks based on mood and weather.`, 'color: aqua'); // Log number of filtered tasks
 
+      // Ensure we only transform the selected tasks into proper task objects
+      const transformedTasks = await Promise.all(filteredTasks.slice(0, 4).map(task => this.transformToTask(task)));
+
+
+      // Log details of each transformed task
+      console.debug("%c Transformed Tasks:", 'color: aqua', transformedTasks);
 
       // Log tasks that match the criteria
-      console.log("Tasks matching criteria:", filtered.map(task => task.title));
+      console.debug("%c Tasks matching criteria:", 'color: aqua', transformedTasks.map(task => task.name));
 
-      // Shuffle and pick 4
-      const shuffled = this.shuffleArray(filtered);
+      // Shuffle and pick 4 (if you want to shuffle the filtered tasks before selecting)
+      const shuffled = this.shuffleArray(transformedTasks);
       const selectedTasks = shuffled.slice(0, 4);
-
-      // Log selected tasks with reasoning
-      console.group("Selected Tasks");
-      selectedTasks.forEach(task => {
-        console.log(`Task: ${task.title}, Mood Range: ${task.moodRange.min}-${task.moodRange.max}, Weather: ${task.weatherConditions.join(', ')}`);
-      });
+  
+      console.info("%c ⬆⬆⬆ getFilteredTasks() ⬆⬆⬆ ", 'color: darkgray');
       console.groupEnd();
-
       return selectedTasks;
     }
   
@@ -155,6 +155,22 @@ export class MoodTaskService {
     // =============================================================================
     // =============================== Task Management =============================
     // =============================================================================
+  
+    /**
+     * Transforms a raw task object from JSON into a proper task object.
+     * 
+     * @param {Object} rawSuggestedJSONTask - The raw task object from JSON.
+     * @returns {Promise<Object>} A promise that resolves to a properly formatted task object.
+     */
+    static async transformToTask(rawSuggestedJSONTask) {
+        return await Task.create(
+          rawSuggestedJSONTask.name || 'Untitled Task', // Use 'name' if available, fallback to 'Untitled Task'
+          rawSuggestedJSONTask.description || '', // Default description if not provided
+          rawSuggestedJSONTask.duration || '', // Use 'duration' if available
+          rawSuggestedJSONTask.dueDate || new Date().toISOString().split('T')[0], // Use 'dueDate' if available, otherwise use today's date
+          'suggested' 
+        );
+    }
   
     /**
      * Shuffles an array using the Fisher-Yates algorithm.

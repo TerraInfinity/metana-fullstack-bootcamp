@@ -3,7 +3,9 @@
 
 //Imports
 import { MoodTaskService } from './mood-task-service.js'; 
-import { TaskManager } from '/src/auth/js/taskManager.js'; // Import TaskManager here
+import { systemTaskManager } from '/src/script/main.js';
+import { currentWeather } from '/src/components/weather/js/weather.js';
+
 
 let moodSelector = null; // Start as null since it's not in the DOM initially
 
@@ -65,7 +67,7 @@ async function fetchMoodSelector() {
         }
 
         // Add the mouseup event listener here
-        const debouncedUpdate = debounce(TaskManager.updateSuggestedTasks, 300); // Create a debounced version of updateSuggestedTasks
+        const debouncedUpdate = debounce(updateSuggestedTasks, 300); // Pass the function reference, not the call
         document.addEventListener('mouseup', (event) => {
             if (event.target.id === 'mood-range') {
                 MoodTaskService.currentMood = parseInt(event.target.value);
@@ -76,6 +78,12 @@ async function fetchMoodSelector() {
     } catch (error) {
         console.error("Error in fetchMoodSelector:", error.message); // Debug: Catch errors
     }
+}
+
+// Assuming updateSuggestedTasks is defined somewhere in your code
+async function updateSuggestedTasks() {
+    systemTaskManager.yourActiveSuggestedTasks = await MoodTaskService.getFilteredTasks(MoodTaskService.currentMood, currentWeather);
+    systemTaskManager.updateSuggestedTasksView();
 }
 
 // Debounce function
