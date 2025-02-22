@@ -51,7 +51,7 @@ export class Task {
      * @param {string} dueDate - The due date of the task.
      * @param {string} [type='active'] - The type of the task (active, completed, suggested).
      */
-    constructor(name, description, duration, dueDate, type='active', id=Date.now().toString()) {
+    constructor(name, description, duration, dueDate, type='active', id=generateUniqueId()) {
         this.id = id; // Using timestamp for unique ID
         this.name = name; // name of the task
         this.description = description; // Description of the task
@@ -66,6 +66,8 @@ export class Task {
         console.info('%c *** constructor() New Task() Object constructed successfully ***', 'color: aqua', this); // Log success message
     }
 
+    static taskCounter = 0; // Static counter for IDs
+    static lastTimestamp = 0; // To track the last timestamp
 
     // =============================================================================
     // ======================== Static Create Factory Method =======================
@@ -86,7 +88,7 @@ export class Task {
      * @returns {Promise<Task>} A promise that resolves to the initialized Task instance.
      * @throws {Error} Throws an error if task initialization fails.
      */
-    static async create(name, description, duration, dueDate, type = 'active', id = Date.now().toString()) {
+    static async create(name, description, duration, dueDate, type = 'active', id = this.generateUniqueId()) {
         console.info('%c ↓ create() starting task object creation: ↓', 'color: wheat', name);
         try {
             // Handle both new and hydrated tasks
@@ -119,6 +121,20 @@ export class Task {
         }
     }
 
+    static generateUniqueId() {
+        const now = Date.now();
+        
+        // If the current timestamp is the same as the last one, increment the counter
+        if (now === this.lastTimestamp) {
+            this.taskCounter++;
+        } else {
+            this.taskCounter = 0; // Reset counter for a new timestamp
+        }
+        
+        this.lastTimestamp = now; // Update the last timestamp
+
+        return `task-${now}-${this.taskCounter}`; // Create a unique ID
+    }
 
     // =============================================================================
     // =============================== Update Methods ==============================

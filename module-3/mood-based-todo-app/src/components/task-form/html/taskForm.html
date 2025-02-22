@@ -12,17 +12,24 @@
             <span class="close-button" id="close-task-form-modal">&times;</span>
             <h2 id="task-form-title">Add a new task</h2>
             <div class="form-group">
-                <input type="text" id="task-name" name="task-name" placeholder="Task title" required>
+                <input type="text" id="task-name" name="task-name" placeholder="Task name">
+                <div class="error-message" id="task-name-error"></div>
+
             </div>
             <div class="form-group">
                 <input type="text" id="task-description" name="task-description" placeholder="Task description">
+                <div class="error-message" id="task-description-error"></div>
+
             </div>
             <div class="form-group">
-                <input type="number" id="duration-input" name="duration-input" min="1" step="1" placeholder="Duration (minutes)" required>
+                <input type="number" id="duration-input" name="duration-input" min="1" step="1" placeholder="Duration (minutes)" >
+                <div class="error-message" id="task-duration-error"></div>
                 <button class="btn-secondary" type="button" id="duration-toggle">Minutes</button>
             </div>
             <div class="form-group">
-                <input type="text" id="datepicker" name="datepicker" class="datepicker" autocomplete="off" placeholder="Select date" required>
+                <input type="text" id="datepicker" name="datepicker" class="datepicker" autocomplete="off" placeholder="Select date"  readonly>
+                <div class="error-message" id="task-datepicker-error"></div>
+
             </div>
             <button type="submit" id="submit-task-form-btn" class="btn-create">Create Task</button>
         </form>

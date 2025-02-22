@@ -116,16 +116,21 @@ export function showTaskFormModal(task = null) {
         defaultDate: new Date()
     });
 
+    // Make datepicker readonly to prevent manual input
+    datepickerEl.setAttribute('readonly', true);
+
+    clearTaskFormErrors(); // Clear any existing error messages
     modal.style.display = "flex"; // Show the modal
     console.info('%c showTaskFormModal() Task form modal displayed', 'color: lightgreen');
 
     // Setup form submission
     if (taskForm) {
         taskForm.onsubmit = async (event) => {
-            // If a task is provided, edit the task
-            await handleTaskFormSubmit(event, task); // Pass true to indicate editing
-
-        }; // Pass the form object and task to handleTaskFormSubmit
+            event.preventDefault();
+            if (validateTaskForm()) {
+                await handleTaskFormSubmit(event, task);
+            }
+        };
     } else {
         console.error('%c showTaskFormModal() Task form not found', 'color: red'); // Log error if form is not found
     }
@@ -146,10 +151,10 @@ async function handleTaskFormSubmit(event, task = null) {
     console.debug('%c handleTaskFormSubmit() Collected formData:', 'color: aqua', Array.from(formData.entries())); // Debugging line to show form data
 
     const taskDetails = {
-        name: formData.get('task-name'), // Get task name from form
-        description: formData.get('task-description'), // Get description from form
-        dueDate: formData.get('datepicker'), // Get date from form
-        duration: formData.get('duration-input'), // Get duration from form
+        name: formData.get('task-name').trim(), // Get task name from form
+        description: formData.get('task-description').trim(), // Get description from form
+        dueDate: formData.get('datepicker').trim(), // Get date from form
+        duration: formData.get('duration-input').trim(), // Get duration from form
         type: 'active' // Set completed status as needed
     };
 
@@ -168,10 +173,10 @@ async function handleTaskFormSubmit(event, task = null) {
     } else {
         // If creating a new task
         try {
-            const task = await Task.create(taskDetails.name, taskDetails.description, taskDetails.duration, taskDetails.dueDate, taskDetails.type);
-            systemTaskManager.addTask(task.type, task, true); // Add the new task to the system task manager
+            const newTask = await Task.create(taskDetails.name, taskDetails.description, taskDetails.duration, taskDetails.dueDate, taskDetails.type);
+            systemTaskManager.addTask(newTask.type, newTask, true); // Add the new task to the system task manager
             systemTaskManager.switchTaskView('active');
-            console.info('%c *** handleTaskFormSubmit() Task created successfully ***', 'color: lightgreen', task); // Log success message
+            console.info('%c *** handleTaskFormSubmit() Task created successfully ***', 'color: lightgreen', newTask); // Log success message
         } catch (error) {
             console.error('%c handleTaskFormSubmit() An error occurred during operation:', 'color: red', error); // Log any errors encountered
         }
@@ -186,9 +191,9 @@ async function handleTaskFormSubmit(event, task = null) {
  * Closes the task form modal.
  * 
  * This function hides the task form modal from the view, effectively closing it.
- * It also logs the closure action for debugging purposes.
+ * It also clears all error messages to ensure a clean state for future interactions.
  * 
- * @function closeModal
+ * @function closeTaskFormModal
  * @returns {void} This function does not return a value.
  * 
  * @throws {Error} Throws an error if the modal element is not found.
@@ -196,16 +201,75 @@ async function handleTaskFormSubmit(event, task = null) {
  * Workflow:
  * - Checks if the task form modal exists in the document.
  * - Hides the modal by setting its display style to 'none'.
+ * - Clears all error messages to ensure a clean state for future interactions.
  * - Logs a message indicating that the modal has been closed.
  */
 function closeTaskFormModal() {
     const modal = document.getElementById('addTaskModal'); // Get the login modal element
     if (modal) {
         modal.style.display = 'none'; // Hide the modal if it exists
+        clearTaskFormErrors(); // Clear error messages upon closing
         console.info('%c *** closeModal() *** Task form modal closed', 'color: lightgreen'); // Log closure action
     } else {
         console.error('%c closeTaskFormModal() Task form modal not found when attempting to close.', 'color: red'); // Log error if modal is not found
     }
+}
+
+
+
+
+function validateTaskForm() {
+    let isValid = true;
+    const taskName = document.getElementById('task-name');
+    const duration = document.getElementById('duration-input');
+    const datepicker = document.getElementById('datepicker');
+
+    // Clear previous error messages
+    clearTaskFormErrors();
+
+    // Validate task name
+    if (!taskName.value.trim()) {
+        document.getElementById('task-name-error').innerHTML = '⚠️ Task name is required';
+        isValid = false;
+    }
+
+    // Validate duration
+    if (!duration.value.trim()) {
+        document.getElementById('task-duration-error').innerHTML = '⚠️ Duration is required';
+        isValid = false;
+    } else if (isNaN(duration.value.trim())) {
+        document.getElementById('task-duration-error').innerHTML = '⚠️ Duration must be a number';
+        isValid = false;
+    }
+
+    // Validate date
+    if (!datepicker.value.trim()) {
+        document.getElementById('task-datepicker-error').innerHTML = '⚠️ Please select a date';
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+/**
+ * Clears all error messages in the task form.
+ * 
+ * @function clearTaskFormErrors
+ * @returns {void}
+ */
+function clearTaskFormErrors() {
+    const errorElements = [
+        'task-name-error',
+        'task-duration-error',
+        'task-datepicker-error'
+    ];
+
+    errorElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.innerHTML = '';
+        }
+    });
 }
 
 

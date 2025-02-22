@@ -442,14 +442,13 @@ export class TaskCard {
         // Ensure the task card is available before proceeding
         
         if (!this.taskCardElement) return;
-
         // Select the delete button from the task card
         const deleteButton = this.taskCardElement.querySelector('.btn-action.delete');
         if (deleteButton) {
             // Attach a click event listener to the delete button
             deleteButton.addEventListener('click', () => {
                 try {
-                    console.info('%c *** setDeleteButtonListener() Removing task: ***', 'color: lightgreen', task);
+                    console.warn('%c *** setDeleteButtonListener() Removing task: ***', 'color: lightgreen', task);
                     systemTaskManager.removeTask(task, true); // Remove the task from the task manager
                 } catch (error) {
                     // Log any errors that occur during the task deletion process

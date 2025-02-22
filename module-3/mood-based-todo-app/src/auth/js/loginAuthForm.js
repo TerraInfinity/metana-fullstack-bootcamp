@@ -1,4 +1,4 @@
-// loginAuthForm.js - Manages authentication form interactions
+// loginAuthForm.js - Manages authentication form interactions with enhanced validation
 /**
  * @file Manages authentication form interactions.
  * @version 1.0.0
@@ -148,12 +148,18 @@ export function showLoginModal() {
 
     // Reset the form to its default state
     updateFormState(true); // Default to login mode
+    clearAuthFormErrors(); // Clear any existing error messages
     modal.style.display = "flex"; // Show the modal
     console.info('%c Login modal displayed', 'color: lightgreen');
 
     // Setup form submission
     if (authForm) {
-        authForm.onsubmit = async (event) => handleAuthFormSubmit(event, true); // Default to login submission
+        authForm.onsubmit = async (event) => {
+            event.preventDefault();
+            if (validateLoginForm()) {
+                await handleAuthFormSubmit(event, true);
+            }
+        };
         setupAuthToggleHandler(); // Set up toggle functionality
     } else {
         console.error('%c Authentication form not found', 'color: red'); // Log error if form is not found
@@ -181,6 +187,7 @@ function closeAuthModal() {
     const modal = document.getElementById('loginModal'); // Get the login modal element
     if (modal) {
         modal.style.display = 'none'; // Hide the modal if it exists
+        clearAuthFormErrors(); // Clear error messages upon closing
         console.info('%c Login modal closed', 'color: lightgreen'); // Log closure action
     } else {
         console.error('%c Login modal not found when attempting to close.', 'color: red'); // Log error if modal is not found
@@ -246,23 +253,37 @@ async function handleAuthFormSubmit(event, isLogin = true) {
     
     const formData = new FormData(authForm); // Collect form data
     const credentials = {
-        username: formData.get('email'), // Get email from form
-        password: formData.get('password') // Get password from form
+        username: formData.get('email').trim(),
+        password: formData.get('password').trim(),
+        name: formData.get('name') ? formData.get('name').trim() : ''
     };
 
     try {
-        const authFunction = isLogin ? login : register; // Determine which function to call
-        const response = await authFunction(credentials.username, credentials.password); // Call auth function
-
-        if (response.success) {
-            closeAuthModal(); // Close modal on success
-            loginButtonUpdateUI(isAuthenticated());
-            console.info('%c Authentication successful', 'color: lightgreen'); // Log success message
-            // Additional UI updates can be handled here
+        if (!isLogin) {
+            // Registration mode
+            const response = await register(credentials.username, credentials.password, credentials.name);
+            if (response.success) {
+                closeAuthModal();
+                loginButtonUpdateUI(isAuthenticated());
+                console.info('%c Registration successful', 'color: lightgreen');
+            } else if (response.message === 'Email already exists') {
+                // Display error message for existing email
+                document.getElementById('login-email-error').innerHTML = '⚠️ Email is already taken';
+                console.error('%c Registration failed: Email already exists', 'color: red');
+            } else {
+                console.error('%c Registration failed:', 'color: red', response.message);
+            }
         } else {
-            console.error('%c Operation failed:', 'color: red', response.message); // Log failure message
-            alert('Operation failed: ' + response.message);
-            // Show error to user, maybe update UI to reflect failure
+            // Login mode
+            const response = await login(credentials.username, credentials.password);
+            if (response.success) {
+                closeAuthModal();
+                loginButtonUpdateUI(isAuthenticated());
+                console.info('%c Authentication successful', 'color: lightgreen');
+            } else {
+                document.getElementById('login-password-error').innerHTML = '⚠️ Invalid credentials';
+                console.error('%c Login failed:', 'color: red', response.message);
+            }
         }
     } catch (error) {
         console.error('%c An error occurred during operation:', 'color: red', error); // Log any errors encountered
@@ -288,6 +309,64 @@ function setupAuthToggleHandler() {
     toggleForm.onclick = () => {
         const isLogin = !toggleForm.innerText.includes("Don't have an account?"); // Determine current mode
         updateFormState(isLogin); // Update UI to reflect new mode
-        authForm.onsubmit = (event) => handleAuthFormSubmit(event, isLogin); // Update submission handler
+        clearAuthFormErrors(); // Clear errors when toggling forms
+        authForm.onsubmit = async (event) => handleAuthFormSubmit(event, isLogin); // Update submission handler
     };
+}
+
+function validateLoginForm() {
+    let isValid = true;
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const name = document.getElementById('name');
+
+    // Clear previous error messages
+    clearAuthFormErrors();
+
+    // Validate name if in registration mode
+    if (formTitle.innerText === "Registration") {
+        if (!name.value.trim()) {
+            document.getElementById('login-name-error').innerHTML = '⚠️ Name is required';
+            isValid = false;
+        }
+    }
+
+    // Validate email
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.value.trim()) {
+        document.getElementById('login-email-error').innerHTML = '⚠️ Email is required';
+        isValid = false;
+    } else if (!emailPattern.test(email.value.trim())) {
+        document.getElementById('login-email-error').innerHTML = '⚠️ Please enter a valid email address';
+        isValid = false;
+    }
+
+    // Validate password
+    if (password.value.length < 8) {
+        document.getElementById('login-password-error').innerHTML = '⚠️ Password must be at least 8 characters long';
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+/**
+ * Clears all error messages in the authentication form.
+ * 
+ * @function clearAuthFormErrors
+ * @returns {void}
+ */
+function clearAuthFormErrors() {
+    const errorElements = [
+        'login-name-error',
+        'login-email-error',
+        'login-password-error'
+    ];
+
+    errorElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.innerHTML = '';
+        }
+    });
 }

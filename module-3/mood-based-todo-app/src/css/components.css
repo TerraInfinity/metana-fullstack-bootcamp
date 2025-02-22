@@ -232,7 +232,7 @@
 /* Form Styles */
 .task-form {
     background-color: var(--card-bg);
-    padding: 2rem;
+    padding: 2.5rem;
     border-radius: 8px;
     color: var(--text-color);
 }
@@ -374,4 +374,9 @@
     text-decoration: none;
     text-shadow: var(--text-shadow);
     cursor: pointer;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.6rem;
 }
