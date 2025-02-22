@@ -99,6 +99,7 @@ export class TaskManager {
      * @returns {void} - This method does not return a value.
      */
     async loadTasks() {
+      console.groupCollapsed('*** loadTasks() ***');
       console.info('%c ↓ loadTasks() Starting ↓', 'color: lightgray');
         try {
             const userEmail = getCurrentUserEmail(); // Get the current user's email
@@ -116,6 +117,7 @@ export class TaskManager {
             console.error('Error loading tasks:', error); // Log any errors that occur during loading
         }
         console.info('%c ↑ loadTasks() Complete ↑', 'color: darkgray');
+        console.groupEnd();
     }
   
     /**
@@ -125,6 +127,8 @@ export class TaskManager {
      * @returns {void} - This method does not return a value.
      */
     async saveTasks() {
+      console.groupCollapsed('*** saveTasks() ***');
+      console.info('%c ↓ saveTasks() Starting ↓', 'color: lightgray');
         try {
             const taskData = {
                 yourActiveTasks: this.yourActiveTasks.map(task => task.serialize()), // Serialize active tasks
@@ -139,7 +143,9 @@ export class TaskManager {
             
         } catch (error) {
             console.error('Error saving tasks:', error); // Log any errors that occur during saving
-        }
+        } 
+        console.info('%c ↑ saveTasks() Complete ↑', 'color: darkgray');
+        console.groupEnd();
     }
   
     // ===========================================================================
@@ -158,6 +164,7 @@ export class TaskManager {
      * @returns {void} - This method does not return a value.
      */
     addTask(type, task, refreshTaskView = true) {
+      console.groupCollapsed('*** addTask() ***');
       console.info('%c ↓ addTask() Starting ↓', 'color: lightgray');
         try {
             // Determine the task type and add the task to the corresponding array
@@ -181,6 +188,7 @@ export class TaskManager {
             console.error('%c Error adding task:', 'color: red', error); // Log any errors that occur during adding
         }
         console.info('%c ↑ addTask() Complete ↑', 'color: darkgray');
+        console.groupEnd();
     }
 
     // ===========================================================================
@@ -197,6 +205,8 @@ export class TaskManager {
      * @returns {Object|null} - The found task object or null if not found.
      */
     getTask(taskId) {
+      console.groupCollapsed('*** getTask() ***');
+      console.info('%c ↓ getTask() Starting ↓', 'color: lightgray');
         // Search in active tasks
         let task = this.yourActiveTasks.find(task => task.id === taskId);
         if (task) return task;
@@ -207,6 +217,8 @@ export class TaskManager {
 
         // Search in suggested tasks
         task = this.yourActiveSuggestedTasks.find(task => task.id === taskId);
+        console.info('%c ↑ getTask() Complete ↑', 'color: darkgray');
+        console.groupEnd();
         return task || null; // Return null if not found in any array
     }
 
@@ -235,6 +247,7 @@ export class TaskManager {
      * @returns {void} - This method does not return a value.
      */
     renderTaskCards(container, tasks) {
+      console.groupCollapsed('*** renderTaskCards() ***');
       console.info('%c ↓ renderTaskCards() Starting ↓', 'color: lightgray');
       console.debug('%c renderTaskCards() systemTaskManager', 'color: aqua', systemTaskManager);
 
@@ -291,14 +304,6 @@ export class TaskManager {
           taskTypeElement.textContent = task.type;
           container.appendChild(task.taskCard.taskCardElement); //TaskCard should already exist in the task object during its construction
 
-          //console.debug('%c renderTaskCards() taskNameElement:', 'color: aqua', taskNameElement);
-          //console.debug('%c renderTaskCards() taskDescriptionElement:', 'color: aqua', taskDescriptionElement);
-          //console.debug('%c renderTaskCards() taskDueDateElement:', 'color: aqua', taskDueDateElement);
-          //console.debug('%c renderTaskCards() taskDurationElement:', 'color: aqua', taskDurationElement);
-          //console.debug('%c renderTaskCards() taskPriorityElement:', 'color: aqua', taskPriorityElement);
-          //console.debug('%c renderTaskCards() taskStatusElement:', 'color: aqua', taskStatusElement);
-          //alert('updateMainTaskView() container' + container.outerHTML);
-
           console.debug('%c renderTaskCards() card appended to container.', 'color: aqua');
 
 
@@ -307,6 +312,7 @@ export class TaskManager {
         console.error('%c Error rendering task cards:', 'color: red', error); // Log any errors that occur during rendering
       }
       console.info('%c ↑ renderTaskCards() Complete ↑', 'color: darkgray');
+      console.groupEnd();
     }
   
     /**
@@ -318,8 +324,10 @@ export class TaskManager {
      * @throws {Error} Throws an error if the container element is not found.
      */
     updateMainTaskView() {
+      console.groupCollapsed('*** updateMainTaskView() ***');
       console.info('%c ↓ updateMainTaskView() Starting ↓', 'color: lightgray');
-      
+
+
       try {
         // Select the container element where task cards will be rendered
         const container = document.querySelector('.tasks-section .task-cards');
@@ -338,6 +346,7 @@ export class TaskManager {
         console.error('%c Error updating main task view:', 'color: red', error); // Log any errors that occur during the update
       }
       console.info('%c ↑ updateMainTaskView() Complete ↑', 'color: darkgray');
+      console.groupEnd();
     }
   
     /**
@@ -348,6 +357,7 @@ export class TaskManager {
      * @throws {Error} Throws an error if the container element is not found.
      */
     updateSuggestedTasksView() {
+      console.groupCollapsed('*** updateSuggestedTasksView() ***');
       console.info('%c ↓ updateSuggestedTasksView() Starting ↓', 'color: lightgray');
       try {
         // Select the container element where suggested task cards will be rendered
@@ -364,6 +374,7 @@ export class TaskManager {
         console.error('%c Error updating suggested tasks view:', 'color: red', error); // Log any errors that occur during the update
       }
       console.info('%c ↑ updateSuggestedTasksView() Complete ↑', 'color: darkgray');
+      console.groupEnd();
     }
   
     /**
@@ -375,6 +386,7 @@ export class TaskManager {
      * @throws {Error} Throws an error if the task count element is not found.
      */
     updateTaskCount() {
+      console.groupCollapsed('*** updateTaskCount() ***');
       console.info('%c ↓ updateTaskCount() Starting ↓', 'color: lightgray');
       try {
         // Select the element that displays the task count
@@ -391,6 +403,7 @@ export class TaskManager {
         console.error('%c Error updating task count:', 'color: red', error); // Log any errors that occur during the update
       }
       console.info('%c ↑ updateTaskCount() Complete ↑', 'color: darkgray');
+      console.groupEnd();
     }
   
     // ===========================================================================
@@ -447,6 +460,7 @@ export class TaskManager {
      * @returns {void} - This method does not return a value.
      */
     refreshAllTaskViews() {
+      console.groupCollapsed('*** refreshAllTaskViews() ***');
       console.info('%c ↓ refreshAllTaskViews() Starting ↓', 'color: lightgray');
       try {
         this.saveTasks()
@@ -460,6 +474,7 @@ export class TaskManager {
         console.error('%c Error refreshing task views:', 'color: red', error); // Log any errors that occur during the refresh
       }
       console.info('%c ↑ refreshAllTaskViews() Complete ↑', 'color: darkgray');
+      console.groupEnd();
     }
 
 
@@ -478,6 +493,7 @@ export class TaskManager {
      * @throws {Error} Throws an error if the task object is invalid or missing required properties.
      */
     removeTask(task, refreshTaskView = true) {
+      console.groupCollapsed('*** removeTask() ***');
       console.info('%c ↓ removeTask() Starting ↓', 'color: lightgray');
       //alert('removeTask() task' + task);
         // Validate the task object
@@ -503,6 +519,7 @@ export class TaskManager {
             this.refreshAllTaskViews(); // Update the UI to reflect the changes
         }
         console.info('%c ↑ removeTask() Complete ↑', 'color: darkgray');
+        console.groupEnd();
     }
 
     /**
@@ -519,7 +536,8 @@ export class TaskManager {
      * @returns {void} - This method does not return a value.
      */
     moveTask(task, newType = 'active', refreshTaskView = true) {
-        console.info('%c ↓ moveTask() Starting ↓', 'color: lightgray');
+      console.groupCollapsed('*** moveTask() ***');
+      console.info('%c ↓ moveTask() Starting ↓', 'color: lightgray');
         // Validate the task object
         if (!task || typeof task.id !== 'string' || !['active', 'completed', 'suggested'].includes(task.type)) {
             throw new Error('Invalid task object provided.'); // Handle invalid task object
@@ -541,7 +559,8 @@ export class TaskManager {
         // Add the task to the new array based on the new type
         task.taskCard.initializeHTMLButtons(task);
         this.addTask(newType, task, refreshTaskView); // refreshTaskView is set to true to refresh the task views after the move
-        console.info('%c ↑ moveTask() Complete ↑', 'color: darkgray');
+        console.info('%c ↑ moveTask() Complete ↑', 'color: darkgray');  
+        console.groupEnd();
     }
 
     /**
@@ -562,6 +581,7 @@ export class TaskManager {
      * @returns {void} - This method does not return a value.
      */
     editTask(task, data, refreshTaskView = true) {
+      console.groupCollapsed('*** editTask() ***');
       console.info('%c ↓ editTask() Starting ↓', 'color: lightgray');
 
       // If the task is a taskID(string), get the task object using the task ID. Otherwise, use the task object provided.
@@ -579,10 +599,12 @@ export class TaskManager {
             this.refreshAllTaskViews(); // Refresh the UI to reflect the updated task details
         }
         console.info('%c ↑ editTask() Complete ↑', 'color: darkgray');
-
+        console.groupEnd(); 
     }
     
     async hydrateTasks(tasks) {
+      console.groupCollapsed('*** hydrateTasks() ***');
+      console.info('%c ↓ hydrateTasks() Starting ↓', 'color: lightgray');
         return Promise.all(tasks.map(async (taskData) => {
             return Task.create(
                 taskData.name,
@@ -593,6 +615,8 @@ export class TaskManager {
                 taskData.id
             );
         }));
+        console.info('%c ↑ hydrateTasks() Complete ↑', 'color: darkgray');
+        console.groupEnd();
     }
 
     /**
@@ -603,7 +627,8 @@ export class TaskManager {
      * @returns {void} - This method does not return a value.
      */
     completeAllTasks() {
-        console.info('%c ↓ manageTasksBasedOnView() Starting ↓', 'color: lightgray');
+      console.groupCollapsed('*** completeAllTasks() ***');
+      console.info('%c ↓ completeAllTasks() Starting ↓', 'color: lightgray');
         try {
             if (this.currentTaskView === 'active') {
                 // Move all active tasks to completed
@@ -619,6 +644,7 @@ export class TaskManager {
         } catch (error) {
             console.error('%c Error managing tasks based on view:', 'color: red', error); // Log any errors that occur during management
         }
-        console.info('%c ↑ manageTasksBasedOnView() Complete ↑', 'color: darkgray');
+        console.info('%c ↑ completeAllTasks() Complete ↑', 'color: darkgray');
+        console.groupEnd();
     }
 }

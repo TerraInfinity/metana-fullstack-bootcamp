@@ -29,8 +29,12 @@ export class MoodTaskService {
 
 
     static async initializeSuggestedTasks() {
+      console.groupCollapsed('*** initializeSuggestedTasks() ***');
+      console.info('%c ↓ initializeSuggestedTasks() Starting ↓', 'color: lightgray');
         await this.getFilteredTasks(this.currentMood, this.currentWeather);
         console.debug('%c MoodTaskService initialized suggested tasks', 'color: aqua');
+        console.info('%c ↑ initializeSuggestedTasks() Complete ↑', 'color: darkgray');
+        console.groupEnd();
     }
 
     // =============================================================================
@@ -45,7 +49,8 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the tasks cannot be loaded.
      */
     static async loadTasksFromJSON() {
-
+      console.groupCollapsed('*** loadTasksFromJSON() ***');
+      console.info('%c ↓ loadTasksFromJSON() Starting ↓', 'color: lightgray');
       try {
         // Construct the URL for fetching tasks
         const relativeUrl = '../public/data/suggested-tasks-pool.json';
@@ -53,14 +58,19 @@ export class MoodTaskService {
         console.debug('%c Attempting to fetch from:', 'color: aqua', url);
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to load tasks'); // Throw error if response is not OK
+        console.info('%c ↑ loadTasksFromJSON() Complete ↑', 'color: darkgray');
+        console.groupEnd();
         return await response.json(); // Return the parsed JSON data
       } catch (error) {
         // Log the error details for debugging
         console.error('%c Failed to find response url', 'color: red', url);
         console.error('%c Error loading tasks from URL:', 'color: red', url); // Print the full URL
         console.error('%c Error loading tasks:', 'color: red', error); // Log the error message
+        console.info('%c ↑ loadTasksFromJSON() Complete ↑', 'color: darkgray');
+        console.groupEnd();
         return { tasks: [] }; // Fallback to an empty array if an error occurs
       }
+
     }
   
     // =============================================================================
@@ -76,7 +86,8 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if tasks cannot be loaded or filtered.
      */
     static async getFilteredTasks(moodValue, weather) {
-      console.group("%c ↓↓↓ getFilteredTasks() ↓↓↓", 'color: lightgray');
+      console.groupCollapsed('*** getFilteredTasks() ***');
+      console.info('%c ↓ getFilteredTasks() Starting ↓', 'color: lightgray');
       this.currentMood = moodValue; // Update currentMood when filtering tasks
       let tasks; // Declare tasks variable to hold loaded tasks
 
@@ -116,6 +127,7 @@ export class MoodTaskService {
   
       console.info("%c ⬆⬆⬆ getFilteredTasks() ⬆⬆⬆ ", 'color: darkgray');
       console.groupEnd();
+
       return selectedTasks;
     }
   
@@ -128,14 +140,18 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the task does not have a valid moodRange property.
      */
     static matchesMood(task, currentMood) {
+      console.groupCollapsed('*** matchesMood() ***');
+      console.info('%c ↓ matchesMood() Starting ↓', 'color: lightgray');
       // Validate that the task has a moodRange property
       if (!task.moodRange || typeof task.moodRange.min !== 'number' || typeof task.moodRange.max !== 'number') {
         throw new Error('Invalid task: moodRange is missing or not properly defined.');
       }
-
+      console.info('%c ↑ matchesMood() Complete ↑', 'color: darkgray');
+      console.groupEnd();
       // Check if the current mood is within the defined range
       return currentMood >= task.moodRange.min && 
              currentMood <= task.moodRange.max;
+
     }
   
     /**
@@ -147,14 +163,18 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the task does not have a valid weatherConditions property.
      */
     static matchesWeather(task, currentWeather) {
+      console.groupCollapsed('*** matchesWeather() ***');
+      console.info('%c ↓ matchesWeather() Starting ↓', 'color: lightgray');
       // Validate that the task has a weatherConditions property
       if (!task.weatherConditions || !Array.isArray(task.weatherConditions)) {
         throw new Error('Invalid task: weatherConditions is missing or not properly defined.');
       }
-
+      console.info('%c ↑ matchesWeather() Complete ↑', 'color: darkgray');
+      console.groupEnd();
       // Check if the current weather is included in the task's weather conditions
       return task.weatherConditions.includes('any') || 
              task.weatherConditions.includes(currentWeather);
+
     }
   
     // =============================================================================
@@ -168,6 +188,10 @@ export class MoodTaskService {
      * @returns {Promise<Object>} A promise that resolves to a properly formatted task object.
      */
     static async transformToTask(rawSuggestedJSONTask) {
+      console.groupCollapsed('*** transformToTask() ***');
+      console.info('%c ↓ transformToTask() Starting ↓', 'color: lightgray');
+      console.info('%c ↑ transformToTask() Complete ↑', 'color: darkgray');
+      console.groupEnd();
         return await Task.create(
           rawSuggestedJSONTask.name || 'Untitled Task', // Use 'name' if available, fallback to 'Untitled Task'
           rawSuggestedJSONTask.description || '', // Default description if not provided
@@ -175,6 +199,7 @@ export class MoodTaskService {
           rawSuggestedJSONTask.dueDate || new Date().toISOString().split('T')[0], // Use 'dueDate' if available, otherwise use today's date
           'suggested' 
         );
+
     }
   
     /**
@@ -185,6 +210,8 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the input is not an array.
      */
     static shuffleArray(array) {
+      console.groupCollapsed('*** shuffleArray() ***');
+      console.info('%c ↓ shuffleArray() Starting ↓', 'color: lightgray');
       // Validate that the input is an array
       if (!Array.isArray(array)) {
         throw new Error('Invalid input: expected an array.');
@@ -195,6 +222,8 @@ export class MoodTaskService {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]]; // Swap elements
       }
+      console.info('%c ↑ shuffleArray() Complete ↑', 'color: darkgray');
+      console.groupEnd();
       return array; // Return the shuffled array
     }
   
@@ -211,15 +240,20 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the delay is not a positive number.
      */
     static debounce(fn, delay) {
+      console.groupCollapsed('*** debounce() ***');
+      console.info('%c ↓ debounce() Starting ↓', 'color: lightgray');
         // Validate that the delay is a positive number
         if (typeof delay !== 'number' || delay <= 0) {
             throw new Error('Invalid delay: must be a positive number.');
         }
 
+        console.info('%c ↑ debounce() Complete ↑', 'color: darkgray');
+        console.groupEnd();
         let debounceTimer; // Timer variable to hold the timeout reference
         return function (...args) {
             clearTimeout(debounceTimer); // Clear the previous timer
             debounceTimer = setTimeout(() => fn.apply(this, args), delay); // Set a new timer
         };
+
     }
 }

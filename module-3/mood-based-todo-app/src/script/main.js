@@ -101,6 +101,7 @@ body.setAttribute('data-theme', savedTheme);
  * and making the TaskManager functions accessible globally.
  */
 document.addEventListener('DOMContentLoaded', async () => {
+    console.groupCollapsed('*** DOMContentLoading & Initializations ***');
     console.info('%c ***↓↓↓*** DOM fully loaded and parsed ***↓↓↓***', 'color: purple'); 
     try {
         // Initialize systemTaskManager
@@ -131,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             console.error('Error loading tasks:', error);
         }
-        
+
         // Initialize suggested tasks
         try {
             await updateSuggestedTasks();
@@ -140,6 +141,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         console.debug('%c DOMContentLoaded - systemTaskManager after loadTasks()', 'color: lightgreen', systemTaskManager);
+        
         systemTaskManager.refreshAllTaskViews();
         
         // Check if TaskManager is available before using it
@@ -149,10 +151,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error during initialization:', error);
     }
 
-    
+    console.groupEnd();
+
     console.info('%c ***↑↑↑*** DOMContentLoaded Listener Complete ***↑↑↑***', 'color: deeppink'); 
 });
-
 
 //add a listener for the show-completed
 let showCompleted = false; // Track the current view state
@@ -203,6 +205,4 @@ themeToggle.addEventListener('click', () => {
     localStorage.setItem('theme', newTheme);
     themeToggle.textContent = newTheme === 'dark' ? '🌓' : '🌞';
 });
-
-
 
