@@ -29,12 +29,12 @@ export class MoodTaskService {
 
 
     static async initializeSuggestedTasks() {
-      console.groupCollapsed('*** initializeSuggestedTasks() ***');
+      // console.groupCollapsed('*** initializeSuggestedTasks() ***');
       console.info('%c ↓ initializeSuggestedTasks() Starting ↓', 'color: lightgray');
-        await this.getFilteredTasks(this.currentMood, this.currentWeather);
-        console.debug('%c MoodTaskService initialized suggested tasks', 'color: aqua');
-        console.info('%c ↑ initializeSuggestedTasks() Complete ↑', 'color: darkgray');
-        console.groupEnd();
+      await this.getFilteredTasks(this.currentMood, this.currentWeather);
+      console.debug('%c MoodTaskService initialized suggested tasks', 'color: aqua');
+      console.info('%c ↑ initializeSuggestedTasks() Complete ↑', 'color: darkgray');
+      // console.groupEnd();
     }
 
     // =============================================================================
@@ -49,7 +49,7 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the tasks cannot be loaded.
      */
     static async loadTasksFromJSON() {
-      console.groupCollapsed('*** loadTasksFromJSON() ***');
+      // console.groupCollapsed('*** loadTasksFromJSON() ***');
       console.info('%c ↓ loadTasksFromJSON() Starting ↓', 'color: lightgray');
       try {
         // Construct the URL for fetching tasks
@@ -59,7 +59,7 @@ export class MoodTaskService {
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to load tasks'); // Throw error if response is not OK
         console.info('%c ↑ loadTasksFromJSON() Complete ↑', 'color: darkgray');
-        console.groupEnd();
+        // console.groupEnd();
         return await response.json(); // Return the parsed JSON data
       } catch (error) {
         // Log the error details for debugging
@@ -67,7 +67,7 @@ export class MoodTaskService {
         console.error('%c Error loading tasks from URL:', 'color: red', url); // Print the full URL
         console.error('%c Error loading tasks:', 'color: red', error); // Log the error message
         console.info('%c ↑ loadTasksFromJSON() Complete ↑', 'color: darkgray');
-        console.groupEnd();
+        // console.groupEnd();
         return { tasks: [] }; // Fallback to an empty array if an error occurs
       }
 
@@ -86,7 +86,7 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if tasks cannot be loaded or filtered.
      */
     static async getFilteredTasks(moodValue, weather) {
-      console.groupCollapsed('*** getFilteredTasks() ***');
+      // console.groupCollapsed('*** getFilteredTasks() ***');
       console.info('%c ↓ getFilteredTasks() Starting ↓', 'color: lightgray');
       this.currentMood = moodValue; // Update currentMood when filtering tasks
       let tasks; // Declare tasks variable to hold loaded tasks
@@ -94,9 +94,9 @@ export class MoodTaskService {
       try {
         const response = await this.loadTasksFromJSON(); // Load tasks from the JSON file
         tasks = response.tasks; // Extract tasks from the response
-        console.debug(`%c Loaded ${tasks.length} tasks from the JSON file.`, 'color: aqua'); // Log number of tasks loaded
+        console.debug(`%c getFilteredTasks() Loaded ${tasks.length} tasks from the JSON file.`, 'color: aqua'); // Log number of tasks loaded
       } catch (error) {
-        console.error('%c Error loading tasks:', 'color: red', error); // Log error if loading fails
+        console.error('%c getFilteredTasks()Error loading tasks:', 'color: red', error); // Log error if loading fails
         throw new Error('Unable to load tasks for filtering.'); // Rethrow error with a user-friendly message
       }
 
@@ -109,26 +109,25 @@ export class MoodTaskService {
         this.matchesWeather(task, weather)
       );
 
-      console.debug(`%c Filtered down to ${filteredTasks.length} tasks based on mood and weather.`, 'color: aqua'); // Log number of filtered tasks
+      // Log reasoning for selected tasks
+      console.debug("%c getFilteredTasks() filteredTasks Tasks Reasoning:", 'color: yellow', filteredTasks.map(task => ({
+        name: task.name,
+        moodMatch: this.matchesMood(task, moodValue),
+        weatherMatch: this.matchesWeather(task, weather)
+      })));
+
+      const shuffled = this.shuffleArray(filteredTasks);
+
+      //console.debug(`%c Filtered down to ${filteredTasks.length} tasks based on mood and weather.`, 'color: aqua'); // Log number of filtered tasks
 
       // Ensure we only transform the selected tasks into proper task objects
-      const transformedTasks = await Promise.all(filteredTasks.slice(0, 4).map(task => this.transformToTask(task)));
+      const transformedTasks = await Promise.all(shuffled.slice(0, 4).map(task => this.transformToTask(task)));
 
 
-      // Log details of each transformed task
-      console.debug("%c Transformed Tasks:", 'color: aqua', transformedTasks);
-
-      // Log tasks that match the criteria
-      console.debug("%c Tasks matching criteria:", 'color: aqua', transformedTasks.map(task => task.name));
-
-      // Shuffle and pick 4 (if you want to shuffle the filtered tasks before selecting)
-      const shuffled = this.shuffleArray(transformedTasks);
-      const selectedTasks = shuffled.slice(0, 4);
-  
       console.info("%c ⬆⬆⬆ getFilteredTasks() ⬆⬆⬆ ", 'color: darkgray');
-      console.groupEnd();
+      // console.groupEnd();
 
-      return selectedTasks;
+      return transformedTasks;
     }
   
     /**
@@ -140,14 +139,14 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the task does not have a valid moodRange property.
      */
     static matchesMood(task, currentMood) {
-      console.groupCollapsed('*** matchesMood() ***');
+      // console.groupCollapsed('*** matchesMood() ***');
       console.info('%c ↓ matchesMood() Starting ↓', 'color: lightgray');
       // Validate that the task has a moodRange property
       if (!task.moodRange || typeof task.moodRange.min !== 'number' || typeof task.moodRange.max !== 'number') {
         throw new Error('Invalid task: moodRange is missing or not properly defined.');
       }
       console.info('%c ↑ matchesMood() Complete ↑', 'color: darkgray');
-      console.groupEnd();
+      // console.groupEnd();
       // Check if the current mood is within the defined range
       return currentMood >= task.moodRange.min && 
              currentMood <= task.moodRange.max;
@@ -163,14 +162,14 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the task does not have a valid weatherConditions property.
      */
     static matchesWeather(task, currentWeather) {
-      console.groupCollapsed('*** matchesWeather() ***');
+      // console.groupCollapsed('*** matchesWeather() ***');
       console.info('%c ↓ matchesWeather() Starting ↓', 'color: lightgray');
       // Validate that the task has a weatherConditions property
       if (!task.weatherConditions || !Array.isArray(task.weatherConditions)) {
         throw new Error('Invalid task: weatherConditions is missing or not properly defined.');
       }
       console.info('%c ↑ matchesWeather() Complete ↑', 'color: darkgray');
-      console.groupEnd();
+      // console.groupEnd();
       // Check if the current weather is included in the task's weather conditions
       return task.weatherConditions.includes('any') || 
              task.weatherConditions.includes(currentWeather);
@@ -188,10 +187,10 @@ export class MoodTaskService {
      * @returns {Promise<Object>} A promise that resolves to a properly formatted task object.
      */
     static async transformToTask(rawSuggestedJSONTask) {
-      console.groupCollapsed('*** transformToTask() ***');
+      // console.groupCollapsed('*** transformToTask() ***');
       console.info('%c ↓ transformToTask() Starting ↓', 'color: lightgray');
       console.info('%c ↑ transformToTask() Complete ↑', 'color: darkgray');
-      console.groupEnd();
+      // console.groupEnd();
         return await Task.create(
           rawSuggestedJSONTask.name || 'Untitled Task', // Use 'name' if available, fallback to 'Untitled Task'
           rawSuggestedJSONTask.description || '', // Default description if not provided
@@ -210,20 +209,19 @@ export class MoodTaskService {
      * @throws {Error} Throws an error if the input is not an array.
      */
     static shuffleArray(array) {
-      console.groupCollapsed('*** shuffleArray() ***');
+      // console.groupCollapsed('*** shuffleArray() ***');
       console.info('%c ↓ shuffleArray() Starting ↓', 'color: lightgray');
       // Validate that the input is an array
       if (!Array.isArray(array)) {
         throw new Error('Invalid input: expected an array.');
       }
-
+      // console.info('%c ↑ shuffleArray() Complete ↑', 'color: darkgray');
+      // console.groupEnd();
       // Fisher-Yates shuffle algorithm
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]]; // Swap elements
       }
-      console.info('%c ↑ shuffleArray() Complete ↑', 'color: darkgray');
-      console.groupEnd();
       return array; // Return the shuffled array
     }
   

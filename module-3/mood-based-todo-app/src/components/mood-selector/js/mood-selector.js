@@ -28,7 +28,7 @@ async function fetchMoodSelector() {
             console.error('Failed to load mood selector'); // Debug: Fetch failed
             throw new Error('Failed to load mood selector');
         }
-
+        
         const moodHtml = await response.text();
         console.log("Mood HTML fetched:", moodHtml); // Debug: Log fetched HTML
 
