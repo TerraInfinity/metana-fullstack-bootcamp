@@ -35,6 +35,7 @@ import { initializeTaskFormModal } from '/src/components/task-form/js/taskForm.j
 import { initializeCompleteAllButton } from '/src/components/task-component/js/completeAllButton.js';
 import { updateSuggestedTasks } from '/src/components/mood-selector/js/mood-selector.js';
 import { getCurrentUserEmail } from '/src/auth/js/auth.js';
+import { initializeWeather } from '/src/components/weather/js/weather.js';
 // =============================================================================
 // =============================== Variables ===================================
 // =============================================================================
@@ -64,17 +65,6 @@ const themeToggle = document.getElementById('theme-toggle');
  */
 const body = document.body;
 
-/** 
- * @type {number} 
- * @description The current mood value, represented as a number (default is 50).
- */
-let currentMood = 50; // Default mood value
-
-/** 
- * @type {HTMLElement} 
- * @description The HTML element representing the weather icon, which may display current weather conditions.
- */
-const weatherIcon = document.getElementById('weather-icon'); // Move this here
 
 // Load saved theme
 /** 
@@ -124,6 +114,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         initializeTaskFormModal();
         // Initialize add task button
         initializeAddTaskButton();
+        // Initialize weather
+        initializeWeather();
         // Initialize complete all button
         initializeCompleteAllButton();
         // Load tasks
