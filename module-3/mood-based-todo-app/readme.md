@@ -230,7 +230,10 @@ This file handles the mood selector component and includes:
 3. **Start the Application:**
 
    - Open `index.html` in a modern web browser or use a local development server such as Live Server.
-   - Alternatively, deploy using Netlify with the provided `netlify.toml` configuration.
+   - Alternatively, deploy using Netlify.
+    Base Directory: /module-3/mood-based-todo-app
+    ![image](https://github.com/user-attachments/assets/c76f99cd-2666-4d54-af1a-13bf58daff37)
+
 
 4. **Interact with the Application:**
 
@@ -239,6 +242,9 @@ This file handles the mood selector component and includes:
    - **Update Weather:** Click the weather icon (⛅) to refresh and update the current weather conditions.
    - **Toggle Theme:** Click the theme toggle button (moon/sun icon) to switch between dark and light modes.
    - **User Accounts:** Use the login interface to register/sign in. A guest mode is also available via local storage.
+
+5. Alternatively load it to netlify
+  Set the build settings to /module-3/mood-based-todo-app
 
 ---
 
