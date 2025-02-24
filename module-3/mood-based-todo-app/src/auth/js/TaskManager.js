@@ -46,8 +46,8 @@ import {
     migrateGuestDataToUser, // Migrates guest user data to an authenticated user
     isAuthenticated, // Checks if the user is currently authenticated
     getCurrentUserEmail, // Retrieves the current user's email
-    loadCurrentUserTasks // Loads tasks for the current user
-
+    loadCurrentUserTasks, // Loads tasks for the current user
+    getGuestUserData // Added import for getGuestUserData
 } from '/src/auth/js/auth.js';
 import { TaskCard } from '/src/components/task-component/js/taskCard.js';
 import { Task } from '/src/auth/js/task.js';
@@ -100,22 +100,38 @@ export class TaskManager {
      */
     async loadTasks() {
       console.info('%c ↓ loadTasks() Starting ↓', 'color: lightgray');
-        try {
-            const userEmail = getCurrentUserEmail(); // Get the current user's email
-            const data = await loadCurrentUserTasks(userEmail); // Load tasks for the user
-            console.debug('%c loadTasks() data before hydrateTasks()', 'color: aqua', data);
-            
-            if (data) {
-                // Convert raw objects to Task instances
-                this.yourActiveTasks = await this.hydrateTasks(data.yourActiveTasks);
-                this.yourCompleteTasks = await this.hydrateTasks(data.yourCompleteTasks);
-                this.yourActiveSuggestedTasks = await this.hydrateTasks(data.yourActiveSuggestedTasks);
-            }
-            console.debug('%c loadTasks() data after hydrateTasks()', 'color: aqua', this);
-        } catch (error) {
-            console.error('Error loading tasks:', error); // Log any errors that occur during loading
+      try {
+        const userEmail = await getCurrentUserEmail(); // Get the current user's email
+        const data = await loadCurrentUserTasks(userEmail); // Load tasks for the user
+        console.debug('%c loadTasks() data before hydrateTasks()', 'color: aqua', data);
+        
+        if (data) {
+          // Handle active tasks array independently
+          if (Array.isArray(data.yourActiveTasks) && data.yourActiveTasks.length > 0) {
+            this.yourActiveTasks = await this.hydrateTasks(data.yourActiveTasks);
+          } else {
+            this.yourActiveTasks = [];
+          }
+
+          // Handle completed tasks array independently
+          if (Array.isArray(data.yourCompleteTasks) && data.yourCompleteTasks.length > 0) {
+            this.yourCompleteTasks = await this.hydrateTasks(data.yourCompleteTasks);
+          } else {
+            this.yourCompleteTasks = [];
+          }
+
+          // Handle suggested tasks array independently
+          if (Array.isArray(data.yourActiveSuggestedTasks) && data.yourActiveSuggestedTasks.length > 0) {
+            this.yourActiveSuggestedTasks = await this.hydrateTasks(data.yourActiveSuggestedTasks);
+          } else {
+            this.yourActiveSuggestedTasks = [];
+          }
         }
-        console.info('%c ↑ loadTasks() Complete ↑', 'color: darkgray');
+        console.debug('%c loadTasks() data after hydrateTasks()', 'color: aqua', this);
+      } catch (error) {
+        console.error('Error loading tasks:', error); // Log any errors that occur during loading
+      }
+      console.info('%c ↑ loadTasks() Complete ↑', 'color: darkgray');
     }
   
     /**
@@ -127,17 +143,7 @@ export class TaskManager {
     async saveTasks() {
       console.info('%c ↓ saveTasks() Starting ↓', 'color: lightgray');
         try {
-            const taskData = {
-                yourActiveTasks: this.yourActiveTasks.map(task => task.serialize()), // Serialize active tasks
-                yourCompleteTasks: this.yourCompleteTasks.map(task => task.serialize()), // Serialize completed tasks
-                yourActiveSuggestedTasks: this.yourActiveSuggestedTasks.map(task => task.serialize()), // Serialize suggested tasks
-                currentTaskView: this.currentTaskView // Save current task view
-            };
-
-            const userEmail = getCurrentUserEmail(); // Get the current user's email
-            await dbManager.saveTasks(userEmail, taskData); // Save tasks to IndexedDB
-            
-            
+          saveCurrentUserData();            
         } catch (error) {
             console.error('Error saving tasks:', error); // Log any errors that occur during saving
         } 
@@ -405,6 +411,7 @@ export class TaskManager {
     switchTaskView(viewType) {
       console.info('%c ↓ switchTaskView() Starting ↓', 'color: lightgray');
       console.debug('%c switchTaskView() Task View Set to:', 'color: aqua', viewType);
+      
       // Validate the provided viewType
       if (!['active', 'completed'].includes(viewType)) {
         throw new Error('Invalid view type'); // Handle invalid view type
@@ -415,10 +422,21 @@ export class TaskManager {
       // Update the header text based on the current view type
       const headerElement = document.getElementById('task-section-header');
       if (headerElement) {
-          headerElement.textContent = viewType === 'completed' ? 'Completed Tasks' : 'Your Tasks';
+        headerElement.textContent = viewType === 'completed' ? 'Completed Tasks' : 'Your Tasks';
       }
 
-      this.updateMainTaskView(); // Refresh the main task view
+      // Update the button text based on the current view type
+      const buttonElement = document.getElementById('show-completed');
+      if (buttonElement) {
+        buttonElement.textContent = viewType === 'completed' ? 'Hide Completed' : 'Show Completed';
+      }
+
+      // Optional: Debug alerts (you can remove these after testing)
+      // alert('switchTaskView() buttonText = ' + (viewType === 'completed' ? 'Hide Completed' : 'Show Completed'));
+      // alert('switchTaskView() headerText = ' + (viewType === 'completed' ? 'Completed Tasks' : 'Your Tasks'));
+
+      // Refresh the main task view after UI updates
+      this.updateMainTaskView();
       console.info('%c ↑ switchTaskView() Complete ↑', 'color: darkgray');
     }
   
@@ -526,6 +544,10 @@ export class TaskManager {
             console.log(`Task is already of type '${newType}'. No move needed, removing task.`); // Log message for no action
             this.removeTask(task, refreshTaskView);            
             return; // Exit the method if the types are the same
+        }
+        // Check if the new type is 'suggested' and switch view if current is 'completed'
+        if (task.type === 'suggested' && this.currentTaskView === 'completed' && newType === 'active') {
+            this.switchTaskView('active');
         }
         
         // Remove the task from its current array based on its type

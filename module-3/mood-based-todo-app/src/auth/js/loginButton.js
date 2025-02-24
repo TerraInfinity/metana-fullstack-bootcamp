@@ -17,7 +17,7 @@
 // =============================== Imports =====================================
 // =============================================================================
 import { showLoginModal } from '/src/auth/js/loginAuthForm.js';
-import { logout, isAuthenticated } from '/src/auth/js/auth.js';
+import { logout, isAuthenticated, updateUserUI } from '/src/auth/js/auth.js';
 
 // =============================================================================
 // =============================== Initialization ==============================
@@ -48,17 +48,15 @@ export function initializeLoginButton() {
       console.error('%c Login button not found', 'color: red');
       return; // Exit if the button is not found
   }
-  updateUI(isAuthenticated());
+  updateUserUI();
   // Add click event listener to the login button
-  loginButton.addEventListener('click', () => {
+  loginButton.addEventListener('click', async () => {
       // Check the current text content of the button
       if (loginButton.textContent === 'Login') {
           showLoginModal(); // Show the login modal (calls loginAuthForm.js showLoginModal function)
       } else if (loginButton.textContent === 'Logout') {
         console.log('%c Logging out...', 'color: lightblue'); // Log the logout action
-        //alert('getCurrentUserData(): ' + JSON.stringify(getCurrentUserData()));
-
-        logout(); // Log the user out (calls auth.js logout function)   
+        await logout(); // Log the user out (calls auth.js logout function)   
       } else {
         console.warn('%c Unexpected button text: ' + loginButton.textContent, 'color: red'); // Warn for unexpected text
       }
@@ -79,9 +77,8 @@ export function initializeLoginButton() {
  * If the user is logged in, the button text is set to 'Login'.
  * If the user is logged out, the button text is set to 'Logout'.
  */
-export function updateUI(isLoggedIn = true) { // Called by auth.js during login/logout
+export function updateLoginButtonUI(isLoggedIn = true) { // Called by auth.js during login/logout
   const loginButton = document.getElementById('login-btn');
-
   // Check if the login button exists before updating UI
   if (!loginButton) {
       console.error('%c Login button not found for UI update', 'color: red');
@@ -91,6 +88,7 @@ export function updateUI(isLoggedIn = true) { // Called by auth.js during login/
   // Update button text based on login status
   if (isLoggedIn === true) {
       loginButton.textContent = 'Logout'; // Set text for logged in state
+
   } else {
       loginButton.textContent = 'Login'; // Set text for logged out state
   }

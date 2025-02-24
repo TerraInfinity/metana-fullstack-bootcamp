@@ -42,6 +42,7 @@ class IndexedDBManager {
 
   async saveTasks(email, taskData) {
     await this.connect();
+    //alert('saveTasks() saving taskData to IndexedDB ' + email + ' ' +  JSON.stringify(taskData));
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(STORE_NAME, 'readwrite');
       const store = transaction.objectStore(STORE_NAME);
@@ -56,15 +57,16 @@ class IndexedDBManager {
     });
   }
 
-  async loadTasks(email) {
+  async fetchDBTasks(email) {
     await this.connect();
+    //alert('fetchDBTasks() loading tasks from IndexedDB ' + email);
     return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction(STORE_NAME, 'readonly');
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.get(email);
+        const transaction = this.db.transaction(STORE_NAME, 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.get(email);
 
-      request.onsuccess = (event) => resolve(event.target.result);
-      request.onerror = (event) => reject(event.target.error);
+        request.onsuccess = (event) => resolve(event.target.result);
+        request.onerror = (event) => reject(event.target.error);
     });
   }
 }

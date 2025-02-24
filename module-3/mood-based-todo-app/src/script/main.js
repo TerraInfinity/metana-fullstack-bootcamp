@@ -34,6 +34,7 @@ import { initializeAddTaskButton } from '/src/components/task-form/js/addTaskBut
 import { initializeTaskFormModal } from '/src/components/task-form/js/taskForm.js';
 import { initializeCompleteAllButton } from '/src/components/task-component/js/completeAllButton.js';
 import { updateSuggestedTasks } from '/src/components/mood-selector/js/mood-selector.js';
+import { getCurrentUserEmail } from '/src/auth/js/auth.js';
 // =============================================================================
 // =============================== Variables ===================================
 // =============================================================================
@@ -127,6 +128,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         initializeCompleteAllButton();
         // Load tasks
         try {
+            //alert('DOMContentLoaded - systemTaskManager.loadTasks() + ' + getCurrentUserEmail());
             await systemTaskManager.loadTasks();
         } catch (error) {
             console.error('Error loading tasks:', error);
@@ -153,21 +155,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.info('%c ***↑↑↑*** DOMContentLoaded Listener Complete ***↑↑↑***', 'color: deeppink'); 
 });
 
-//add a listener for the show-completed
 let showCompleted = false; // Track the current view state
 
 document.getElementById('show-completed').addEventListener('click', () => {
-    showCompleted = !showCompleted; // Toggle the view state
-    const viewType = showCompleted ? 'completed' : 'active'; // Determine the view type
-    systemTaskManager.switchTaskView(viewType); // Switch the task view based on the current state
-
-    // Update button text based on the current view state
-    const buttonText = showCompleted ? 'Hide Completed' : 'Show Completed';
-    document.getElementById('show-completed').textContent = buttonText; // Change button text
-
-    // Update task section header text
-    const headerText = showCompleted ? 'Completed Tasks' : 'Your Tasks';
-    document.getElementById('task-section-header').textContent = headerText; // Change header text
+    const showCompleted = systemTaskManager.currentTaskView;
+    if (showCompleted === 'active') {
+        systemTaskManager.switchTaskView('completed');
+    } else {
+        systemTaskManager.switchTaskView('active');
+    }
 });
 
 /**

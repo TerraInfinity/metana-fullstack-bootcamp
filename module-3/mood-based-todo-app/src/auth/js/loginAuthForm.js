@@ -16,7 +16,7 @@
  */
 
 import { login, register, isAuthenticated } from '/src/auth/js/auth.js';
-import { updateUI as loginButtonUpdateUI} from '/src/auth/js/loginButton.js';
+import { updateLoginButtonUI } from '/src/auth/js/loginButton.js';
 // Common elements reference
 let authForm, toggleForm, submitButton, formTitle;
 
@@ -213,18 +213,21 @@ function closeAuthModal() {
  * - Updates the toggle form link text based on the current mode.
  * - Changes the submit button text based on the current mode.
  * - Updates the form title based on the current mode.
+ * - Toggle name field visibility
  */
 function updateFormState(isLoginState = true) {
-    // Update the toggle form link text based on the current mode
     toggleForm.innerHTML = isLoginState 
-        ? "Don't have an account? <a href='#'>Sign up</a>" // Text for login mode
-        : 'Already have an account? <a href="#">Log in</a>'; // Text for registration mode
+        ? "Don't have an account? <a href='#'>Sign up</a>"
+        : 'Already have an account? <a href="#">Log in</a>';
 
-    // Change the submit button text based on the current mode
-    submitButton.innerText = isLoginState ? "Login" : "Register"; // Set button text
-
-    // Update the form title based on the current mode
-    formTitle.innerText = isLoginState ? "Welcome Back" : "Registration"; // Set form title
+    submitButton.innerText = isLoginState ? "Login" : "Register";
+    formTitle.innerText = isLoginState ? "Welcome Back" : "Registration";
+    
+    // Toggle name field visibility
+    const nameField = document.getElementById('name-container');
+    if (nameField) {
+        nameField.style.display = isLoginState ? 'none' : 'block';
+    }
 }
 
 /**
@@ -251,6 +254,12 @@ function updateFormState(isLoginState = true) {
 async function handleAuthFormSubmit(event, isLogin = true) {
     event.preventDefault(); // Prevent default form submission behavior
     
+    // Validate the form first; this call now checks all fields (including duplicate email in registration mode).
+    if (!validateLoginForm(isLogin)) {
+        // If there are any validation errors, abort submission.
+        return;
+    }
+    
     const formData = new FormData(authForm); // Collect form data
     const credentials = {
         username: formData.get('email').trim(),
@@ -264,21 +273,21 @@ async function handleAuthFormSubmit(event, isLogin = true) {
             const response = await register(credentials.username, credentials.password, credentials.name);
             if (response.success) {
                 closeAuthModal();
-                loginButtonUpdateUI(isAuthenticated());
+                updateLoginButtonUI(isAuthenticated());
                 console.info('%c Registration successful', 'color: lightgreen');
-            } else if (response.message === 'Email already exists') {
-                // Display error message for existing email
-                document.getElementById('login-email-error').innerHTML = '⚠️ Email is already taken';
-                console.error('%c Registration failed: Email already exists', 'color: red');
+            } else if (response.message === 'Email already in use') {
+                // Show inline error for email already in use.
+                document.getElementById('login-email-error').innerHTML = '⚠️ Email already in use';
             } else {
-                console.error('%c Registration failed:', 'color: red', response.message);
+                // Display any other registration error inline.
+                document.getElementById('login-email-error').innerHTML = `⚠️ ${response.message}`;
             }
         } else {
             // Login mode
             const response = await login(credentials.username, credentials.password);
             if (response.success) {
                 closeAuthModal();
-                loginButtonUpdateUI(isAuthenticated());
+                updateLoginButtonUI(isAuthenticated());
                 console.info('%c Authentication successful', 'color: lightgreen');
             } else {
                 document.getElementById('login-password-error').innerHTML = '⚠️ Invalid credentials';
@@ -314,35 +323,51 @@ function setupAuthToggleHandler() {
     };
 }
 
-function validateLoginForm() {
+/**
+ * Validates the login or registration form.
+ * 
+ * @param {boolean} isLogin - True if in login mode, false if in registration mode.
+ * @returns {boolean} - Returns true if the form is valid, false otherwise.
+ */
+function validateLoginForm(isLogin = true) {
     let isValid = true;
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-    const name = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const nameInput = document.getElementById('name');
 
-    // Clear previous error messages
+    // Clear any previous error messages.
     clearAuthFormErrors();
 
-    // Validate name if in registration mode
-    if (formTitle.innerText === "Registration") {
-        if (!name.value.trim()) {
+    // If we're in registration mode, validate the name.
+    if (!isLogin) {
+        if (!nameInput.value.trim()) {
             document.getElementById('login-name-error').innerHTML = '⚠️ Name is required';
             isValid = false;
         }
     }
 
-    // Validate email
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.value.trim()) {
+    // Validate the email field.
+    if (!emailInput.value.trim()) {
         document.getElementById('login-email-error').innerHTML = '⚠️ Email is required';
         isValid = false;
-    } else if (!emailPattern.test(email.value.trim())) {
-        document.getElementById('login-email-error').innerHTML = '⚠️ Please enter a valid email address';
-        isValid = false;
+    } else {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(emailInput.value.trim())) {
+            document.getElementById('login-email-error').innerHTML = '⚠️ Please enter a valid email address';
+            isValid = false;
+        }
+        // In registration mode, also check if the email is already in use.
+        if (!isLogin) {
+            const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+            if (allUsers.some(u => u.email === emailInput.value.trim())) {
+                document.getElementById('login-email-error').innerHTML = '⚠️ Email already in use';
+                isValid = false;
+            }
+        }
     }
 
-    // Validate password
-    if (password.value.length < 8) {
+    // Validate the password field.
+    if (passwordInput.value.length < 8) {
         document.getElementById('login-password-error').innerHTML = '⚠️ Password must be at least 8 characters long';
         isValid = false;
     }

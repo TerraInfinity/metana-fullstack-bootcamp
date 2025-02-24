@@ -33,8 +33,9 @@
 // =============================================================================
 // ========================= Import Functions ==================================
 // =============================================================================
-import { updateUI as updateLoginButtonUI } from '/src/auth/js/loginButton.js';
+import { updateLoginButtonUI } from '/src/auth/js/loginButton.js';
 import { dbManager } from '/src/auth/js/indexedDBManager.js'; // Updated import statement
+import { systemTaskManager } from '/src/script/main.js'; // NEW: Import systemTaskManager to refresh task views
 
 // =============================================================================
 // ============================== Variables ====================================
@@ -79,7 +80,7 @@ const GUEST_USER_KEY = 'guestUser';
 export async function initializeAuth() {
   let currentUser = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
   if (!currentUser) {
-    currentUser = { email: 'Guest', password: null }; // Default guest user
+    currentUser = { email: 'Guest', password: null, name: 'Guest' }; // Default guest user
     sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(currentUser));
   }
   return currentUser;
@@ -103,11 +104,12 @@ export async function initializeAuth() {
  *                     - {boolean} success - True if login succeeds, false otherwise.
  *                     - {string} message - A message providing additional information.
  */
-export function login(email, password) {
-  const allUsers = getAllUsers();
+export async function login(email, password) {
+  const allUsers = await getAllUsers();
   const user = allUsers.find(u => u.email === email && u.password === password);
   if (user) {
     sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify(user));
+    await updateUserUI(true);
     return { success: true, user };
   }
   return { success: false, message: 'Invalid credentials' };
@@ -119,24 +121,25 @@ export function login(email, password) {
  * Registers a new user in the system.
  * 
  * This function checks if a user with the provided email already exists. 
- * If not, it creates a new user with the given email and password, 
+ * If not, it creates a new user with the given email, password, and name, 
  * and saves the updated user list to localStorage.
  * 
  * Automatically logs in the user after successful registration.
  * 
  * @param {string} email - The email address of the user to register.
  * @param {string} password - The password for the new user account.
+ * @param {string} name - The name of the user.
  * @returns {Object} - An object indicating the success of the registration:
  *                     - {boolean} success - True if registration is successful.
  *                     - {string} message - A message providing additional information.
  */
-export function register(email, password) {
-  const allUsers = getAllUsers();
+export async function register(email, password, name) {
+  const allUsers = await getAllUsers();
   if (allUsers.some(u => u.email === email)) {
     return { success: false, message: 'Email already in use' };
   }
   
-  const newUser = { email, password };
+  const newUser = { email, password, name };
   allUsers.push(newUser);
   localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(allUsers));
   return login(email, password);
@@ -153,24 +156,25 @@ export function register(email, password) {
  * @function logout
  * @returns {void} - This function does not return a value.
  */
-export function logout() {
+export async function logout() {
   console.info('%c ↓ logout() Starting ↓', 'color: lightgray');
-  const currentUserData = getCurrentUserData();
-  try {
-    saveCurrentUserData(currentUserData) // Save current user data.
-        .then(() => {
-            sessionStorage.removeItem(CURRENT_USER_SESSION_KEY); // Remove current user session
-        })
-        .catch(error => {
-            console.error('%c Error during logout process:', 'color: red', error); // Log any errors that occur during saving
-        });
-    //alert('currentUserData: ' + JSON.stringify(getCurrentUserData()));
-
-    updateUI(); // Update UI to reflect logged-out state
-    console.info('%c ↑ logout() complete ↑', 'color: darkgray');
+  try {    
+    const currentUserData = await getCurrentUserData();
+    console.debug('%c logout() currentUserData:', 'color: aqua', currentUserData);
+    await saveCurrentUserData(currentUserData);
+    sessionStorage.removeItem(CURRENT_USER_SESSION_KEY);
+    sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify({ 
+      email: 'Guest', 
+      password: null, 
+      name: 'Guest' 
+    }));
+    await systemTaskManager.loadTasks();
   } catch (error) {
-    console.error('%c Error during logout process:', 'color: red', error); // Log any errors that occur during logout
+    console.error('%c Error during logout process:', 'color: red', error);
+    console.error('%c Invalid user data format:', 'color: orange', currentUserData);
   }
+  await updateUserUI();
+  console.info('%c ↑ logout() complete ↑', 'color: darkgray');
 }
 
 /**
@@ -184,6 +188,7 @@ export function logout() {
  *                      false otherwise.
  */
 export function isAuthenticated() {
+
   const currentUser = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY));
   return currentUser && currentUser.email !== 'Guest'; // Check if the user is not a guest
 }
@@ -202,7 +207,7 @@ export function isAuthenticated() {
  * 
  * @returns {Array} - Returns an array of users if found, otherwise an empty array.
  */
-export function getAllUsers() {
+export async function getAllUsers() {
   try {
     return JSON.parse(localStorage.getItem(LOCAL_STORAGE_USERS_KEY)) || []; // Retrieve users from localStorage
   } catch (error) {
@@ -221,22 +226,31 @@ export function getAllUsers() {
  * 
  * @returns {Object|null} - Returns the current user data if found, otherwise the guest user data or null.
  */
-export function getCurrentUserData() {
+export async function getCurrentUserData() {
   try {
-    const currentUserData = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY)) || null; // Retrieve current user data
-    
-    if ((!currentUserData) || (currentUserData.email == null)) {
-      console.debug('%c getCurrentUserData() Current user data not found, defaulting to guest user data.', 'color: aqua'); // Log message when switching to guest user data
-      const guestUserData = getGuestUserData();
-      console.debug('%c getCurrentUserData() Returning guestUserData', 'color: aqua', guestUserData);
-      return guestUserData; // Use guest user data if current user data is null
-    }
+    const currentUserData = JSON.parse(sessionStorage.getItem(CURRENT_USER_SESSION_KEY)) || null;
 
-    console.debug('%c getCurrentUserData() found', 'color: aqua', currentUserData);
-    return currentUserData; // Use guest user data if current user data is null
+    if (!currentUserData || currentUserData.email == null) {
+      console.debug('%c getCurrentUserData() Current user data not found, defaulting to guest user data.', 'color: aqua');
+      const guestUserData = await getGuestUserData();
+      console.debug('%c getCurrentUserData() Returning guestUserData', 'color: aqua', guestUserData);
+      return { 
+        email: guestUserData.email, 
+        password: guestUserData.password, 
+        name: guestUserData.name, 
+        taskManager: systemTaskManager
+      };
+    }
+    
+    return { 
+      email: currentUserData.email, 
+      password: currentUserData.password, 
+      name: currentUserData.name, 
+      taskManager: systemTaskManager
+    };
   } catch (error) {
-    console.error('%c getCurrentUserData() Error retrieving current user data:', 'color: red', error); // Log any errors that occur during retrieval
-    return null; // Return null in case of an error
+    console.error('%c getCurrentUserData() Error retrieving current user data:', 'color: red', error);
+    return null;
   }
 }
 
@@ -246,7 +260,7 @@ export function getCurrentUserData() {
  * 
  * @returns {Object|null} - The guest user data object if successfully retrieved or initialized, otherwise null.
  */
-export function getGuestUserData() {  
+export async function getGuestUserData() {  
   let guestUser = JSON.parse(sessionStorage.getItem(GUEST_USER_KEY));
   if (!guestUser) {
     guestUser = { email: 'Guest', password: null };
@@ -260,19 +274,17 @@ export function getGuestUserData() {
 // =============================================================================
 
 /**
- * Retrieves the email of the current user from localStorage.
- * If the current user email is not found, it retrieves the guest user email instead.
- * 
- * @returns {string|null} - Returns the current user email if found, otherwise the guest user email or null.
+ * Retrieves the current user email.
+ * If there is no authenticated user, returns 'guest'.
+ *
+ * @returns {string} The user's email or 'guest' if not authenticated.
  */
-export function getCurrentUserEmail() {
-  try {
-    const currentUserSessionEmail = getCurrentUserData().email;
-    return currentUserSessionEmail; // Return the current user email
-  } catch (error) {
-    console.error('%c getCurrentUserEmail() Error retrieving current user email:', 'color: red', error); // Log any errors that occur during retrieval
-    return null; // Return null in case of an error
+export async function getCurrentUserEmail()  {
+  const currentUserData = await getCurrentUserData();
+  if (currentUserData && currentUserData.email) {
+    return currentUserData.email;
   }
+  return 'Guest';
 }
 
 /**
@@ -282,13 +294,13 @@ export function getCurrentUserEmail() {
  * @returns {string} - Returns the guest user email if found, otherwise 'Guest'.
  * @throws {Error} Throws an error if there is an issue retrieving the guest user email.
  */
-export function getGuestUserEmail() { 
+export async function getGuestUserEmail() { 
   try {
-    const guestEmail = getGuestUserData().email;
-    return guestEmail; // Return the guest user email
+    const guestData = await getGuestUserData();
+    return guestData.email;
   } catch (error) {
-    console.error('%c getGuestUserEmail() Error retrieving guest user email:', 'color: red', error); // Log any errors that occur during retrieval
-    throw new Error('Failed to retrieve guest user email'); // Throw an error if retrieval fails
+    console.error('%c getGuestUserEmail() Error retrieving guest user email:', 'color: red', error);
+    throw new Error('Failed to retrieve guest user email');
   }
 }
 
@@ -305,18 +317,29 @@ export function getGuestUserEmail() {
  * @throws {Error} Throws an error if the data cannot be saved or if the data format is invalid.
  */
 export async function saveCurrentUserData(userData) {
+  if (!userData) {
+    userData = await getCurrentUserData();
+  }
   if (!userData || !userData.email) throw new Error('Invalid user data format');
   
-  // Save to IndexedDB for all users including guests
-  await dbManager.saveTasks(userData.email, userData.taskManager);
-  
-  // Only save credentials to sessionStorage
+  const taskData = userData.taskManager ? {
+    yourActiveTasks: userData.taskManager.yourActiveTasks.map(task => task.serialize()),
+    yourCompleteTasks: userData.taskManager.yourCompleteTasks.map(task => task.serialize()),
+    yourActiveSuggestedTasks: userData.taskManager.yourActiveSuggestedTasks.map(task => task.serialize())
+  } : {
+    yourActiveTasks: await systemTaskManager.loadTasks().then(tasks => tasks.yourActiveTasks.map(task => task.serialize())),
+    yourCompleteTasks: await systemTaskManager.loadTasks().then(tasks => tasks.yourCompleteTasks.map(task => task.serialize())),
+    yourActiveSuggestedTasks: await systemTaskManager.loadTasks().then(tasks => tasks.yourActiveSuggestedTasks.map(task => task.serialize()))
+  };
+
+  await dbManager.saveTasks(userData.email, taskData);
   sessionStorage.setItem(CURRENT_USER_SESSION_KEY, JSON.stringify({
     email: userData.email,
-    password: userData.password
+    password: userData.password,
+    name: userData.name
   }));
 }
-  
+
 /**
  * Saves or updates user data in localStorage after verifying the data format.
  * This function attempts to merge new data with existing user data. If no user 
@@ -332,11 +355,11 @@ export async function saveCurrentUserData(userData) {
  *   - There's an error in accessing or updating localStorage.
  * @returns {void}
  */
-export function saveUserData(email, data) {
+export async function saveUserData(email, data) {
   // Verify the format of the provided data
   //const verifiedData = verifyDataFormat(data, false); // Validate data format, excluding credentials (false flag). This ensures verifiedData does not include email and password.
   try {
-    const users = getAllUsers();
+    const users = await getAllUsers();
     const userIndex = users.findIndex(u => u.email === email);
     if (userIndex > -1) {
       const specifiedUserData = users[userIndex]; // Get the specified user data
@@ -366,8 +389,8 @@ export function saveUserData(email, data) {
  */
 export async function migrateGuestDataToUser(email) {
   try {
-    const guestData = await dbManager.loadTasks('Guest');
-    const userData = await dbManager.loadTasks(email);
+    const guestData = await dbManager.fetchDBTasks('Guest');
+    const userData = await dbManager.fetchDBTasks(email);
     
     await dbManager.transaction(async () => { // Ensure this method exists
       if (guestData) await dbManager.saveTasks(email, guestData);
@@ -381,24 +404,6 @@ export async function migrateGuestDataToUser(email) {
 }
  
 // =============================================================================
-// ====================== Data Verification Functions ==========================
-// =============================================================================
-
-/**
- * Verifies the format of the provided userData object.
- * 
- * @param {Object} userData - The userData object to verify.
- * @returns {void}
- */
-export function verifyDataFormat(userData) {
-  console.info('%c ↓ verifyDataFormat() ↓ Starting ', 'color: lightgray');
-
-  console.debug('%c verifyDataFormat() userData:', 'color: aqua', userData);
-
-  console.info('%c ↑ verifyDataFormat() ↑ Complete ', 'color: darkgray');
-}
-
-// =============================================================================
 // ========================= Update UI Functions ==============================
 // =============================================================================
 
@@ -411,20 +416,27 @@ export function verifyDataFormat(userData) {
  * 
  * @throws {Error} Throws an error if the current user email cannot be retrieved.
  */
-function updateUI() {
-  // Update the greeting text to welcome the logged-in user
-  document.getElementById('greeting-text').textContent = `Welcome, ${getCurrentUserEmail()}.`; // Update greeting
-
-  // Update the login button text based on the user's login status
+export async function updateUserUI(alsoRefreshTaskView = false) {
+  try {
+    const email = await getCurrentUserEmail();
+    document.getElementById('greeting-text').textContent = `Welcome, ${email}.`;
+  } catch (error) {
+    document.getElementById('greeting-text').textContent = 'Welcome, Guest.';
+  }
+  
   if (isAuthenticated()) {
-    updateLoginButtonUI(false); // Update UI to reflect logged-out status
+    updateLoginButtonUI(true);
   } else {
-    updateLoginButtonUI(true); // Update UI to reflect logged-in status
+    updateLoginButtonUI(false);
+  }
+
+  if (alsoRefreshTaskView) {
+    await systemTaskManager.loadTasks();
   }
 }
 
 export async function loadCurrentUserTasks(email) {
-  return dbManager.loadTasks(email);
+  return dbManager.fetchDBTasks(email);
 }
 
 
