@@ -10,21 +10,22 @@
  -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>MoodTodo - Home</title>
     <!--============================================================
     ======================= Meta Tags ==============================
-    =============================================================--> 
+    =============================================================-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--============================================================
     ======================= Stylesheets ============================
-    =============================================================--> 
+    =============================================================-->
     <link rel="stylesheet" href="src/css/styles.css">
     <link rel="stylesheet" href="src/css/components.css">
     <!-- Add jQuery UI CSS -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">  
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <!-- Add Font Awesome CSS (for icons)-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -34,7 +35,7 @@
 
     <!--============================================================
     ======================= Scripts ================================
-    =============================================================--> 
+    =============================================================-->
     <!-- Add jQuery and jQuery UI JS -->
     <!-- 
         The following scripts are essential for the MoodTodo application:
@@ -47,16 +48,24 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
-  
     <!--============================================================    
     ======================= Main Navigation =========================
-    =============================================================--> 
-
+    =============================================================-->
     <nav class="main-nav">
         <div class="nav-container">
-            <a href="index.html" class="logo">🏠 MoodTodo</a>
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-house"></i>MoodTodo
+            </a>
             <div class="nav-links">
-                <button id="theme-toggle" class="theme-toggle">🌓</button>
+                <span class="icon-buttons">
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fa-solid fa-moon" id="theme-icon"></i>
+                    </button>
+                    <!-- User Icon - Click to Open User Menu or Login if Not Logged In -->
+                    <button class="icon-button" id="user-icon-button">
+                        <i class="fa-solid fa-user" style="color: #63E6BE;" id="user-icon-light"></i>
+                    </button>
+                </span>
                 <a href="#" class="nav-link btn-secondary" id="login-btn">Login</a>
             </div>
         </div>
@@ -64,45 +73,48 @@
 
     <!--============================================================
     ======================= Main Content ==========================
-    =============================================================--> 
-
+    =============================================================-->
     <main class="container">
         <!-- Main Container -->
-        <div class="dashboard-grid">
-            <!-- Dashboard Header Section -->
-            <header class="dashboard-header">
-                <!-- Greeting Section -->
-                <div class="greeting" id="greeting-section">
-                    <!-- Greeting Text Updates When Logged In-->
+        <!-- Dashboard Header Section -->
+        <header class="dashboard-header">
+            <!-- Greeting Section -->
+            <div class="greeting" id="greeting-section">
+                <span class="user-icon">
+                    <img id="user-icon" src="public/images/glaum 1.png" alt="User Icon" style="width: 50px; height: 50px; border-radius: 50%;">
+                </span>
+                <div>
                     <h1 class="text-bordered" id="greeting-text">Welcome, Guest.</h1>
-                    <!-- Task Count Updates When Tasks Are Added/Loaded -->
                     <p class="task-count text-bordered" id="task-count">Ready for today? You have <span id="task-count-number">#</span> tasks planned</p>
                 </div>
-                <!-- Header Icons Section -->
-                <div class="header-icons">            
-                    <!-- Mood Icon - Click to Open Mood Slider -->
-                    <button class="icon-button" id="mood-icon">😊</button>
-                    <!-- Weather Icon - Click to Refresh Current Weather -->
-                    <button class="icon-button" id="weather-icon" title="Current Weather">⛅</button>
-                    <!-- User Icon - Click to Open User Menu or Login if Not Logged In -->
-                    <button class="icon-button" id="user-icon">👤</button>
-                </div>
-            </header>
+            </div>
+
+            <!-- Header Icons Section -->
+            <div class="header-icons">
+                <!-- Mood Icon - Click to Open Mood Slider -->
+                <button class="icon-button" id="mood-icon">😊</button>
+                <!-- Weather Icon - Click to Refresh Current Weather -->
+                <button class="icon-button" id="weather-icon" title="Current Weather">⛅</button>
+
+            </div>
+        </header>
+        <div class="dashboard-grid">
+
 
             <!--============================================================
             ======================= Main Task Section ======================
             ===== Active Tasks & Completed Tasks & Suggested Tasks =========
-            =============================================================--> 
+            =============================================================-->
             <!-- 
                 Main Task Section within Main Container 
                 Contains:
                 - Your Tasks or Completed Tasks Section (With a Button to Toggle Between Sections)
                 - The Suggested Tasks Section (Which Changes Based on the User's Mood And Weather)
-            -->             
+            -->
             <section class="tasks-section">
                 <!-- Main Task Section Header -->
                 <div class="section-header">
-                    
+
                     <!-- Main Tasks Section Header - Updates To Completed Tasks When The Button Is Clicked -->
                     <h2 class="text-bordered" id="task-section-header">Your Tasks</h2>
                     <!-- Controls Section - Contains Buttons To Complete All Tasks Or Toggle between Your Active Tasks Completed Tasks -->
@@ -137,8 +149,8 @@
      - The Hidden Modal For The Login/Register Form 
      - The Hidden Modal for Adding/Editing A New Task form
      -->
-     <div id="authModalContainer" class="modalContainer"></div>
-     <div id="addTaskModalContainer" class="modalContainer"></div>
+    <div id="authModalContainer" class="modalContainer"></div>
+    <div id="addTaskModalContainer" class="modalContainer"></div>
 
     <!-- Add Modal for YouTube Video -->
     <div id="youtubeModal" class="modal" style="display:none;">
@@ -147,15 +159,15 @@
             <iframe id="youtubeFrame" width="100%" height="315" src="" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
-    
+
     <!--============================================================
     ======================= Footer ==============================
-    =============================================================--> 
+    =============================================================-->
     <footer class="footer">
         <div class="footer-content" style="display: block;align-items: center;">
-            <p class="footer-text-right" style="margin: 0; text-align: center;">Follow us on 
+            <p class="footer-text-right" style="margin: 0; text-align: center;">Follow us on
                 <a href="https://x.com/BambiCloudPod" class="footer-link"><i class="fab fa-twitter"></i></a>
-                <a href="https://github.com/TerraInfinity" class="footer-link"><i class="fab fa-github"></i></a> 
+                <a href="https://github.com/TerraInfinity" class="footer-link"><i class="fab fa-github"></i></a>
                 <a href="https://www.instagram.com/terra8infinity/" class="footer-link"><i class="fab fa-instagram"></i></a>
                 <a href="https://www.linkedin.com/in/terra-hunter-70263063" class="footer-link"><i class="fab fa-linkedin"></i></a>
                 <a href="https://www.youtube.com/@CrystalCloudPodcast" class="footer-link"><i class="fab fa-youtube"></i></a>
@@ -171,7 +183,7 @@
 
     <!--============================================================
     ========================= Music ================================
-    =============================================================--> 
+    =============================================================-->
     <audio id="Rose42" src="public/data/music/Rose42.mp3" preload="auto"></audio>
     <audio id="BadWolf137" src="public/data/music/BadWolf137.mp3" preload="auto"></audio>
     <script>
@@ -222,6 +234,5 @@
     </script>
 
 </body>
+
 </html>
-
-

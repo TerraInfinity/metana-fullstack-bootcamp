@@ -1,0 +1,66 @@
+<div class="auth-modal" id="profileModal">
+  <form id="profile-form" class="auth-form" method="POST" enctype="multipart/form-data">
+    <span class="close-button" id="close-profile-form-modal">&times;</span>
+    <h2 id="profile-form-title">Profile</h2>
+    
+    <!-- Profile Photo Preview Container -->
+    <div class="profile-photo-preview-container" id="profile-photo-preview-container" style="position: relative; width: 100px; height: 100px; margin: auto; overflow: hidden;">
+      <img id="profile-photo-preview" src="/public/images/glaum 1.png" alt="Profile Photo Preview" style="width: 100%; height: auto; max-height: 100%; border-radius: 50%; object-fit: cover;">
+      <div class="edit-photo-overlay" id="edit-photo-overlay" style="position: absolute; bottom: 0; right: 0; background: rgba(0,0,0,0.5); border-radius: 50%; padding: 5px; cursor: pointer;">
+        <span style="color: white; font-size: 16px;">📷</span>
+      </div>
+    </div>
+
+    <!-- Hidden file input to trigger photo upload -->
+    <input type="file" id="profile-photo" name="profile-photo" accept="image/*" style="display: none;">
+    
+    <!-- Basic Info -->
+    <div class="form-group">
+      <label for="profile-name">Name</label>
+      <input type="text" id="profile-name" name="profile-name" placeholder="Enter your name" class="input-field">
+      <div class="error-message" id="profile-name-error"></div>
+    </div>
+    <div class="form-group">
+      <label for="profile-email">Email</label>
+      <input type="email" id="profile-email" name="profile-email" placeholder="Enter your email" class="input-field">
+      <div class="error-message" id="profile-email-error"></div>
+    </div>
+    
+    <!-- Toggle for Password Change -->
+    <div class="form-group">
+      <p id="toggle-change-password" style="text-align: center; font-size: 0.9em; color: blue; text-decoration: underline; cursor: pointer;">
+        Change Password
+      </p>
+    </div>
+    
+    <!-- Password Change Section (Initially Hidden) -->
+    <div class="password-change-fields" id="password-change-fields" style="display: none;">
+      <div class="form-group">
+        <label for="current-password">Current Password</label>
+        <div class="password-input-container">
+          <input type="password" id="current-password" name="current-password" placeholder="Enter current password" class="input-field">
+          <span class="toggle-password" data-target="current-password">&#128065;</span>
+        </div>
+        <div class="error-message" id="current-password-error"></div>
+      </div>
+      <div class="form-group">
+        <label for="new-password">New Password</label>
+        <div class="password-input-container">
+          <input type="password" id="new-password" name="new-password" placeholder="Enter new password" class="input-field">
+          <span class="toggle-password" data-target="new-password">&#128065;</span>
+        </div>
+        <div class="error-message" id="new-password-error"></div>
+      </div>
+      <div class="form-group">
+        <label for="confirm-new-password">Confirm New Password</label>
+        <div class="password-input-container">
+          <input type="password" id="confirm-new-password" name="confirm-new-password" placeholder="Confirm new password" class="input-field">
+          <span class="toggle-password" data-target="confirm-new-password">&#128065;</span>
+        </div>
+        <div class="error-message" id="confirm-new-password-error"></div>
+      </div>
+    </div>
+    
+    <button type="submit" id="submit-profile-form-btn" class="btn-create">Save Changes</button>
+  </form>
+</div>

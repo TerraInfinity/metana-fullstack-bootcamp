@@ -15,8 +15,14 @@
  * - Provides error handling for failed submissions and loading issues.
  */
 
-import { login, register, isAuthenticated } from '/src/auth/js/auth.js';
-import { updateLoginButtonUI } from '/src/auth/js/loginButton.js';
+import {
+    login,
+    register,
+    isAuthenticated
+} from '/src/auth/js/auth.js';
+import {
+    updateLoginButtonUI
+} from '/src/auth/js/loginButton.js';
 // Common elements reference
 let authForm, toggleForm, submitButton, formTitle;
 
@@ -51,7 +57,7 @@ export function initializeAuthForm() {
         return; // Exit if modalContainer is not found
     }
 
-    fetch('/src/auth/html/login.html') // Load the login form from login.html
+    fetch('/src/auth/html/loginForm.html') // Load the login form from loginForm.html
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok'); // Throw error for non-OK responses
@@ -66,7 +72,7 @@ export function initializeAuthForm() {
         .catch(error => {
             console.error('%c Error loading login form:', 'color: red', error); // Log any errors encountered
         });
-    
+
     console.info('%c <↑↑↑| initializeAuthForm() complete |↑↑↑>', 'color: lime');
 }
 
@@ -89,24 +95,31 @@ export function initializeAuthForm() {
 function setupAuthModal() {
     const modal = document.getElementById('loginModal'); // Get the login modal element
     if (!modal) {
-        console.error('%c Login modal not found for setup.', 'color: red'); // Log error if modal is not found
+        console.error('%c Login modal not found for setup.', 'color: red');
         return; // Exit if modal is not found
     }
 
-    // Close button functionality
-    const span = document.getElementById("close-auth-form-modal"); // Get the close button element
+    // Close button functionality.
+    const span = document.getElementById('close-auth-form-modal'); // Get the close button element
     if (span) {
         span.onclick = () => {
             closeAuthModal(); // Close modal on button click
         };
     } else {
-        console.warn('%c Close button not found in the modal.', 'color: orange'); // Log warning if close button is not found
+        console.warn('%c Close button not found in the modal.', 'color: orange');
     }
 
-    // Close modal when clicking outside
-    window.onclick = (event) => {
-        if (event.target === modal) closeAuthModal(); // Close modal if clicked outside
-    };
+    // Attach an outside-click listener directly on the modal overlay.
+    // Use a data attribute to ensure the listener is added only once.
+    if (!modal.hasAttribute('data-outside-listener')) {
+        modal.addEventListener('click', (event) => {
+            // If the click target is the modal itself (the overlay), close the modal.
+            if (event.target === modal) {
+                closeAuthModal();
+            }
+        });
+        modal.setAttribute('data-outside-listener', 'true');
+    }
 }
 
 // =============================================================================
@@ -216,13 +229,13 @@ function closeAuthModal() {
  * - Toggle name field visibility
  */
 function updateFormState(isLoginState = true) {
-    toggleForm.innerHTML = isLoginState 
-        ? "Don't have an account? <a href='#'>Sign up</a>"
-        : 'Already have an account? <a href="#">Log in</a>';
+    toggleForm.innerHTML = isLoginState ?
+        "Don't have an account? <a href='#'>Sign up</a>" :
+        'Already have an account? <a href="#">Log in</a>';
 
     submitButton.innerText = isLoginState ? "Login" : "Register";
     formTitle.innerText = isLoginState ? "Welcome Back" : "Registration";
-    
+
     // Toggle name field visibility
     const nameField = document.getElementById('name-container');
     if (nameField) {
@@ -253,13 +266,13 @@ function updateFormState(isLoginState = true) {
  */
 async function handleAuthFormSubmit(event, isLogin = true) {
     event.preventDefault(); // Prevent default form submission behavior
-    
+
     // Validate the form first; this call now checks all fields (including duplicate email in registration mode).
     if (!validateLoginForm(isLogin)) {
         // If there are any validation errors, abort submission.
         return;
     }
-    
+
     const formData = new FormData(authForm); // Collect form data
     const credentials = {
         username: formData.get('email').trim(),

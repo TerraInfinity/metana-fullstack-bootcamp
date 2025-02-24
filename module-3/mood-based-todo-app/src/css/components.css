@@ -6,7 +6,7 @@
     padding: 1.5rem;
     margin-bottom: 1rem;
     border-radius: 12px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,15 +41,20 @@
 
 /* Additional Task Card Styles from styles.css */
 .task-description {
-    display: -webkit-box; /* Use flexbox for multi-line truncation */
-    -webkit-box-orient: vertical; /* Set the orientation to vertical */
+    display: -webkit-box;
+    /* Use flexbox for multi-line truncation */
+    -webkit-box-orient: vertical;
+    /* Set the orientation to vertical */
     font-style: italic;
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    overflow: hidden;
+    /* Hide overflow */
+    text-overflow: ellipsis;
+    /* Add ellipsis for overflowed text */
 }
 
 .task-description:hover {
-    cursor: help; /* Change cursor to indicate information availability */
+    cursor: help;
+    /* Change cursor to indicate information availability */
 }
 
 .task-due-date {
@@ -59,47 +64,62 @@
 
 @media (max-width: 768px) {
     .task-description {
-        -webkit-line-clamp: 2; /* Limit to 2 lines */
+        -webkit-line-clamp: 2;
+        /* Limit to 2 lines */
     }
 }
 
 @media (min-width: 768px) and (max-width: 900px) {
     .task-description {
-        -webkit-line-clamp: 4; /* Limit to 4 lines */
+        -webkit-line-clamp: 4;
+        /* Limit to 4 lines */
     }
 }
 
 @media (min-width: 1000px) and (max-width: 1280px) {
     .task-description {
-        -webkit-line-clamp: 3; /* Limit to 3 lines */
+        -webkit-line-clamp: 3;
+        /* Limit to 3 lines */
     }
 }
+
 @media (min-width: 1280px) {
     .task-description {
-        -webkit-line-clamp: 2; /* Limit to 2 lines */
+        -webkit-line-clamp: 2;
+        /* Limit to 2 lines */
     }
 }
 
 .task-actions {
     display: flex;
-    flex-direction: column; /* Stack buttons vertically */
-    gap: 0.5rem; /* Space between buttons */
-    align-items: flex-end; /* Center buttons in the column */
-    min-width: 60px; /* Ensure a minimum width for the button container */
+    flex-direction: column;
+    /* Stack buttons vertically */
+    gap: 0.5rem;
+    /* Space between buttons */
+    align-items: flex-end;
+    /* Center buttons in the column */
+    min-width: 60px;
+    /* Ensure a minimum width for the button container */
 }
 
 .task-actions button {
-    width: 2.5rem; /* Set a fixed width for buttons in rem */
-    height: 2.5rem; /* Set a fixed height for buttons in rem */
-    border: none; /* Remove border */
-    background-color: transparent; /* Make background transparent */
-    cursor: pointer; /* Change cursor to indicate information availability */
+    width: 2.5rem;
+    /* Set a fixed width for buttons in rem */
+    height: 2.5rem;
+    /* Set a fixed height for buttons in rem */
+    border: none;
+    /* Remove border */
+    background-color: transparent;
+    /* Make background transparent */
+    cursor: pointer;
+    /* Change cursor to indicate information availability */
 }
 
 /* Responsive adjustments */
 @media (max-width: 1000px) {
     .task-card {
-        grid-template-columns: 1fr; /* Single column on smaller screens */
+        grid-template-columns: 1fr;
+        /* Single column on smaller screens */
     }
 }
 
@@ -114,11 +134,11 @@
     background: #2196F3;
     color: white;
     border: none;
-    
+
     border-radius: 25px;
     font-size: 0.9rem;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -148,7 +168,7 @@
     padding: 1rem;
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 .weather-info {
@@ -267,8 +287,10 @@
 
 .form-group input[type="number"] {
     width: 100%;
-    padding: 1rem; /* Increase padding for touch targets */
-    font-size: 1rem; /* Adjust font size for readability */
+    padding: 1rem;
+    /* Increase padding for touch targets */
+    font-size: 1rem;
+    /* Adjust font size for readability */
     border: 1px solid var(--border-color);
     border-radius: 4px;
     background-color: var(--bg-color);
@@ -276,9 +298,14 @@
     font-family: inherit;
 }
 
-.btn-primary, .btn-secondary, .btn-tertiary, .btn-create {
-    padding: 1rem 1.5rem; /* Increase padding on buttons */
-    font-size: 1rem; /* Adjust font size as needed */
+.btn-primary,
+.btn-secondary,
+.btn-tertiary,
+.btn-create {
+    padding: 1rem 1.5rem;
+    /* Increase padding on buttons */
+    font-size: 1rem;
+    /* Adjust font size as needed */
 }
 
 .btn-primary {
@@ -296,7 +323,7 @@
     border: none;
     border-radius: 25px;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -308,19 +335,25 @@
     background: #dda0dd;
     color: white;
     border: none;
-    border-radius: 10px; /* Even smaller rounded corners */
+    border-radius: 10px;
+    /* Even smaller rounded corners */
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Reduced shadow for less visual weight */
-    display: inline-block; /* Changed from flex to inline-block for simplicity */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Reduced shadow for less visual weight */
+    display: inline-block;
+    /* Changed from flex to inline-block for simplicity */
     text-align: center;
-    min-width: fit-content; /* Ensures it's not too narrow */
-    max-width: 100px; /* Caps the width if the text is very long */
+    min-width: fit-content;
+    /* Ensures it's not too narrow */
+    max-width: 100px;
+    /* Caps the width if the text is very long */
 }
 
 .btn-secondary.btn-complete-all {
     background: #39e600;
     color: black;
 }
+
 .btn-secondary.btn-show-completed {
     background: black;
     color: white;
@@ -329,16 +362,22 @@
 
 /* Modal styles */
 .modal {
-    padding: 1.25rem; 
+    padding: 1.25rem;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(var(--bg-color-r), var(--bg-color-g), var(--bg-color-b), 0.25); /* Changed to transparent red */
+    background: rgba(var(--bg-color-r), var(--bg-color-g), var(--bg-color-b), 0.25);
+    /* Changed to transparent red */
     display: none;
     justify-content: center;
     align-items: center;
+}
+
+.modal.visible {
+    display: flex;
+    /* Show the modal when the visible class is added */
 }
 
 .modal-content {
@@ -379,4 +418,121 @@
 .error-message {
     color: red;
     font-size: 0.6rem;
+}
+
+.profile-photo-preview-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    overflow: hidden;
+}
+
+#profile-photo-preview {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.edit-photo-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* Password input container styling */
+.password-input-container {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Style for the toggle password icon */
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.2em;
+    user-select: none;
+}
+
+/* Hide scrollbar for password fields container */
+.password-change-fields {
+    overflow: hidden;
+}
+
+/* Responsive Design Adjustments */
+@media (max-width: 600px) {
+    .auth-modal {
+        width: 90%;
+        max-width: 400px;
+    }
+}
+
+/* Error message styling */
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+/* Input field styling */
+.input-field {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+/* Button styling */
+.btn-create {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    /* Green */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+.btn-create:hover {
+    background-color: #45a049;
+}
+
+/* Change Password toggle styling */
+#toggle-change-password {
+    text-align: center;
+    font-size: 0.9em;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s;
+    margin: 10px 0;
+}
+
+#toggle-change-password:hover {
+    color: darkblue;
+    /* Change color on hover for better UX */
+}
+
+#profileModalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    /* Below the modal but above everything else */
 }

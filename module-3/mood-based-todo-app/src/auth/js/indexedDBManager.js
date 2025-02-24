@@ -69,6 +69,19 @@ class IndexedDBManager {
         request.onerror = (event) => reject(event.target.error);
     });
   }
+
+  updateTasks(userId, taskData) {
+    return new Promise((resolve, reject) => {
+      // We assume the object store has a primary key "id"
+      const transaction = this.db.transaction(STORE_NAME, 'readwrite');
+      const store = transaction.objectStore(STORE_NAME);
+      // Use the immutable userId as the key; "put" will update the record if it already exists.
+      const request = store.put({ id: userId, ...taskData });
+      
+      request.onsuccess = () => resolve();
+      request.onerror = (event) => reject(event.target.error);
+    });
+  }
 }
 
 export const dbManager = new IndexedDBManager(); // Exporting the instance

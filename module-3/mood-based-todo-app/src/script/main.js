@@ -36,6 +36,7 @@ import { initializeCompleteAllButton } from '/src/components/task-component/js/c
 import { updateSuggestedTasks } from '/src/components/mood-selector/js/mood-selector.js';
 import { getCurrentUserEmail } from '/src/auth/js/auth.js';
 import { initializeWeather } from '/src/components/weather/js/weather.js';
+import { initializeProfileForm } from '/src/auth/js/profileForm.js';
 // =============================================================================
 // =============================== Variables ===================================
 // =============================================================================
@@ -104,6 +105,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         // Initialize login button
         initializeLoginButton();
+        // Initialize profile form
+        initializeProfileForm();
         // Initialize authentication
         try {
             await initializeAuth();
@@ -188,7 +191,7 @@ themeToggle.addEventListener('click', () => {
     console.log(`Switching theme to: ${newTheme}`);
     body.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    themeToggle.textContent = newTheme === 'dark' ? '🌓' : '🌞';
+    themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fa-solid fa-moon" style="color:rgb(255, 255, 255);"></i>' : '<i class="fa-solid fa-sun" style="color:rgb(255, 200, 0);"></i>';
 });
 
 

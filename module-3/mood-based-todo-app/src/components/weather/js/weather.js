@@ -1,3 +1,6 @@
+import { updateSuggestedTasks } from '/src/components/mood-selector/js/mood-selector.js'; // Importing updateSuggestedTasks if needed
+
+
 /** 
  * @type {HTMLElement} 
  * @description The HTML element representing the weather icon, which may display current weather conditions.
@@ -62,6 +65,7 @@ export function generateRandomWeather() {
     };
     // Update the button icon using the new weather data
     updateWeatherIcon(currentWeather);
+    updateSuggestedTasks();
 }
 
 export function updateWeatherIcon(currentWeather) {
