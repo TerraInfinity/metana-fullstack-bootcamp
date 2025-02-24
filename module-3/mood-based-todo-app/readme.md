@@ -58,53 +58,8 @@ The application is entirely client-side and leverages the browser's local and se
 ## Project Structure
 
 Below is an overview of the file and folder organization in the project:
-moodtodo/
-├── public/                   # Publicly accessible files
-│   ├── data/                 # Data files
-│   │   └── suggested-tasks-pool.json   # Task templates for suggestions
-│   ├── images/               # Images and icons used in the UI
-│   └── favicon.ico           # Favicon
-│
-├── src/                      # Source files
-│   ├── auth/                 # Authentication modules and task classes
-│   │   ├── auth.js           # Core authentication logic – manages login, session, and UI updates.
-│   │   ├── loginAuthForm.js  # Handles the authentication form UI logic.
-│   │   ├── loginButton.js    # Initializes and updates the login button.
-│   │   ├── profileForm.js    # Provides profile editing functionalities.
-│   │   ├── TaskManager.js    # Manages tasks (loading, saving, updating views) for authenticated and guest users.
-│   │   ├── task.js           # Defines the Task class that represents individual task objects.
-│   │   └── indexedDBManager.js  # Handles tasks persistence using IndexedDB.
-│   │
-│   ├── script/               # Primary application workflow
-│   │   └── main.js           # Main entry point – initializes modules, event listeners, and manages the overall 
-state.
-│   │
-│   ├── components/           # Reusable UI components
-│   │   ├── mood-selector/    
-│   │   │   ├── html/         # HTML template for the mood selector component
-│   │   │   │   └── mood-selector.html 
-│   │   │   └── js/           # Contains mood selector logic (e.g., toggle display, event listeners)
-│   │   ├── task-form/        # Task creation form for adding new tasks
-│   │   │   ├── js/
-│   │   │   │   ├── addTaskButton.js  # Logic to initialize the “Add Task” floating button.
-│   │   │   │   └── taskForm.js         # Manages the modal for task creation.
-│   │   ├── task-component/   # Templates and logic for rendering individual task cards
-│   │   │   └── js/
-│   │   │       └── completeAllButton.js  # Handles the “Complete All” tasks functionality.
-│   │   └── weather/          # Weather-related functionality
-│   │       └── js/
-│   │           └── weather.js  # Initializes and updates weather display and related UI interactions.
-│   │
-│   ├── css/                  # Stylesheets
-│   │   ├── styles.css        # Global styles for the application.
-│   │   └── components.css    # Styles specific to reusable UI components (mood selector, task form, etc.).
-│   │
-├── index.html                # Main entry point HTML file; references all key scripts and styles.
-├── login.html                # Secondary HTML file for the login modal or dedicated authentication view.
-├── README.md                 # Project documentation (this file).
-├── LICENSE                   # License information (MIT License).
-├── .gitignore                # Specifies files and directories to ignore in version control.
-└── netlify.toml              # Deployment configuration for Netlify.
+![image](https://github.com/user-attachments/assets/166dd5ea-ff5a-4970-8df1-482d11490478)
+
 ---
 
 ## Module & File Details
