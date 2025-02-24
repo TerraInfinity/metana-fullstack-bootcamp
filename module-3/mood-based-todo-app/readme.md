@@ -243,8 +243,6 @@ This file handles the mood selector component and includes:
    - **Toggle Theme:** Click the theme toggle button (moon/sun icon) to switch between dark and light modes.
    - **User Accounts:** Use the login interface to register/sign in. A guest mode is also available via local storage.
 
-5. Alternatively load it to netlify
-  Set the build settings to /module-3/mood-based-todo-app
 
 ---
 
