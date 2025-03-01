@@ -1,0 +1,28 @@
+<div id="weather-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Current Weather</h2>
+            <span id="close-weather-modal" class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="weather-details">
+                <div class="weather-location">
+                    <h3 id="weather-location-name">Loading location...</h3>
+                    <p id="weather-location-region"></p>
+                </div>
+                <div class="weather-icon-container">
+                    <span id="weather-modal-icon" class="large-weather-icon">⛅</span>
+                </div>
+                <div class="weather-data">
+                    <p><strong>Condition:</strong> <span id="weather-condition">Loading...</span></p>
+                    <p><strong>Temperature:</strong> <span id="weather-temperature">--</span>°C</p>
+                    <p><strong>Humidity:</strong> <span id="weather-humidity">--</span>%</p>
+                    <p><strong>Wind:</strong> <span id="weather-wind">--</span> km/h</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="refresh-weather" class="button">Refresh</button>
+        </div>
+    </div>
+</div> 

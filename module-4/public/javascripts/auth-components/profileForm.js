@@ -51,7 +51,7 @@ export function showProfileFormModal() {
     fetch('/templates/auth-components/profileForm.hbs')
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to load profileForm.html');
+                throw new Error('Failed to load profileForm');
             }
             return response.text();
         })

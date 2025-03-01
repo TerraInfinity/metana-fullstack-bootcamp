@@ -1,4 +1,5 @@
 /* Task Cards */
+
 .task-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -39,7 +40,9 @@
     margin-top: 0.5rem;
 }
 
+
 /* Additional Task Card Styles from styles.css */
+
 .task-description {
     display: -webkit-box;
     /* Use flexbox for multi-line truncation */
@@ -60,7 +63,6 @@
 .task-due-date {
     text-decoration: underline;
 }
-
 
 @media (max-width: 768px) {
     .task-description {
@@ -115,7 +117,9 @@
     /* Change cursor to indicate information availability */
 }
 
+
 /* Responsive adjustments */
+
 @media (max-width: 1000px) {
     .task-card {
         grid-template-columns: 1fr;
@@ -123,18 +127,21 @@
     }
 }
 
+
 /* Suggested Tasks */
+
 .suggested .task-time {
     background: #e3f2fd;
 }
 
+
 /* Add Task Button */
+
 .btn-add-task {
     position: relative;
     background: #2196F3;
     color: white;
     border: none;
-
     border-radius: 25px;
     font-size: 0.9rem;
     cursor: pointer;
@@ -150,7 +157,9 @@
     font-size: 1.2rem;
 }
 
+
 /* Theme Toggle */
+
 .theme-toggle {
     background: none;
     border: none;
@@ -163,6 +172,7 @@
 
 
 /* Weather Card */
+
 .weather-card {
     background: var(--card-bg);
     padding: 1rem;
@@ -249,7 +259,9 @@
     background-color: #33cc00;
 }
 
+
 /* Form Styles */
+
 .task-form {
     background-color: var(--card-bg);
     padding: 2.5rem;
@@ -261,7 +273,9 @@
     margin-bottom: 1.5rem;
 }
 
+
 /* Form Improvements (Touch targets, keyboard types) */
+
 .form-group input[type="text"],
 .form-group input[type="date"],
 .form-group textarea {
@@ -361,6 +375,7 @@
 
 
 /* Modal styles */
+
 .modal {
     padding: 1.25rem;
     position: fixed;
@@ -384,7 +399,6 @@
     background: var(--bg-color);
     padding: 20px;
     border-radius: 8px;
-
     text-align: center;
     position: relative;
 }
@@ -446,13 +460,17 @@
     cursor: pointer;
 }
 
+
 /* Password input container styling */
+
 .password-input-container {
     position: relative;
     overflow: hidden;
 }
 
+
 /* Style for the toggle password icon */
+
 .toggle-password {
     position: absolute;
     right: 10px;
@@ -463,12 +481,16 @@
     user-select: none;
 }
 
+
 /* Hide scrollbar for password fields container */
+
 .password-change-fields {
     overflow: hidden;
 }
 
+
 /* Responsive Design Adjustments */
+
 @media (max-width: 600px) {
     .auth-modal {
         width: 90%;
@@ -476,21 +498,27 @@
     }
 }
 
+
 /* Error message styling */
+
 .error-message {
     color: red;
     font-size: 0.8em;
     margin-top: 5px;
 }
 
+
 /* Input field styling */
+
 .input-field {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
 }
 
+
 /* Button styling */
+
 .btn-create {
     width: 100%;
     padding: 10px;
@@ -507,7 +535,9 @@
     background-color: #45a049;
 }
 
+
 /* Change Password toggle styling */
+
 #toggle-change-password {
     text-align: center;
     font-size: 0.9em;
@@ -535,4 +565,188 @@
     align-items: center;
     z-index: 999;
     /* Below the modal but above everything else */
+}
+
+
+/* Weather Modal Styling */
+
+#weather-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(--bg-color-r), var(--bg-color-g), var(--bg-color-b), 0.75);
+    z-index: 1000;
+    /* Flexbox for perfect centering */
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Override display:none with flexbox when showing the modal */
+
+#weather-modal[style*="display: block"] {
+    display: flex !important;
+}
+
+#weather-modal .modal-content {
+    background: var(--card-bg);
+    color: var(--text-color);
+    width: 90%;
+    max-width: 500px;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    /* Reset margin since we're using flexbox for centering */
+    margin: 0;
+    max-height: 90vh;
+    overflow-y: auto;
+    /* Animation */
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Modal header */
+
+#weather-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+#weather-modal .modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+#close-weather-modal {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+#close-weather-modal:hover {
+    opacity: 1;
+}
+
+
+/* Weather content styling */
+
+.large-weather-icon {
+    font-size: 5rem;
+    display: block;
+    text-align: center;
+    margin: 1rem auto;
+    line-height: 1;
+}
+
+.weather-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.weather-location {
+    text-align: center;
+}
+
+.weather-location h3 {
+    font-size: 1.75rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.weather-location p {
+    font-size: 1rem;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.weather-data {
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+.weather-data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+}
+
+.weather-data-label {
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.weather-data-value {
+    font-weight: 600;
+}
+
+
+/* Modal footer */
+
+#weather-modal .modal-footer {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--border-color);
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+}
+
+#refresh-weather {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    min-width: 150px;
+    text-align: center;
+}
+
+#refresh-weather:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+
+/* Responsive adjustments */
+
+@media (max-width: 480px) {
+    #weather-modal .modal-content {
+        padding: 1rem;
+        width: 95%;
+    }
+    .large-weather-icon {
+        font-size: 4rem;
+    }
+    .weather-location h3 {
+        font-size: 1.5rem;
+    }
 }

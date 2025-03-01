@@ -8,7 +8,7 @@ const exphbs = require('express-handlebars');
 const fs = require('fs');
 const _ = require('lodash');
 const path = require('path');
-
+const apiRoutes = require('./routes/api');
 
 module.exports = {
     http: http,
@@ -17,6 +17,7 @@ module.exports = {
     fs: fs,
     _: _,
     path: path,
+    apiRoutes: apiRoutes,
     // Add other modules if needed. e.g.,
 
 };

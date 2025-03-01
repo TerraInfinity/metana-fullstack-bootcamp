@@ -29,6 +29,9 @@ const express = modules.express; // The Express framework for building the app
 const exphbs = modules.exphbs; // Handlebars engine for rendering templates
 const path = modules.path; // Helps with file paths
 
+// Import routes
+const apiRoutes = modules.apiRoutes;
+
 // Make a new Express app—our app starts here
 const app = express(); // Creates the app we'll build on
 
@@ -53,6 +56,9 @@ app.set('views', path.join(__dirname, 'views')); // Points to the views folder f
 
 // Serve static files like CSS, JS, and images from 'public' (sets public as the root)
 app.use(express.static(path.join(__dirname, 'public'))); // Makes public/ files available 
+
+// Register API routes
+app.use('/api', apiRoutes);
 
 // Set up the routes—here's what happens when users visit URLs
 app.get('/', (req, res) => { // When someone hits the homepage (/)

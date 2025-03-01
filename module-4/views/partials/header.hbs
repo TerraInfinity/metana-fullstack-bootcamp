@@ -18,7 +18,16 @@
                 <i class="fa-solid fa-house"></i> <h1>{{title}}</h1>
             </a>
             <div class="nav-links">
+                
                 <span class="icon-buttons">
+                                <!-- Header Icons Section -->
+                <div class="header-icons">
+                    <!-- Mood Icon - Click to Open Mood Slider -->
+                    <button class="icon-button" id="mood-icon">😊</button>
+                    <!-- Weather Icon - Click to Refresh Current Weather -->
+                    <button class="icon-button" id="weather-icon" title="Current Weather">🌈</button>
+
+                
                     <button id="theme-toggle" class="theme-toggle">
                         <i class="fa-solid fa-moon" id="theme-icon"></i>
                     </button>
@@ -26,9 +35,11 @@
                     <button class="icon-button" id="user-icon-button">
                         <i class="fa-solid fa-user" style="color: #63E6BE;" id="user-icon-light"></i>
                     </button>
+                    </div>
                 </span>
                 <a href="#" class="nav-link btn-secondary" id="login-btn">Login</a>
             </div>
+
         </div>
     </nav>
 </header> 
