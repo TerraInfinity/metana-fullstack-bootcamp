@@ -1,0 +1,510 @@
+/* styles.css  */
+
+
+/* =============================================================================
+   VARIABLES & THEME OVERRIDES
+   ============================================================================ */
+
+
+/* Root-level variables for colors, spacing, and breakpoints */
+
+:root {
+    --bg-color: #1a1a1a;
+    --bg-color-r: 26;
+    /* Red component */
+    --bg-color-g: 26;
+    /* Green component */
+    --bg-color-b: 26;
+    /* Blue component */
+    --text-color: #ffffff;
+    /* White text for dark mode */
+    --card-bg: #2d2d2d;
+    --accent-color: #4CAF50;
+    --secondary-text: #b3b3b3;
+    --time-bg: #404040;
+    --border-color: #404040;
+    --footer-bg-color: #554f4f;
+    --gif-fade-color: rgba(0, 0, 0, 0.5);
+    /* Default for dark theme */
+    --text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8), -1px -1px 2px rgba(0, 0, 0, 0.8), 1px -1px 2px rgba(0, 0, 0, 0.8), -1px 1px 2px rgba(0, 0, 0, 0.8);
+    /* For dark theme */
+    /* Breakpoints */
+    --breakpoint-mobile: 480px;
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1024px;
+    --breakpoint-large-desktop: 1200px;
+}
+
+[data-theme="light"] {
+    --bg-color: #ffffff;
+    --bg-color-r: 255;
+    /* Red component */
+    --bg-color-g: 255;
+    /* Green component */
+    --bg-color-b: 255;
+    /* Blue component */
+    --text-color: #1a1a1a;
+    /* Black text for light mode */
+    --card-bg: #f5f5f5;
+    --time-bg: #e0e0e0;
+    --border-color: #e0e0e0;
+    --footer-bg-color: #c7bdbd;
+    --gif-fade-color: rgba(255, 255, 255, 0.5);
+    /* For light theme */
+    --text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.8), 1px -1px 2px rgba(255, 255, 255, 0.8), -1px 1px 2px rgba(255, 255, 255, 0.8);
+    /* For light theme */
+}
+
+
+/* =============================================================================
+   RESET & BASE STYLES
+   ============================================================================ */
+
+
+/* ============================================================================ 
+   GLOBAL RESETS & BASE TYPOGRAPHY (MOBILE FIRST)
+   - Note: The second 'body' rule here overrides a few properties set earlier.
+   ============================================================================ */
+
+
+/* 
+     The universal selector resets default margins and paddings to ensure a 
+     consistent starting point for styling across browsers.
+  */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+
+/* =============================================================================
+   BACKGROUND & GLOBAL EFFECTS
+   ============================================================================ */
+
+
+/* Initial body background, font & background image settings */
+
+body {
+    margin: 0;
+    background-image: url('/data/images/spice%20bimbo%20loop.gif');
+    /* Path updated */
+    background-size: cover;
+    /* Ensures the image covers the entire viewport */
+    background-position: center;
+    background-attachment: fixed;
+    /* Background stays fixed while scrolling */
+    position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Add transition for color */
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    /* Override font family */
+}
+
+img,
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* Creates an overlay for blending effects on the background image */
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--gif-fade-color);
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    /* You can experiment with 'multiply', 'screen', or 'soft-light' */
+    z-index: 1;
+    /* Ensure it's above the background but below other content */
+    transition: background-color 1.3s ease;
+    /* Add transition for smooth blending */
+}
+
+
+/* Global text elements to use theme text color and uniform font size */
+
+h1,
+h2,
+h3,
+p,
+span,
+a,
+button {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    /* Adjust the font size for smaller screens */
+}
+
+
+/* Applies a text shadow (for both light and dark themes) */
+
+.text-bordered {
+    text-shadow: var(--text-shadow);
+}
+
+
+/* =============================================================================
+   NAVIGATION STYLES
+   ============================================================================ */
+
+
+/* Styles for the main navigation bar */
+
+.main-nav {
+    background: var(--card-bg);
+    padding: 1rem 0;
+    background: rgba(var(--card-bg), 0.9);
+}
+
+
+/* Container for navigation items */
+
+.nav-container {
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    /* Space between logo and nav links */
+    align-items: center;
+    padding: 0 1rem;
+    flex-direction: row;
+    /* Ensure items are in a row */
+}
+
+
+/* Logo styling within the nav */
+
+.logo {
+    display: flex;
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: var(--text-color);
+    /* Updated to use the theme variable */
+    text-shadow: var(--text-shadow);
+    align-items: center;
+    /* Center the logo vertically */
+}
+
+
+/* Navigation links container */
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    margin-left: auto;
+    /* Pushes nav links to the right */
+}
+
+
+/* Icon buttons within nav links */
+
+.nav-links .icon-buttons {
+    display: flex;
+    gap: 0.2rem;
+    overflow: hidden;
+    /* Prevents scroll on the right-hand side */
+}
+
+
+/* Individual navigation link */
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-color);
+    /* Updated to use the theme variable */
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #00ff95;
+}
+
+
+/* =============================================================================
+   LAYOUT & COMPONENT STYLES
+   ============================================================================ */
+
+
+/* Container for main content sections (responsive for most screens) */
+
+.container {
+    max-width: 90%;
+    /* Changed from 1200px to 90% for responsive design */
+    margin: 1rem auto;
+    /* Margin in rem */
+    padding: 0 1rem;
+    display: grid;
+    gap: 2rem;
+}
+
+
+/* Grid layout for the dashboard (Your Tasks & Suggested Tasks) */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Mobile-first: single column */
+    gap: 2rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+
+/* =============================================================================
+   RESPONSIVE STYLES & MEDIA QUERIES
+   ============================================================================ */
+
+
+/* -----------------------------------------------------
+   Desktop Styles (min-width: 1000px)
+   Adjustments for dashboard layout and footer
+----------------------------------------------------- */
+
+@media (min-width: 1000px) {
+    /* Desktop styles */
+    .dashboard-grid {
+        grid-template-columns: 3fr 1fr;
+        /* Two columns for desktop */
+        gap: 3rem;
+    }
+    .suggested-tasks {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+    .suggested-tasks .task-cards {
+        grid-template-columns: repeat(2, 1fr);
+        /* Two columns for desktop */
+    }
+    body {
+        font-size: 1.125rem;
+        /* Increase font size for desktop */
+    }
+    /* Ensure footer stays at the bottom */
+    .footer {
+        position: fixed;
+        /* Fix the footer to the bottom */
+    }
+}
+
+
+/* -----------------------------------------------------
+   Adjustments for smaller screens (max-width: 1000px)
+   Adjustments for typography
+----------------------------------------------------- */
+
+@media (max-width: 1000px) {
+    h1 {
+        font-size: 0.9rem;
+        /* Adjust the font size for smaller screens */
+    }
+}
+
+
+/* -----------------------------------------------------
+   Tablet Adjustments (min-width: 768px)
+   Adjustments for dashboard layout
+----------------------------------------------------- */
+
+@media (min-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 2fr 1fr;
+        /* Two columns: your tasks (2fr) and suggested tasks (1fr) */
+        gap: 2rem;
+    }
+    /* Ensure the suggested tasks section occupies the second column */
+    .suggested-tasks {
+        grid-column: 2;
+    }
+}
+
+
+/* -----------------------------------------------------
+   Large Desktop Adjustments (min-width: 1200px)
+   Adjustments for dashboard layout
+----------------------------------------------------- */
+
+@media (min-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 3fr 1fr;
+        /* Increase the left column for tasks */
+        gap: 3rem;
+    }
+}
+
+
+/* -----------------------------------------------------
+   Responsive Navigation for Mobile (max-width: 480px)
+   Adjustments for navigation layout
+----------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .nav-container {
+        flex-direction: column;
+        /* Stack items vertically */
+        align-items: center;
+        /* Center items */
+    }
+    .nav-links {
+        margin-top: 1rem;
+        /* Add some space above the links */
+        flex-direction: column;
+        /* Stack links vertically */
+        gap: 0.5rem;
+        /* Space between links */
+        align-items: center;
+        /* Center the links */
+    }
+    .icon-buttons {
+        justify-content: center;
+        /* Center the icon buttons */
+    }
+}
+
+
+/* =============================================================================
+   MODAL STYLES
+   ============================================================================ */
+
+
+/* Modal theming for dark mode */
+
+[data-theme="dark"] .modal-content {
+    background-color: #333;
+    color: #fff;
+}
+
+
+/* =============================================================================
+   UTILITY & COMPONENT STYLES
+   ============================================================================ */
+
+
+/* Grid layout for control buttons */
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 0.625rem;
+    /* Adjusts the space between the buttons */
+}
+
+
+/* Header layout within the dashboard */
+
+.dashboard-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0.625rem;
+    /* Padding in rem */
+    overflow: hidden;
+    /* Prevents overflow that may cause scrollbars */
+}
+
+
+/* Icon grouping inside the header */
+
+.header-icons {
+    display: flex;
+    gap: 10px;
+    overflow: hidden;
+    /* Prevents overflow that may cause scrollbars */
+    max-width: 100%;
+    /* Ensures it doesn't exceed the container */
+}
+
+
+/* Icon button styling */
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    /* Font size in rem */
+}
+
+.icon-button:hover {
+    transform: scale(1.1);
+    /* Scale up the button slightly */
+    color: #00ff95;
+    /* Change color on hover */
+}
+
+
+/* Utility for hiding elements */
+
+.hidden {
+    display: none;
+}
+
+
+/* =============================================================================
+   FOOTER STYLES
+   ============================================================================ */
+
+
+/* Footer container styling */
+
+.footer {
+    bottom: 0;
+    /* Align it to the bottom of the viewport */
+    width: 100%;
+    /* Ensure it spans the full width */
+    background-color: transparent;
+    padding: 1rem 0;
+    /* Padding in rem */
+    text-align: center;
+    color: var(--text-color);
+    font-size: 0.8rem;
+    border-radius: 5rem;
+    /* Add border-radius for rounded corners */
+}
+
+
+/* Footer link styling */
+
+.footer-link {
+    text-decoration: none;
+    /* Remove underline from links */
+    color: var(--text-color);
+    /* Ensure footer links use the theme color */
+}
+
+
+/* =============================================================================
+   ADDITIONAL UTILITY CLASSES
+   ============================================================================ */
+
+
+/* Flex layout for greeting section */
+
+.greeting {
+    display: flex;
+    /* Use flexbox for alignment */
+    align-items: center;
+    /* Center items vertically */
+}
+
+
+/* Spacing for the user icon next to text */
+
+.user-icon {
+    margin-right: 1rem;
+    /* Space between icon and text */
+}

@@ -1,0 +1,80 @@
+#!/usr/bin/env node                  // Lets this file run directly with Node.js
+
+/**
+ * @file bin/www
+ * @description
+ *   This file kicks off the server—grabs the app from app.js and gets it running.
+ */
+
+// Pull in the app we set up in app.js
+const app = require('../app'); // Imports the ready-to-go Express app
+
+// Get Node's built-in HTTP tool to make a server
+const http = require('http'); // For creating the actual server
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+function normalizePort(val) {
+    const port = parseInt(val, 10);
+    if (isNaN(port)) {
+        // Named pipe
+        return val;
+    }
+    if (port >= 0) {
+        // Port number
+        return port;
+    }
+    return false;
+}
+
+const port = normalizePort(process.env.PORT || '3000');
+
+// Stash the port in the app's settings (good practice)
+app.set('port', port); // Saves the port in the app for reference
+
+// Build the server using our app
+const server = http.createServer(app); // Creates an HTTP server with the Express app inside
+
+// Start the server and let us know it's working
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    const bind = typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port;
+
+    // Handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(`${bind} requires elevated privileges`);
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(`${bind} is already in use`);
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+function onListening() {
+    const addr = server.address();
+    const bind = typeof addr === 'string' ?
+        'pipe ' + addr :
+        'port ' + addr.port;
+    console.log(`Listening on ${bind}`);
+}

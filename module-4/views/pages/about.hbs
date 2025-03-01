@@ -1,0 +1,31 @@
+<main>
+    {{!-- 
+        About Us Page Template
+        ----------------------
+        This template defines the structure and content for the "About Us" page.
+        
+        In Relation to the Assignment:
+          - The assignment requires you to build an Express application using Handlebars.
+          - Each page (like the About Us page) is handled by its own template.
+          - This file demonstrates how to separate page-specific content from the common layout.
+          - Here, dynamic data (e.g. the current year) is injected from the server via Express.
+        
+        Key Best Practices Illustrated:
+          - **Separation of Concerns**: The layout (common HTML structure) is defined in main.hbs,
+            while about.hbs contains only the page-specific content.
+          - **Dynamic Data Rendering**: The {{currentYear}} placeholder gets its value from the server,
+            showing how to pass data into your templates effectively.
+          - **Reusability**: Shared elements such as the header and footer are defined in partials and included
+            only once in the main layout file, ensuring consistency and reducing redundancy.
+
+    --}}
+    
+    {{!-- Main heading indicating the page title --}}
+    <h2>About Us</h2>
+    
+    {{!-- Paragraph explaining the purpose of the About Us page --}}
+    <p>We are a team of developers passionate about building web applications.</p>
+    
+    {{!-- Displaying dynamic data (e.g., the current year) passed from the server --}}
+    <p>Current Year: {{currentYear}}</p>
+</main> 

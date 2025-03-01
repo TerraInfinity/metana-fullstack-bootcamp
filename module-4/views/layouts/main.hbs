@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{!--
+        Layout File: main.hbs
+        ---------------------
+        Purpose:
+          - Acts as the primary layout for all pages in your application.
+          - Provides the common HTML structure (doctype, head, body) and shared elements.
+          - Contains a placeholder {{{body}}} where page-specific content is injected.
+        Best Practices:
+          - Keep overall structure and shared assets (stylesheets, meta tags) in one place.
+          - Use this file to ensure consistent look and feel across your website.
+          - Include shared partials (e.g., header and footer) here rather than in every individual template.
+    --}}
+
+    <!--============================================================
+    ======================= Meta Tags ==============================
+    =============================================================-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--============================================================
+    ==================== Global Stylesheets ========================
+    =============================================================-->
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/components.css">
+    <!-- Add jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Add Font Awesome CSS (for icons)-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!--============================================================
+    ===================== Global JavaScript ========================
+    =============================================================-->
+    <!-- jQuery must come BEFORE your module scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+</head>
+<body>
+    {{!-- Insert the header partial --}}
+    {{> header}}
+    {{!-- Page-specific content will be injected into the {{{body}}} placeholder --}}
+    {{{ body }}}
+    {{!-- Insert the footer partial (if created) --}}
+    {{> footer}}
+    <script type="module" src="/javascripts/main.js"></script>
+    <script type="module" src="/javascripts/auth-components/auth.js"></script>
+</body>
+</html> 

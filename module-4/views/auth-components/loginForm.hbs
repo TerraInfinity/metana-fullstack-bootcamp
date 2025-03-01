@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodTodo - Login</title>
+    <link rel="stylesheet" href="/stylesheets/auth.css">
+
+</head>
+<body>
+
+
+    <!-- Modal content -->
+    <div class="modal" id="loginModal">    
+        <form id="auth-form" class="auth-form" method="POST"> 
+            <span class="close-button" id="close-auth-form-modal">&times;</span>
+            <h2 id="auth-form-title">Welcome Back</h2>
+            <div class="form-group">
+                <div id="name-container" style="display: none;">
+                    <input type="text" id="name" name="name" placeholder="Name">
+                    <div class="error-message" id="login-name-error"></div>
+                </div>
+                <input type="email" id="email" name="email"  placeholder="Email">
+                <div class="error-message" id="login-email-error"></div>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password"  placeholder="Password">
+                <div class="error-message" id="login-password-error"></div>
+            </div>
+            <button type="submit" id="submit-auth-form-btn" class="btn-create">Login</button>
+            <p id="toggle-auth-form">Don't have an account? <a href="#">Sign up</a></p>
+        </form>
+    </div>
+
+</body>
+</html>

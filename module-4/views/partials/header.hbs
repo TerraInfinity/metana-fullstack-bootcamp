@@ -1,0 +1,34 @@
+    {{!--
+        Partial File: header.hbs
+        -------------------------
+        Purpose:
+          - Contains the header section of your website.
+          - Displays the site title and navigation links.
+          - Is reused across all pages by including it in the main layout.
+        Best Practices:
+          - Use semantic HTML (e.g., <header>, <nav>) for accessibility and SEO.
+          - Keep navigation simple and consistent.
+          - By centralizing the header, changes here propagate to all pages.
+    --}}
+    <header>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fa-solid fa-house"></i> <h1>{{title}}</h1>
+            </a>
+            <div class="nav-links">
+                <span class="icon-buttons">
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fa-solid fa-moon" id="theme-icon"></i>
+                    </button>
+                    <!-- User Icon - Click to Open User Menu or Login if Not Logged In -->
+                    <button class="icon-button" id="user-icon-button">
+                        <i class="fa-solid fa-user" style="color: #63E6BE;" id="user-icon-light"></i>
+                    </button>
+                </span>
+                <a href="#" class="nav-link btn-secondary" id="login-btn">Login</a>
+            </div>
+        </div>
+    </nav>
+</header> 

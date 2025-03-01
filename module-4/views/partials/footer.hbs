@@ -1,0 +1,93 @@
+<footer>
+    {{!--
+        Partial File: footer.hbs
+        -------------------------
+        Purpose:
+          - Contains the footer section of the website.
+          - Provides consistent information or navigation elements at the bottom of each page.
+          - Typically includes items such as copyright information, contact links, or additional navigation.
+        Best Practices:
+          - Use semantic HTML (e.g., <footer>) to boost accessibility and SEO.
+          - Keep the content minimal and focused on essential information.
+          - Include this partial in the main layout (main.hbs) to ensure it appears consistently across all pages.
+          - Avoid duplicating content by centralizing common elements in partials.
+    --}}
+
+
+    <!--============================================================
+    ======================= Footer ==============================
+    =============================================================-->
+    <footer class="footer">
+        <div class="footer-content" style="display: block;align-items: center;">
+            <p class="footer-text-right" style="margin: 0; text-align: center;">Follow us on
+                <a href="https://x.com/BambiCloudPod" class="footer-link"><i class="fab fa-twitter"></i></a>
+                <a href="https://github.com/TerraInfinity" class="footer-link"><i class="fab fa-github"></i></a>
+                <a href="https://www.instagram.com/terra8infinity/" class="footer-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/terra-hunter-70263063" class="footer-link"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@CrystalCloudPodcast" class="footer-link"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="footer-link" id="youtube-link">👽</a>
+                <br>
+                <a id="music-toggle-badwolf" class="footer-link" style="cursor: help;">Baď̸̨͇͓̙̣͔͙̎̈́̿̓̇̄̏͜🐺Wol̴̝̮̍̓f</a>
+                <br>
+                <a id="music-toggle-rose" class="footer-link" style="cursor: help;">🌹</a>
+            </p>
+        </div>
+
+
+
+        <!--============================================================
+        ========================= Music ================================
+        =============================================================-->
+        <audio id="Rose42" src="/data/music/Rose42.mp3" preload="auto"></audio>
+        <audio id="BadWolf137" src="/data/music/BadWolf137.mp3" preload="auto"></audio>
+        <script>
+            // Function to toggle music playback
+            document.getElementById('music-toggle-rose').addEventListener('click', function() {
+                const roseAudio = document.getElementById('Rose42');
+                const badWolfAudio = document.getElementById('BadWolf137');
+                if (roseAudio.paused) {
+                    roseAudio.play();
+                    badWolfAudio.pause(); // Pause the other audio if needed
+                } else {
+                    roseAudio.pause();
+                }
+            });
+
+            document.getElementById('music-toggle-badwolf').addEventListener('click', function() {
+                const badWolfAudio = document.getElementById('BadWolf137');
+                const roseAudio = document.getElementById('Rose42');
+                if (badWolfAudio.paused) {
+                    badWolfAudio.play();
+                    roseAudio.pause(); // Pause the other audio if needed
+                } else {
+                    badWolfAudio.pause();
+                }
+            });
+
+            // Open YouTube modal
+            document.getElementById('youtube-link').addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default link behavior
+                const youtubeFrame = document.getElementById('youtubeFrame');
+                youtubeFrame.src = "https://www.youtube.com/embed/93U3qZIVCKI?si=EG5dhOUTVQHlaCvy&autoplay=1"; // Set the video source with autoplay
+                document.getElementById('youtubeModal').style.display = "flex"; // Show the modal
+            });
+
+            // Directly check if elements exist before attaching event listeners
+            const closeButton = document.querySelector('.close');
+            if (closeButton) {
+                closeButton.addEventListener('click', function() {
+                    document.getElementById('youtubeModal').style.display = "none"; // Hide the modal
+                    document.getElementById('youtubeFrame').src = ""; // Stop the video
+                });
+            }
+
+            // Close modal when clicking outside of the modal content
+            window.onclick = function(event) {
+                const youtubeModal = document.getElementById('youtubeModal');
+                if (youtubeModal && event.target == youtubeModal) {
+                    youtubeModal.style.display = "none"; // Hide the modal
+                    document.getElementById('youtubeFrame').src = ""; // Stop the video
+                }
+            };
+        </script>
+</footer>

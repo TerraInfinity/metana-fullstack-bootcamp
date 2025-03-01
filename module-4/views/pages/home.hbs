@@ -1,0 +1,99 @@
+<!--
+ * @file index.html
+ * @version 1.0.0
+ * @author Terra Infinity
+ * @description The main HTML file for the MoodTodo application, containing the structure for the home page.
+ * @module index.html
+ * 
+ * This file serves as the entry point for the MoodTodo application, providing the layout and UI components
+ * necessary for user interaction, including navigation, task management, and mood selection.
+ -->
+
+    <!--============================================================
+    ======================= Main Content ==========================
+    =============================================================-->
+    <main class="container">
+        <!-- Main Container -->
+        <!-- Dashboard Header Section -->
+        <header class="dashboard-header">
+            <!-- Greeting Section -->
+            <div class="greeting" id="greeting-section">
+                <span class="user-icon">
+                    <img id="user-icon" src="/data/images/glaum 1.png" alt="User Icon" style="width: 50px; height: 50px; border-radius: 50%;">
+                </span>
+                <div>
+                    <h1 class="text-bordered" id="greeting-text">Welcome, Guest.</h1>
+                    <p class="task-count text-bordered" id="task-count">Ready for today? You have <span id="task-count-number">#</span> tasks planned</p>
+                </div>
+            </div>
+
+            <!-- Header Icons Section -->
+            <div class="header-icons">
+                <!-- Mood Icon - Click to Open Mood Slider -->
+                <button class="icon-button" id="mood-icon">😊</button>
+                <!-- Weather Icon - Click to Refresh Current Weather -->
+                <button class="icon-button" id="weather-icon" title="Current Weather">⛅</button>
+
+            </div>
+        </header>
+        <div class="dashboard-grid">
+
+
+            <!--============================================================
+            ======================= Main Task Section ======================
+            ===== Active Tasks & Completed Tasks & Suggested Tasks =========
+            =============================================================-->
+            <!-- 
+                Main Task Section within Main Container 
+                Contains:
+                - Your Tasks or Completed Tasks Section (With a Button to Toggle Between Sections)
+                - The Suggested Tasks Section (Which Changes Based on the User's Mood And Weather)
+            -->
+            <section class="tasks-section">
+                <!-- Main Task Section Header -->
+                <div class="section-header">
+
+                    <!-- Main Tasks Section Header - Updates To Completed Tasks When The Button Is Clicked -->
+                    <h2 class="text-bordered" id="task-section-header">Your Tasks</h2>
+                    <!-- Controls Section - Contains Buttons To Complete All Tasks Or Toggle between Your Active Tasks Completed Tasks -->
+                    <div class="controls">
+                        <!-- Add Task Button -->
+                        <button class="btn-add-task" id="add-task-btn">
+                            <span>+</span> Add
+                        </button>
+                        <!-- Complete All Tasks Button in current view - either your active tasks or completed tasks -->
+                        <button id="complete-all" class="btn-secondary btn-complete-all" style="text-align: center">Complete All</button>
+                        <!-- Toggle Between Active Tasks And Completed Tasks Button -->
+                        <button id="show-completed" class="btn-secondary btn-show-completed" style="text-align: center">Show Completed</button>
+                    </div>
+                </div>
+
+                <!-- Task Cards Section - Contains The Task Cards For The Current View (Either Your Active Tasks Or Completed Tasks) -->
+                <div class="task-cards"></div>
+            </section>
+            <!-- Suggested Tasks -->
+            <section class="suggested-tasks" id="suggested-tasks-section">
+                <!-- Suggested Tasks Section Header -->
+                <h2 class="text-bordered">Suggested Tasks</h2>
+                <!-- Suggested Tasks Task Cards Section - Contains The Task Cards For The Suggested Tasks -->
+                <div class="task-cards"></div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Modal Container - 
+     Manages:
+     - The Hidden Modal For The Login/Register Form 
+     - The Hidden Modal for Adding/Editing A New Task form
+     -->
+    <div id="authModalContainer" class="modalContainer"></div>
+    <div id="addTaskModalContainer" class="modalContainer"></div>
+
+    <!-- Add Modal for YouTube Video -->
+    <div id="youtubeModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <iframe id="youtubeFrame" width="100%" height="315" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
