@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    isAdmin: {
+        type: Boolean,
+        required: [true, 'Please specify if the user is an admin'],
+        default: false
     }
 });
 
