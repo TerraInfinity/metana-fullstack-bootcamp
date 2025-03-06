@@ -1,12 +1,26 @@
+/**
+ * @file Blog routes handling all blog-related API endpoints
+ * @module blogRoutes
+ * @requires express
+ * @requires ../models/blogModel
+ * @requires ../models/userModel
+ * @requires ../middleware/authMiddleware
+ */
+
 const express = require('express');
 const router = express.Router();
 const Blog = require('../models/blogModel');
 const User = require('../models/userModel');
 const { protect, admin } = require('../middleware/authMiddleware');
 
-// @desc    Create a new blog
-// @route   POST /api/blogs
-// @access  Private
+/**
+ * @route POST /api/blogs/create
+ * @desc Create a new blog post
+ * @access Private - Requires authentication
+ * @param {Object} req.body.title - The title of the blog post
+ * @param {Object} req.body.content - The content of the blog post
+ * @returns {Object} Created blog post
+ */
 router.post('/create', protect, async(req, res) => {
     try {
         const { title, content } = req.body;
@@ -25,9 +39,12 @@ router.post('/create', protect, async(req, res) => {
     }
 });
 
-// @desc    Get all blogs
-// @route   GET /api/blogs
-// @access  Public
+/**
+ * @route GET /api/blogs
+ * @desc Get all blog posts
+ * @access Public
+ * @returns {Array} Array of blog posts
+ */
 router.get('/', async(req, res) => {
     try {
         const blogs = await Blog.find({})
@@ -41,9 +58,13 @@ router.get('/', async(req, res) => {
     }
 });
 
-// @desc    Get a single blog
-// @route   GET /api/blogs/:id
-// @access  Public
+/**
+ * @route GET /api/blogs/:id
+ * @desc Get a single blog post by ID
+ * @access Public
+ * @param {string} req.params.id - Blog post ID
+ * @returns {Object} Blog post
+ */
 router.get('/:id', async(req, res) => {
     try {
         const blog = await Blog.findById(req.params.id).populate(
@@ -65,9 +86,15 @@ router.get('/:id', async(req, res) => {
     }
 });
 
-// @desc    Update a blog
-// @route   PUT /api/blogs/:id
-// @access  Private
+/**
+ * @route PUT /api/blogs/update/:id
+ * @desc Update a blog post
+ * @access Private - Only author can update
+ * @param {string} req.params.id - Blog post ID
+ * @param {Object} req.body.title - Updated title
+ * @param {Object} req.body.content - Updated content
+ * @returns {Object} Updated blog post
+ */
 router.put('/update/:id', protect, async(req, res) => {
     try {
         const { title, content } = req.body;
@@ -98,9 +125,13 @@ router.put('/update/:id', protect, async(req, res) => {
     }
 });
 
-// @desc    Delete a blog
-// @route   DELETE /api/blogs/delete/:id
-// @access  Private (Author or Admin)
+/**
+ * @route DELETE /api/blogs/delete/:id
+ * @desc Delete a blog post
+ * @access Private - Author or Admin only
+ * @param {string} req.params.id - Blog post ID
+ * @returns {Object} Success message
+ */
 router.delete('/delete/:id', protect, async(req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
@@ -125,11 +156,12 @@ router.delete('/delete/:id', protect, async(req, res) => {
     }
 });
 
-
-
-// @desc    Delete all blogs
-// @route   DELETE /api/blogs/delete-all
-// @access  Private (Admin only)
+/**
+ * @route DELETE /api/blogs/delete-all
+ * @desc Delete all blog posts
+ * @access Private - Admin only
+ * @returns {Object} Success message with delete count
+ */
 router.delete('/delete-all', protect, admin, async(req, res) => {
     try {
         const result = await Blog.deleteMany({});
@@ -144,10 +176,13 @@ router.delete('/delete-all', protect, admin, async(req, res) => {
     }
 });
 
-
-// @desc    Delete all blogs for a specific user
-// @route   DELETE /api/blogs/delete-all/:id
-// @access  Private (Admin only)
+/**
+ * @route DELETE /api/blogs/delete-all/:id
+ * @desc Delete all blog posts for a specific user
+ * @access Private - Admin only
+ * @param {string} req.params.id - User ID
+ * @returns {Object} Success message with delete count
+ */
 router.delete('/delete-all/:id', protect, admin, async(req, res) => {
     try {
         const userId = req.params.id;
@@ -170,8 +205,5 @@ router.delete('/delete-all/:id', protect, admin, async(req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
-
-
-
 
 module.exports = router;

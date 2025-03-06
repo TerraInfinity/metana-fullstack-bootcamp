@@ -1,5 +1,19 @@
+/**
+ * @fileoverview Blog model schema definition for the blog application
+ * @module models/blogModel
+ */
+
 const mongoose = require('mongoose');
 
+/**
+ * Blog Schema
+ * @typedef {Object} BlogSchema
+ * @property {string} title - The title of the blog post (required, max 100 chars)
+ * @property {string} content - The content of the blog post (required)
+ * @property {mongoose.Schema.Types.ObjectId} author - Reference to the User who created the post
+ * @property {Date} createdAt - Timestamp when the blog was created (auto-generated)
+ * @property {Date} updatedAt - Timestamp when the blog was last updated (auto-generated)
+ */
 const blogSchema = new mongoose.Schema({
     title: {
         type: String,
