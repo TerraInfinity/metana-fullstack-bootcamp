@@ -1,0 +1,48 @@
+{
+    "name": "module-5",
+    "version": "1.0.0",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js",
+        "start:frontend": "webpack serve --mode development",
+        "build:frontend": "webpack --mode production",
+        "dev:all": "concurrently \"npm run dev\" \"npm run start:frontend\"",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "express": "^4.21.2",
+        "jsonwebtoken": "^9.0.2",
+        "pg": "^8.13.3",
+        "pg-hstore": "^2.3.4",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-router-dom": "^6.26.0",
+        "sequelize": "^6.37.6"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.26.9",
+        "@babel/preset-env": "^7.26.9",
+        "@babel/preset-react": "^7.26.3",
+        "autoprefixer": "^10.4.17",
+        "babel-loader": "^10.0.0",
+        "concurrently": "^9.1.2",
+        "css-loader": "^7.1.2",
+        "html-webpack-plugin": "^5.6.3",
+        "nodemon": "^3.1.9",
+        "postcss": "^8.4.35",
+        "postcss-loader": "^8.1.1",
+        "style-loader": "^4.0.0",
+        "tailwindcss": "^3.4.1",
+        "webpack": "^5.98.0",
+        "webpack-cli": "^6.0.1",
+        "webpack-dev-server": "^5.2.0"
+    },
+    "description": ""
+}
