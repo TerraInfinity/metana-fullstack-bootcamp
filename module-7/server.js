@@ -2,18 +2,30 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { connectDB } = require('./config/db');
-const userRoutes = require('./routes/userRoutes');
-const blogRoutes = require('./routes/blogRoutes');
+const userRoutes = require('./routes/backend/userRoutes');
+const commentRoutes = require('./routes/backend/commentRoutes');
+const blogRoutes = require('./routes/backend/blogRoutes');
+const pathRoutes = require('./routes/backend/maintenance/pathRoutes');
+const pointTypeRoutes = require('./routes/backend/maintenance/pointTypeRoutes');
+const thumbnailRoutes = require('./routes/backend/thumbnailRoutes');
 
 // Load environment variables
 dotenv.config();
 
 // Initialize express app
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.BACKEND_PORT || 5000;
 
 // Connect to PostgreSQL
-connectDB();
+console.log('Attempting to connect to the database...');
+connectDB()
+    .then(() => {
+        console.log('Database connection successful.');
+    })
+    .catch((error) => {
+        console.error('Database connection failed:', error);
+        process.exit(1); // Exit the process if the connection fails
+    });
 
 // Middleware
 app.use(cors());
@@ -23,6 +35,11 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
+app.use('/api/paths', pathRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/pointTypes', pointTypeRoutes);
+app.use('/api', thumbnailRoutes); // Add this line to mount thumbnail routes
+
 
 // Root route
 app.get('/', (req, res) => {

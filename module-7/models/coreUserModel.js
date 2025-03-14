@@ -1,23 +1,23 @@
 /**
- * userModel.js
+ * @fileoverview User model schema definition for the blog application using Sequelize for PostgreSQL.
+ * @module models/coreUserModel
+ * /**
+ * coreUserModel.js
  * 
  * This file defines the User model for the application using Sequelize.
  * It includes methods for password matching and hooks for password hashing
  * before creating or updating a user.
  * 
- * @class User
- * @extends Model
- * @method matchPassword(enteredPassword) Compares the entered password with the hashed password.
- * @returns {Promise<boolean>} Returns true if the passwords match, otherwise false.
  */
 const { DataTypes, Model } = require('sequelize');
-const bcrypt = require('bcrypt');
 const { sequelize } = require('../config/db');
-const Blog = require('./blogModel'); // Ensure Blog is imported
+const bcrypt = require('bcrypt');
 
 class User extends Model {
     async matchPassword(enteredPassword) {
-        return await bcrypt.compare(enteredPassword, this.password);
+        const isMatch = await bcrypt.compare(enteredPassword, this.password);
+        console.log(`Comparing entered password: ${enteredPassword} with stored password: ${this.password} - Match: ${isMatch}`);
+        return isMatch;
     }
 }
 
@@ -35,7 +35,7 @@ User.init({
         },
         validate: {
             notEmpty: { msg: 'Please provide a name' },
-            len: [1, 50]
+            len: [1, 50],
         },
     },
     email: {
@@ -44,23 +44,52 @@ User.init({
         unique: true,
         validate: {
             notEmpty: { msg: 'Please provide an email' },
-            isEmail: { msg: 'Please provide a valid email' }
+            isEmail: { msg: 'Please provide a valid email' },
         },
-        indexes: [{ unique: true }]
     },
     password: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
             notEmpty: { msg: 'Please add a password' },
-            len: [6, Infinity]
+            len: [6, Infinity],
         },
     },
     isAdmin: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
-    }
+    },
+    level: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+    },
+    xp: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+    },
+    age: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    gender: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    orientation: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    pronouns: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    bio: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
 }, {
     sequelize,
     modelName: 'User',
@@ -71,22 +100,25 @@ User.init({
     },
     hooks: {
         beforeCreate: async(user) => {
-            if (user.password) {
-                const salt = await bcrypt.genSalt(10);
-                user.password = await bcrypt.hash(user.password, salt);
+            if (user.changed('password')) {
+                user.password = await bcrypt.hash(user.password, 10);
             }
         },
         beforeUpdate: async(user) => {
             if (user.changed('password')) {
-                const salt = await bcrypt.genSalt(10);
-                user.password = await bcrypt.hash(user.password, salt);
+                user.password = await bcrypt.hash(user.password, 10);
             }
-        },
-    },
+        }
+    }
 });
 
-// Define associations after both models are defined
+// Define associations after model initialization
+const Blog = require('./coreBlogModel');
+const BlogComment = require('./blogModel/blogCommentModel');
+
 User.hasMany(Blog, { foreignKey: 'authorId', as: 'blogs' });
 Blog.belongsTo(User, { foreignKey: 'authorId', as: 'author' });
+User.hasMany(BlogComment, { foreignKey: 'userId', as: 'comments' });
+BlogComment.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = User;

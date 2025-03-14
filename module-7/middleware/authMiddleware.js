@@ -7,7 +7,7 @@
  */
 
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModel');
+const User = require('../models/coreUserModel');
 const dotenv = require('dotenv');
 
 // Protect routes

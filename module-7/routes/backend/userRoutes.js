@@ -1,9 +1,22 @@
+/**
+ * @file userRoutes.js
+ * @module userRoutes
+ * @description This file contains all the routes related to user management, including registration, login, profile management, and user deletion.
+ * @requires express
+ * @requires ../models/coreUserModel
+ * @requires ../utils/generateToken
+ * @requires ../middleware/authMiddleware
+ * @requires ../models/coreBlogModel
+ */
 const express = require('express');
 const router = express.Router();
-const User = require('../models/userModel');
-const generateToken = require('../utils/generateToken');
-const { protect, admin } = require('../middleware/authMiddleware');
-const Blog = require('../models/blogModel');
+const User = require('../../models/coreUserModel');
+const generateToken = require('../../utils/generateToken');
+const { protect, admin } = require('../../middleware/authMiddleware');
+const Blog = require('../../models/coreBlogModel');
+const bcrypt = require('bcrypt');
+const BlogComment = require('../../models/blogModel/blogCommentModel');
+
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Private (Admin only)
@@ -58,7 +71,7 @@ router.post('/register', async(req, res) => {
         const user = await User.create({
             name,
             email,
-            password,
+            password, // This will be hashed by the hook
             isAdmin
         });
 
@@ -82,19 +95,37 @@ router.post('/login', async(req, res) => {
     try {
         const { email, password } = req.body;
 
+        // Log the received email and password for debugging
+        console.log('Received login request with:', { email, password });
+
         const user = await User.findOne({
             where: { email },
             attributes: ['id', 'name', 'email', 'password']
         });
 
-        if (user && (await user.matchPassword(password))) {
-            res.json({
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                token: generateToken(user.id)
-            });
+        // Log the user found (or not found)
+        if (user) {
+            console.log('User found:', user);
         } else {
+            console.log('No user found with email:', email);
+        }
+
+        if (user) {
+            const isPasswordValid = await user.matchPassword(password);
+            if (isPasswordValid) {
+                console.log('Authentication successful for:', email);
+                res.json({
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    token: generateToken(user.id)
+                });
+            } else {
+                console.log('Invalid password for user:', email);
+                res.status(401).json({ message: 'Invalid email or password for ' + email });
+            }
+        } else {
+            console.log('Authentication failed: No user found with email:', email);
             res.status(401).json({ message: 'Invalid email or password for ' + email });
         }
     } catch (error) {
@@ -127,6 +158,38 @@ router.get('/profile', protect, async(req, res) => {
     }
 });
 
+
+// @desc    Get user profile by id
+// @route   GET /api/users/profile/:id
+// @access  Public
+router.get('/profile/:id', async(req, res) => {
+    try {
+        const userId = req.params.id; // Get user ID from URL
+        const user = await User.findByPk(userId, {
+            attributes: ['id', 'name', 'email'],
+            include: [{
+                    model: Blog,
+                    as: 'blogs',
+                    attributes: ['id', 'title', 'content', 'createdAt']
+                },
+                {
+                    model: BlogComment,
+                    as: 'comments',
+                    attributes: ['id', 'userId', 'content', 'blogId', 'rating', 'createdAt']
+                }
+            ]
+        });
+
+        if (user) {
+            res.json(user); // Respond with user details including blogs and comments
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
 
 
 
@@ -251,5 +314,22 @@ router.delete('/factory-reset', protect, admin, async(req, res) => {
     }
 });
 
+// Temporary endpoint to hash existing passwords
+router.post('/hash-passwords', async(req, res) => {
+    try {
+        const users = await User.findAll();
+        for (const user of users) {
+            if (user.password) {
+                const hashedPassword = await bcrypt.hash(user.password, 10);
+                user.password = hashedPassword;
+                await user.save(); // Save the updated user with the hashed password
+            }
+        }
+        res.status(200).json({ message: 'All passwords have been hashed successfully.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
 
 module.exports = router;

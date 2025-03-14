@@ -1,5 +1,20 @@
+/**
+ * webpack.config.js
+ * Configuration file for Webpack to bundle the application.
+ */
+const dotenv = require('dotenv');
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const env = dotenv.config({ path: path.resolve(__dirname, '.env') }).parsed;
+
+const envKeys = env ? Object.keys(env).reduce((acc, key) => {
+    if (key.startsWith('REACT_APP_')) {
+        acc[`process.env.${key}`] = JSON.stringify(env[key]);
+    }
+    return acc;
+}, {}) : {};
 
 module.exports = {
     entry: path.resolve(__dirname, 'src/index.jsx'),
@@ -38,6 +53,7 @@ module.exports = {
         extensions: ['.js', '.jsx'],
     },
     plugins: [
+        new webpack.DefinePlugin(envKeys),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'public/index.html'),
         }),
