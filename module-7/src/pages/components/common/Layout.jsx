@@ -9,9 +9,9 @@ const Layout = ({ title, children }) => {
     <div className="min-h-screen bg-slate-900 text-white px-4 sm:px-6 lg:px-8">
       <Header />
       <PageTitle title={title} /> {/* PageTitle is passed as a prop */}
-      <main className="max-w-full overflow-x-auto">{children}</main> {/* Prevent overflow */}
+      <main className="max-w-full overflow-x-hidden">{children}</main> {/* Prevent horizontal overflow */}
       <AdBanner />
-      <Footer />
+      <Footer className="max-w-full" /> {/* Ensure footer does not exceed full width */}
     </div>
   );
 };
