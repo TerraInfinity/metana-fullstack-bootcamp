@@ -166,6 +166,7 @@ function VideoPlayer({ videoUrl }) {
               console.error('Error loading YouTube video:', videoUrl, e);
               setError(true);
             }}
+            onLoad={() => setError(false)} // Reset error state on successful load
           ></iframe>
         )}
       </div>

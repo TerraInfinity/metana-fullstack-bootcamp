@@ -10,7 +10,7 @@ import BlogPostGrid from './components/BlogListPage/BlogPostGrid';
 export const BlogListPage = () => {
   return (
     <Layout title="The Bambi Cloud Podcast">
-      <FeaturedPost />
+      <FeaturedPost  />
       <BlogPostGrid />
     </Layout>
   );

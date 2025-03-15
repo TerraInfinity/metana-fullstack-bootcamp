@@ -15,7 +15,7 @@ const BlogPostGrid = ({ blogs = [] }) => {
   return (
     <div className="px-20 py-0 max-md:px-10 max-md:py-0 max-sm:px-5 max-sm:py-0">
       <h2 className="mb-8 text-2xl text-white">Latest Posts</h2>
-      <div className="grid gap-6 mb-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-6 mb-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
         {blogs.length > 0 ? (
           blogs.map((blog) => (
             <BlogPostCard 
