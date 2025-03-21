@@ -1,6 +1,9 @@
 /**
  * PublicProfilePage.jsx
  * The user profile page with tab navigation for managing profiles, viewing stats, and activity.
+ * This component displays the public profile of a user, including stats and activity.
+ * 
+ * @returns {JSX.Element} The rendered public profile page component.
  */
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext.jsx';

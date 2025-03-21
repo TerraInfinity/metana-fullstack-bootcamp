@@ -2,6 +2,7 @@
  * @file userRoutes.js
  * @module userRoutes
  * @description This file contains all the routes related to user management, including registration, login, profile management, and user deletion.
+ * This file defines the routes for managing user-related operations.
  * @requires express
  * @requires ../models/coreUserModel
  * @requires ../utils/generateToken

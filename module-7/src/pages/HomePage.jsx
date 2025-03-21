@@ -1,6 +1,10 @@
 /**
  * HomePage.jsx
  * The main home page component.
+ * This component displays the main content of the application, including featured posts and a grid of blog posts.
+ * It fetches blog data from the backend API and manages loading and error states.
+ * 
+ * @returns {JSX.Element} The rendered home page component.
  */
 import React, { useState, useEffect } from 'react';
 import Layout from './components/common/Layout'; // Import the Layout component
@@ -44,6 +48,3 @@ export const HomePage = () => {
     </Layout>
   );
 };
-
-
-

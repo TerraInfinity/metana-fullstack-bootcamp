@@ -1,3 +1,8 @@
+/**
+ * Server configuration file.
+ * This file sets up the Express application, connects to the database,
+ * and imports route handlers for various functionalities.
+ */
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');

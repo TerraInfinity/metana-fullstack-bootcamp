@@ -1,6 +1,7 @@
 /**
- * webpack.config.js
- * Configuration file for Webpack to bundle the application.
+ * Webpack configuration file.
+ * This file configures Webpack for bundling the application,
+ * handling environment variables, entry points, and output settings.
  */
 const dotenv = require('dotenv');
 const webpack = require('webpack');

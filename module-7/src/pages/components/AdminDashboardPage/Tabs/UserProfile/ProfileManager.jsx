@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import ProfileComponent from './ProfileComponent';
-
+/**
+ * ProfileManager component
+ * 
+ * This component manages the user profile fields, allowing for editing and updating user information.
+ * It includes form fields for name, email, bio, and social links.
+ * 
+ * @param {object} user - The user object containing profile information.
+ * @param {function} onUpdate - Callback function to handle updates to the profile.
+ * @returns {JSX.Element} The rendered profile manager component.
+ */
 function ProfileManager({ user, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(user.name);

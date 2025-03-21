@@ -1,6 +1,6 @@
 /**
- * tailwind.config.js
- * Configuration file for Tailwind CSS.
+ * Tailwind CSS configuration file.
+ * This file specifies the content sources and theme extensions for Tailwind CSS.
  */
 module.exports = {
     content: [

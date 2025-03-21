@@ -1,8 +1,7 @@
 /**
- * thumbnailRoutes.js
- * 
- * This file contains routes for acquiring video thumbnails due to certain 
- * constraints and restrictions. The thumbnails are used in blog cards.
+ * @file thumbnailRoutes.js
+ * @description This file contains routes for acquiring video thumbnails used in blog cards.
+ * This file defines the routes for fetching and processing thumbnails from various sources.
  */
 
 const express = require('express');

@@ -4,12 +4,25 @@
  * This component includes a comment form and a comment section for user feedback.
  * It also prompts users to log in if they are not authenticated.
  * 
- * File: FeedbackSection.jsx
+ * @param {Array} comments - The list of comments to display.
+ * @param {string} blogId - The ID of the blog post for which feedback is being provided.
+ * @returns {JSX.Element} The rendered feedback section component.
  */
 import React, { useState, useContext } from 'react';
 import CommentSection from './CommentSection';
 import { AuthContext } from '../../../context/AuthContext'; // Import AuthContext
 
+/**
+ * The FeedbackSection component is a functional component that displays a comment form and a list of comments for a blog post.
+ * It uses the AuthContext to determine if the user is authenticated, and if not, prompts them to log in.
+ * 
+ * @typedef {Object} FeedbackSectionProps
+ * @property {Array} comments - The list of comments to display.
+ * @property {string} blogId - The ID of the blog post for which feedback is being provided.
+ * 
+ * @param {FeedbackSectionProps} props - The component props.
+ * @returns {JSX.Element} The rendered feedback section component.
+ */
 function FeedbackSection({ comments, blogId }) {
   const { isAuthenticated } = useContext(AuthContext); // Access isAuthenticated from AuthContext
 

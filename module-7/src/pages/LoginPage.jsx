@@ -1,6 +1,9 @@
 /**
  * LoginPage.jsx
  * The main login and registration page, handling user authentication.
+ * This component manages user login and registration processes, including form handling and API calls.
+ * 
+ * @returns {JSX.Element} The rendered login page component.
  */
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
@@ -45,4 +48,3 @@ export function LoginPage() {
     </Layout>
   );
 }
-

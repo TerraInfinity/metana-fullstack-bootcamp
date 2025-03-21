@@ -4,6 +4,14 @@
  */
 import React from 'react';
 
+/**
+ * LogoutButton component
+ * 
+ * This component renders a button that triggers user logout when clicked.
+ * 
+ * @param {function} onLogout - The function to call when the button is clicked.
+ * @returns {JSX.Element} The rendered logout button component.
+ */
 function LogoutButton({ onLogout }) {
     return (
       <div className="text-center p-4">

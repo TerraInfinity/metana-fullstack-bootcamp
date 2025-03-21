@@ -1,6 +1,10 @@
 /**
  * LandingPage.jsx
  * The landing page component.
+ * This component serves as the entry point for users, providing navigation to the main application.
+ * It includes buttons and disclaimers for user interaction.
+ * 
+ * @returns {JSX.Element} The rendered landing page component.
  */
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -56,4 +60,3 @@ export const LandingPage = () => {
     </div>
   );
 };
-

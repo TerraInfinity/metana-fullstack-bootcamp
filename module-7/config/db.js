@@ -1,6 +1,7 @@
 /**
  * @file db.js
- * @description Database configuration file for PostgreSQL connection using Sequelize
+ * @description Database configuration file for PostgreSQL connection using Sequelize.
+ * This file exports the Sequelize instance and the connectDB function.
  */
 
 require('dotenv').config(); // Load environment variables from .env file

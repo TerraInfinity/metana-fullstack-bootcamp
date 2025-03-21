@@ -1,7 +1,7 @@
 /**
- * @fileoverview User model schema definition for the blog application using Sequelize for PostgreSQL.
- * @module models/coreUserModel
- * /**
+ * @fileoverview Core User model schema definition for the blog application using Sequelize for PostgreSQL.
+ * This file defines the User model schema, including fields and validation rules.
+ * 
  * coreUserModel.js
  * 
  * This file defines the User model for the application using Sequelize.
@@ -13,7 +13,18 @@ const { DataTypes, Model } = require('sequelize');
 const { sequelize } = require('../config/db');
 const bcrypt = require('bcrypt');
 
+/**
+ * Represents a User in the application.
+ * @class User
+ * @extends Model
+ */
 class User extends Model {
+    /**
+     * Checks if the entered password matches the stored password.
+     * @async
+     * @param {string} enteredPassword - The password to compare with the stored password.
+     * @returns {boolean} True if the passwords match, false otherwise.
+     */
     async matchPassword(enteredPassword) {
         const isMatch = await bcrypt.compare(enteredPassword, this.password);
         console.log(`Comparing entered password: ${enteredPassword} with stored password: ${this.password} - Match: ${isMatch}`);
@@ -99,11 +110,21 @@ User.init({
         attributes: { exclude: ['password'] },
     },
     hooks: {
+        /**
+         * Hashes the password before creating a new user.
+         * @async
+         * @param {User} user - The user to hash the password for.
+         */
         beforeCreate: async(user) => {
             if (user.changed('password')) {
                 user.password = await bcrypt.hash(user.password, 10);
             }
         },
+        /**
+         * Hashes the password before updating an existing user.
+         * @async
+         * @param {User} user - The user to hash the password for.
+         */
         beforeUpdate: async(user) => {
             if (user.changed('password')) {
                 user.password = await bcrypt.hash(user.password, 10);

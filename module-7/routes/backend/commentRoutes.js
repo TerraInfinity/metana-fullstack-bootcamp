@@ -1,5 +1,6 @@
 /**
- * @file Comment routes handling all comment-related API endpoints
+ * @file Comment routes handling all comment-related API endpoints.
+ * This file defines the routes for managing comments, including creating, retrieving, and deleting comments.
  * @module commentRoutes
  * @requires express
  * @requires ../../models/blogModel/blogCommentModel

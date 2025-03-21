@@ -1,15 +1,28 @@
+/**
+ * CommentSection component
+ * 
+ * This component displays a list of comments for a blog post and includes a form for adding new comments.
+ * It handles user authentication and prompts for login if the user is not authenticated.
+ * 
+ * @param {Array} comments - The list of comments to display.
+ * @param {string} blogId - The ID of the blog post for which comments are being displayed.
+ * @param {boolean} isLoggedIn - Whether the user is logged in.
+ * @returns {JSX.Element} The rendered comment section component.
+ */
 import React, { useState, useEffect } from 'react';
 import CommentForm from './CommentForm'; // Import CommentForm
 
 /**
  * CommentSection component
  * 
- * This component displays a list of comments and allows logged-in users
- * to add new comments to the blog post, including a star rating.
+ * This component displays a list of comments for a blog post and includes a form for adding new comments.
+ * It handles user authentication and prompts for login if the user is not authenticated.
  * 
- * File: CommentSection.jsx
+ * @param {Array} comments - The list of comments to display.
+ * @param {string} blogId - The ID of the blog post for which comments are being displayed.
+ * @param {boolean} isLoggedIn - Whether the user is logged in.
+ * @returns {JSX.Element} The rendered comment section component.
  */
-
 function CommentSection({ isLoggedIn, comments, blogId }) {
   const [commentList, setCommentList] = useState(comments || []);
   const [newComment, setNewComment] = useState('');

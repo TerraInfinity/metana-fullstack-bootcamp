@@ -1,5 +1,6 @@
 /**
- * @file Blog routes handling all blog-related API endpoints
+ * @file Blog routes handling all blog-related API endpoints.
+ * This file defines the routes for managing blog-related operations, including CRUD operations.
  * @module blogRoutes
  * @requires express
  * @requires ../models/coreBlogModel

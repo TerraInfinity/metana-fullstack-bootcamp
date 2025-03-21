@@ -1,6 +1,7 @@
 /**
  * AdminDashboardPage.jsx
  * The user profile page with tab navigation for managing profiles, viewing stats, activity, and privacy settings.
+ * This file defines the layout and functionality of the admin dashboard, including components for managing user profiles and settings.
  */
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
@@ -15,6 +16,11 @@ import LogoutButton from './components/AdminDashboardPage/Tabs/UserProfile/Logou
 import DeleteAccountModal from './components/AdminDashboardPage/Tabs/UserProfile/DeleteAccountModal';
 import SiteSettings from './components/AdminDashboardPage/Tabs/SiteSettings/SiteSettings'; 
 
+/**
+ * The AdminDashboardPage component manages the layout and functionality of the admin dashboard.
+ * It handles user authentication, profile data fetching, and tab navigation.
+ * @returns {JSX.Element} The admin dashboard page component.
+ */
 export function AdminDashboardPage() {
   const { token, logout, isAuthenticated, loading } = useContext(AuthContext);
   const [user, setUser] = useState(null);
@@ -25,6 +31,10 @@ export function AdminDashboardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updateMessage, setUpdateMessage] = useState('');
 
+  /**
+   * Fetches the user profile data from the backend API.
+   * Handles authentication and redirects to login page if unauthorized.
+   */
   useEffect(() => {
     const fetchProfile = async () => {
       const response = await fetch(backendProfileAPIUrl, {
@@ -54,6 +64,10 @@ export function AdminDashboardPage() {
   // Example usage of userId
   console.log('Current User ID:', userId);
 
+  /**
+   * Handles profile updates by sending a PUT request to the backend API.
+   * @param {object} formData The updated profile data.
+   */
   const handleUpdate = async (formData) => {
     const response = await fetch(backendProfileAPIUrl, {
       method: 'PUT',
@@ -69,6 +83,9 @@ export function AdminDashboardPage() {
     }
   };
 
+  /**
+   * Handles account deletion by logging out and redirecting to the home page.
+   */
   const handleDeleteAccount = () => {
     console.log('Account deleted');
     logout();

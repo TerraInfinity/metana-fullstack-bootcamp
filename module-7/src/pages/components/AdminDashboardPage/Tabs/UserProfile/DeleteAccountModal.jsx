@@ -5,6 +5,19 @@
 import React, { useState } from 'react';
 import Modal from '../../../common/Modal'; // Corrected the import path
 
+/**
+ * DeleteAccountModal component
+ * 
+ * This modal component is used for confirming user account deletion.
+ * It prompts the user to enter their password to confirm the deletion action.
+ * 
+ * @param {boolean} isOpen - Indicates if the modal is open.
+ * @param {function} onClose - Function to call when the modal is closed.
+ * @param {function} onDelete - Function to call when the account deletion is confirmed.
+ * @param {string} userId - The ID of the user whose account is to be deleted.
+ * @param {string} token - The authentication token for the user.
+ * @returns {JSX.Element} The rendered delete account modal component.
+ */
 function DeleteAccountModal({ isOpen, onClose, onDelete, userId, token }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

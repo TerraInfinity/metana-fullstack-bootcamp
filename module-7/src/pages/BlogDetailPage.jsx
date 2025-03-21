@@ -5,7 +5,7 @@
  * It includes the header, page title, blog content, feedback section,
  * advertisement banner, and footer.
  * 
- * File: BlogDetailPage.jsx
+ * @returns {JSX.Element} The rendered blog detail page.
  */
 import React, { useState, useEffect } from 'react';
 import Layout from './components/common/Layout'; // Import the Layout component
@@ -88,4 +88,3 @@ export function BlogDetailPage() {
     </Layout>
   );
 }
-

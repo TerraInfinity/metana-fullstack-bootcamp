@@ -5,13 +5,33 @@
  * a summary, audio player, video player, and a description section
  * that can be expanded or collapsed.
  * 
- * File: BlogContent.jsx
+ * @description The BlogContent component is a functional React component
+ * that renders the main content of a blog post. It includes a summary,
+ * audio player, video player, and a description section that can be
+ * expanded or collapsed.
+ * 
+ * @param {object} blog - The blog post object containing content details.
+ * @param {string} blog.title - The title of the blog post.
+ * @param {string} blog.summary - A brief summary of the blog post.
+ * @param {string} blog.audioUrl - The URL of the audio file associated with the blog post.
+ * @param {string} blog.videoUrl - The URL of the video file associated with the blog post.
+ * @param {string} blog.content - The main content of the blog post.
+ * 
+ * @returns {JSX.Element} The rendered blog content component.
  */
 import React, { useState, useEffect } from 'react';
 import Summary from './Summary';
 import AudioPlayer from './AudioPlayer';
 import VideoPlayer from './VideoPlayer';
 
+/**
+ * BlogContent function component
+ * 
+ * @function BlogContent
+ * @param {object} props - The component props.
+ * @param {object} props.blog - The blog post object containing content details.
+ * @returns {JSX.Element} The rendered blog content component.
+ */
 function BlogContent({ blog }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [summary, setSummary] = useState('');
@@ -36,6 +56,11 @@ function BlogContent({ blog }) {
     }
   }, [blog]);
 
+  /**
+   * Toggles the expanded state of the description section.
+   * 
+   * @function toggleExpand
+   */
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };

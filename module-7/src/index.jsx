@@ -1,6 +1,7 @@
 /**
  * index.jsx
  * Entry point for the React application that renders the App component.
+ * This file sets up the React application and wraps it with the AuthProvider for managing authentication state.
  */
 import React from 'react';
 import { createRoot } from 'react-dom/client';
