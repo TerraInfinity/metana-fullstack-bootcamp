@@ -4,36 +4,32 @@ import ChangePasswordForm from './ChangePasswordForm';
 import SocialBar from './SocialBar';
 import AdditionalDetails from './AdditionalDetails';
 import { FaInstagram, FaLinkedin, FaYoutube, FaFacebookF, FaGlobe, FaTumblr, FaSnapchatGhost, FaReddit, FaTwitch, FaGithub, FaDiscord } from 'react-icons/fa';
-import { SiRumble, SiLinktree } from "react-icons/si";
-import { SlSocialSpotify, SlSocialSoundcloud, SlSocialSteam } from "react-icons/sl";
-import { FaPatreon, FaXTwitter  } from "react-icons/fa6";
+import { SiRumble, SiLinktree } from 'react-icons/si';
+import { SlSocialSpotify, SlSocialSoundcloud, SlSocialSteam } from 'react-icons/sl';
+import { FaPatreon, FaXTwitter } from 'react-icons/fa6';
 import ProfileHeader from './ProfileHeader';
-// Add the import for the Omniflix icon if available
-// import { OmniflixIcon } from 'path/to/omniflixIcon'; // Uncomment and update the path if you have an icon
 
-// Define social platforms with icons and valid domains
+// Define social platforms with icons and valid domains (using consistent lowercase keys)
 const socialPlatforms = [
-    { key: 'website', label: 'Website', icon: FaGlobe, domains: null },
-    { key: 'Patreon', label: 'Patreon', icon: FaPatreon, domains: ['patreon.com'] },
-    { key: 'Discord', label: 'Discord', icon: FaDiscord, domains: ['discord.com'] },
-    { key: 'linktree', label: 'Linktree', icon: SiLinktree, domains: ['linktr.ee'] },
-    { key: 'X', label: 'X (Twitter)', icon: FaXTwitter, domains: ['twitter.com', 'x.com'] },
-    { key: 'Reddit', label: 'Reddit', icon: FaReddit, domains: ['reddit.com'] },
-    { key: 'Spotify', label: 'Spotify', icon: SlSocialSpotify, domains: ['spotify.com'] },
-    { key: 'Soundcloud', label: 'SoundCloud', icon: SlSocialSoundcloud, domains: ['soundcloud.com'] },
-    { key: 'instagram', label: 'Instagram', icon: FaInstagram, domains: ['instagram.com'] },
-    { key: 'youtube', label: 'YouTube', icon: FaYoutube, domains: ['youtube.com'] },
-    { key: 'omniflix', label: 'Omniflix', icon: '/assets/images/omniflixIcon.jpg', isImage: true, domains: ['omniflix.tv'] },
-    { key: 'rumble', label: 'Rumble', icon: SiRumble, domains: ['rumble.com'] },
-    { key: 'Github', label: 'GitHub', icon: FaGithub, domains: ['github.com'] },
-    { key: 'Twitch', label: 'Twitch', icon: FaTwitch, domains: ['twitch.tv'] },
-    { key: 'Steam', label: 'Steam', icon: SlSocialSteam, domains: ['steamcommunity.com'] },
-    { key: 'Tumblr', label: 'Tumblr', icon: FaTumblr, domains: ['tumblr.com'] },
-    { key: 'Snapchat', label: 'Snapchat', icon: FaSnapchatGhost, domains: ['snapchat.com'] },
-    { key: 'linkedin', label: 'LinkedIn', icon: FaLinkedin, domains: ['linkedin.com'] },
-    { key: 'facebook', label: 'Facebook', icon: FaFacebookF, domains: ['facebook.com'] },
-
-
+  { key: 'website', label: 'Website', icon: FaGlobe, domains: null },
+  { key: 'patreon', label: 'Patreon', icon: FaPatreon, domains: ['patreon.com'] },
+  { key: 'discord', label: 'Discord', icon: FaDiscord, domains: ['discord.com'] },
+  { key: 'linktree', label: 'Linktree', icon: SiLinktree, domains: ['linktr.ee'] },
+  { key: 'x', label: 'X (Twitter)', icon: FaXTwitter, domains: ['twitter.com', 'x.com'] },
+  { key: 'reddit', label: 'Reddit', icon: FaReddit, domains: ['reddit.com'] },
+  { key: 'spotify', label: 'Spotify', icon: SlSocialSpotify, domains: ['spotify.com'] },
+  { key: 'soundcloud', label: 'SoundCloud', icon: SlSocialSoundcloud, domains: ['soundcloud.com'] },
+  { key: 'instagram', label: 'Instagram', icon: FaInstagram, domains: ['instagram.com'] },
+  { key: 'youtube', label: 'YouTube', icon: FaYoutube, domains: ['youtube.com'] },
+  { key: 'omniflix', label: 'Omniflix', icon: '/assets/images/omniflixIcon.jpg', isImage: true, domains: ['omniflix.tv'] },
+  { key: 'rumble', label: 'Rumble', icon: SiRumble, domains: ['rumble.com'] },
+  { key: 'github', label: 'GitHub', icon: FaGithub, domains: ['github.com'] },
+  { key: 'twitch', label: 'Twitch', icon: FaTwitch, domains: ['twitch.tv'] },
+  { key: 'steam', label: 'Steam', icon: SlSocialSteam, domains: ['steamcommunity.com'] },
+  { key: 'tumblr', label: 'Tumblr', icon: FaTumblr, domains: ['tumblr.com'] },
+  { key: 'snapchat', label: 'Snapchat', icon: FaSnapchatGhost, domains: ['snapchat.com'] },
+  { key: 'linkedin', label: 'LinkedIn', icon: FaLinkedin, domains: ['linkedin.com'] },
+  { key: 'facebook', label: 'Facebook', icon: FaFacebookF, domains: ['facebook.com'] },
 ];
 
 function ProfileComponent({
@@ -50,45 +46,41 @@ function ProfileComponent({
   onValidationChange,
   onEdit,
   onCancel,
+  currentPassword,
+  setCurrentPassword,
+  newPassword,
+  setNewPassword,
+  confirmNewPassword,
+  setConfirmNewPassword,
 }) {
   const [urlErrors, setUrlErrors] = useState({});
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [selectedSocials, setSelectedSocials] = useState({});
   const [showAllIcons, setShowAllIcons] = useState(false);
-  const [iconLimit, setIconLimit] = useState(7); // Default to 7 icons
+  const [iconLimit, setIconLimit] = useState(7);
 
-  // New state for additional details
-  const [age, setAge] = useState(user.details?.age || '');
-  const [gender, setGender] = useState(user.details?.gender || '');
-  const [orientation, setOrientation] = useState(user.details?.orientation || '');
-  const [pronouns, setPronouns] = useState(user.details?.pronouns || '');
+  const [age, setAge] = useState(user.age || '');
+  const [gender, setGender] = useState(user.gender || '');
+  const [orientation, setOrientation] = useState(user.orientation || '');
+  const [pronouns, setPronouns] = useState(user.pronouns || '');
 
-  // Validate form whenever inputs change
   useEffect(() => {
     validateForm();
-  }, [name, email, bio, socialLinks, age, gender, orientation, pronouns]);
+  }, [name, email, bio, socialLinks, age, gender, orientation, pronouns, currentPassword, newPassword, confirmNewPassword]);
 
-  // Effect to handle window resize and set icon limit based on screen size
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) { // Medium breakpoint (768px)
-        setIconLimit(6); // Show 6 icons at medium breakpoint
+      if (window.innerWidth >= 768) {
+        setIconLimit(6);
       } else {
-        setIconLimit(7); // Show 7 icons otherwise
+        setIconLimit(7);
       }
     };
-
-    // Set initial icon limit
     handleResize();
-
-    // Add event listener for window resize
     window.addEventListener('resize', handleResize);
-    
-    // Cleanup event listener on component unmount
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Toggle social field visibility
   const toggleSocial = (key) => {
     setSelectedSocials((prev) => ({
       ...prev,
@@ -96,23 +88,24 @@ function ProfileComponent({
     }));
   };
 
-  // URL validation logic
   const validateUrl = (url, domains) => {
     const urlPattern = /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(\/[^\s]*)?$/;
     if (!url || !urlPattern.test(url)) return false;
-    if (!domains) return true; // Website: no domain restriction
+    if (!domains) return true;
     const urlDomain = new URL(url.startsWith('http') ? url : `https://${url}`).hostname.toLowerCase();
     return domains.some((domain) => urlDomain === domain || urlDomain.endsWith(`.${domain}`));
   };
 
-  // Form validation
+
   const validateForm = () => {
     const errors = {};
     if (!name) errors.name = 'Name is required';
-    if (!email) {
-      errors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = 'Invalid email format';
+    if (user.provider === 'local') {
+      if (!email) {
+        errors.email = 'Email is required';
+      } else if (!/\S+@\S+\.\S+/.test(email)) {
+        errors.email = 'Invalid email format';
+      }
     }
     Object.keys(socialLinks).forEach((key) => {
       const url = socialLinks[key];
@@ -123,9 +116,23 @@ function ProfileComponent({
         }
       }
     });
+    if (user.provider === 'local') {
+      if (showChangePassword) {
+        if (newPassword && newPassword.length < 8) {
+          errors.newPassword = 'New password must be at least 8 characters';
+        }
+        if (newPassword && confirmNewPassword && newPassword !== confirmNewPassword) {
+          errors.confirmNewPassword = 'Passwords do not match';
+        }
+        if ((newPassword || confirmNewPassword) && !currentPassword) {
+          errors.currentPassword = 'Current password is required to update password';
+        }
+      }
+    }
     setUrlErrors(errors);
     onValidationChange(Object.keys(errors).length === 0);
   };
+
 
   return (
     <div className="text-white space-y-2">
@@ -155,16 +162,27 @@ function ProfileComponent({
           {/* Email Field */}
           <div>
             <label className="text-gray-300" htmlFor="email">Email:</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
-              required
-            />
-            {urlErrors.email && <p className="text-red-500 text-sm">{urlErrors.email}</p>}
+            {user.provider === 'local' ? (
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
+                required
+              />
+            ) : (
+              <div>
+                <p className="text-white">{email}</p>
+                <p className="text-sm text-gray-400">
+                  Your email is managed by {user.provider}.
+                </p>
+              </div>
+            )}
+            {user.provider === 'local' && urlErrors.email && (
+              <p className="text-red-500 text-sm">{urlErrors.email}</p>
+            )}
           </div>
           {/* Bio Field */}
           <div className="relative">
@@ -227,43 +245,30 @@ function ProfileComponent({
               />
             </div>
           </div>
-          {/* Social Bar moved here */}
+          {/* Social Links */}
           <div>
-            {/* Row for social icons */}
             <div className="flex flex-wrap gap-4 mb-4">
               {socialPlatforms.slice(0, showAllIcons ? socialPlatforms.length : iconLimit).map(({ key, icon, label, isImage }) => {
-                const IconComponent = !isImage ? icon : null; // Only assign icon to a variable if it's a React component
+                const IconComponent = !isImage ? icon : null;
                 return (
                   <button
                     key={key}
                     type="button"
-                    onClick={() => toggleSocial(key)} // Ensure the toggle function is called on click
+                    onClick={() => toggleSocial(key)}
                     className={`text-2xl p-2 rounded-full transition-colors ${
-                      selectedSocials[key]
-                        ? 'text-gray-500 bg-gray-700'
-                        : 'text-white hover:bg-gray-600'
+                      selectedSocials[key] ? 'text-gray-500 bg-gray-700' : 'text-white hover:bg-gray-600'
                     }`}
                     title={label}
                   >
-                  {isImage ? (
-                    <img src={icon} alt={label} className="w-6 h-6 md:w-8 md:h-8" />
-                  ) : (
-                    IconComponent && <IconComponent className="w-6 h-6 md:w-8 md:h-8" />
-                  )}
+                    {isImage ? (
+                      <img src={icon} alt={label} className="w-6 h-6 md:w-8 md:h-8" />
+                    ) : (
+                      IconComponent && <IconComponent className="w-6 h-6 md:w-8 md:h-8" />
+                    )}
                   </button>
                 );
               })}
             </div>
-            {/* Toggle link for expanding/collapsing icons, anchored to the right */}
-            {/* <div className="flex justify-between items-center">
-              <p
-                className="text-sm text-blue-600 cursor-pointer"
-                onClick={() => setShowAllIcons(!showAllIcons)}
-              >
-                {showAllIcons ? 'Collapse' : 'Expand'}
-              </p>
-            </div> */}
-            {/* Row for social input fields */}
             <div className="flex flex-wrap gap-4">
               {socialPlatforms.map(({ key, label }) => (
                 selectedSocials[key] && (
@@ -283,25 +288,39 @@ function ProfileComponent({
               ))}
             </div>
           </div>
-          {/* Change Password Toggle and Expand Toggle */}
-          <div className="flex justify-between items-center">
-            <p
-              className="text-sm text-blue-600 cursor-pointer"
-              onClick={() => setShowChangePassword(!showChangePassword)}
-            >
-              {showChangePassword ? 'Hide Change Password' : 'Change Password'}
-            </p>
-            <p
-              className="text-sm text-blue-600 cursor-pointer"
-              onClick={() => setShowAllIcons(!showAllIcons)}
-            >
-              {showAllIcons ? 'Collapse' : 'Expand'}
-            </p>
-          </div>
-          {showChangePassword && (
-            <ChangePasswordForm onCancel={() => setShowChangePassword(false)} />
+          {/* Change Password Toggle and Fields */}
+          {user.provider === 'local' && (
+            <div className="flex justify-between items-center">
+              <p
+                className="text-sm text-blue-600 cursor-pointer"
+                onClick={() => setShowChangePassword(!showChangePassword)}
+              >
+                {showChangePassword ? 'Hide Change Password' : 'Change Password'}
+              </p>
+              <p
+                className="text-sm text-blue-600 cursor-pointer"
+                onClick={() => setShowAllIcons(!showAllIcons)}
+              >
+                {showAllIcons ? 'Collapse' : 'Expand'}
+              </p>
+            </div>
           )}
-          {/* Buttons */}
+          {showChangePassword && user.provider === 'local' && (
+            <div>
+              <ChangePasswordForm
+                currentPassword={currentPassword}
+                setCurrentPassword={setCurrentPassword}
+                newPassword={newPassword}
+                setNewPassword={setNewPassword}
+                confirmNewPassword={confirmNewPassword}
+                setConfirmNewPassword={setConfirmNewPassword}
+              />
+              {urlErrors.currentPassword && <p className="text-red-500 mt-2">{urlErrors.currentPassword}</p>}
+              {urlErrors.newPassword && <p className="text-red-500 mt-2">{urlErrors.newPassword}</p>}
+              {urlErrors.confirmNewPassword && <p className="text-red-500 mt-2">{urlErrors.confirmNewPassword}</p>}
+            </div>
+          )}
+          {/* Cancel Button */}
           <button
             type="button"
             onClick={onCancel}
@@ -313,8 +332,11 @@ function ProfileComponent({
       ) : (
         <>
           <p><strong>Name:</strong> {user.name}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <AdditionalDetails details={user.details} />
+          <p>
+            <strong>Email:</strong> {user.email}{' '}
+            {user.provider !== 'local' && <span className="text-gray-400">({user.provider})</span>}
+          </p>
+          <AdditionalDetails details={{ age, gender, orientation, pronouns }} />
           <BioComponent bio={user.bio} />
           {user.socialLinks && <SocialBar socialLinks={user.socialLinks} />}
           <button

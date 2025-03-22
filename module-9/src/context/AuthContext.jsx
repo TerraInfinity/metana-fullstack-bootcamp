@@ -3,7 +3,7 @@
  * This file provides authentication context for the application, managing user authentication state and token storage.
  * It exports the AuthContext and provides functions for validating tokens and managing authentication state.
  */
-import React, { createContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useState, useEffect, useMemo, useContext } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 /**
@@ -83,4 +83,16 @@ export const AuthProvider = ({ children }) => {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+/**
+ * Custom hook to use the AuthContext.
+ * @returns {object} The authentication context value.
+ */
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };
