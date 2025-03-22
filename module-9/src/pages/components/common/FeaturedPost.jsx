@@ -11,10 +11,25 @@ import { Link } from 'react-router-dom';
  * handles automatic and manual navigation through the posts, and displays relevant information
  * such as the author, creation date, and media tags.
  * 
- * Props:
- * @param {Array} blogs - An array of blog objects to be displayed in the carousel.
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Array} props.blogs - An array of blog objects to be displayed in the carousel.
+ * @param {Object} props.blogs[].author - The author of the blog post.
+ * @param {string} props.blogs[].author.name - The name of the author.
+ * @param {string} props.blogs[].author.logo - The URL of the author's logo.
+ * @param {string} props.blogs[].id - The unique identifier for the blog post.
+ * @param {string} props.blogs[].blogImage - The URL of the blog's image.
+ * @param {string} props.blogs[].pathId - The ID of the path associated with the blog.
+ * @param {string} props.blogs[].title - The title of the blog post.
+ * @param {string} props.blogs[].createdAt - The creation date of the blog post in ISO format.
+ * @param {string} props.blogs[].blogSummary - A brief summary of the blog post.
+ * @param {string} [props.blogs[].videoUrl] - The URL of the video associated with the blog post.
+ * @param {string} [props.blogs[].audioUrl] - The URL of the audio associated with the blog post.
+ * @param {Array} [props.blogs[].blogComments] - An array of comments on the blog post.
+ * @param {boolean} [props.blogs[].isAgeRestricted] - Indicates if the blog post is age-restricted.
  */
 const getMediaTag = (blog) => {
+  // Determine the media type based on the presence of video and audio URLs
   const hasVideo = blog.videoUrl && blog.videoUrl.trim() !== '';
   const hasAudio = blog.audioUrl && blog.audioUrl.trim() !== '';
   if (hasVideo && hasAudio) return 'Audio/Video';
@@ -24,13 +39,16 @@ const getMediaTag = (blog) => {
 };
 
 const FeaturedPost = ({ blogs = [] }) => {
+  // State to manage the current index of the displayed blog post
   const [currentIndex, setCurrentIndex] = useState(0);
+  // State to control the autoplay feature
   const [isPaused, setIsPaused] = useState(false);
   const placeholderLogo = '/assets/images/logo.png';
   const [thumbnails, setThumbnails] = useState({});
   const apiPort = process.env.REACT_APP_BACKEND_PORT;
   const apiUrl = `${window.location.protocol}//${window.location.hostname}:${apiPort}/api/`;
 
+  // Function to extract YouTube ID from a video URL
   const getYouTubeID = (url) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
@@ -38,6 +56,7 @@ const FeaturedPost = ({ blogs = [] }) => {
   };
 
   useEffect(() => {
+    // Fetch thumbnails for the blog posts
     const fetchThumbnails = async () => {
       const newThumbnails = {};
       if (!Array.isArray(blogs)) return;
@@ -51,13 +70,14 @@ const FeaturedPost = ({ blogs = [] }) => {
               const response = await axios.get(`${apiUrl}proxy-thumbnail?url=${encodeURIComponent(blog.videoUrl)}`);
               newThumbnails[blog.id] = response.data.thumbnail || blog.blogImage;
             } catch (error) {
-              newThumbnails[blog.id] = blog.blogImage;
+              newThumbnails[blog.id] = blog.blogImage; // Fallback to blog image on error
             }
           }
         } else {
-          newThumbnails[blog.id] = blog.blogImage;
+          newThumbnails[blog.id] = blog.blogImage; // Use blog image if no video URL
         }
       }
+      // Update thumbnails state only if new thumbnails are different
       if (JSON.stringify(newThumbnails) !== JSON.stringify(thumbnails)) {
         setThumbnails(newThumbnails);
       }
@@ -65,11 +85,13 @@ const FeaturedPost = ({ blogs = [] }) => {
     fetchThumbnails();
   }, [blogs, thumbnails]);
 
+  // Validate blogs prop
   if (!Array.isArray(blogs)) {
     console.error('FeaturedPost received invalid blogs prop:', blogs);
     return null;
   }
 
+  // Check for missing blog IDs
   blogs.forEach(blog => {
     if (!blog.id) {
       console.error('Blog is missing an id:', blog);
@@ -77,6 +99,7 @@ const FeaturedPost = ({ blogs = [] }) => {
   });
 
   useEffect(() => {
+    // Set up automatic navigation through the blog posts
     if (blogs.length > 0 && !isPaused) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % blogs.length);
@@ -86,7 +109,7 @@ const FeaturedPost = ({ blogs = [] }) => {
   }, [blogs, isPaused]);
 
   if (blogs.length === 0) {
-    return null;
+    return null; // Return null if there are no blogs to display
   }
 
   const currentBlog = blogs[currentIndex];

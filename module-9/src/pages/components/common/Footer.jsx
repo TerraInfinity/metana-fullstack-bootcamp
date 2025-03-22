@@ -1,6 +1,15 @@
 /**
  * Footer.jsx
- * A component for the website footer.
+ * A functional component that renders the website footer, which includes:
+ * - About information
+ * - Quick links to various sections of the site
+ * - Categories of content
+ * - A newsletter subscription form
+ * 
+ * This component is designed to be responsive and adapts to different screen sizes.
+ * 
+ * @component
+ * @returns {JSX.Element} The rendered footer component containing various sections.
  */
 import React from 'react';
 import NewsletterForm from './NewsletterForm';

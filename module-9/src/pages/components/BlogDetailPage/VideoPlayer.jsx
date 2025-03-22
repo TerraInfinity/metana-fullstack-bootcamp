@@ -4,13 +4,24 @@
  * This component provides a video player for displaying video content
  * related to the blog post, including support for OmniFlix videos.
  *
- * File: VideoPlayer.jsx
+ * Props:
+ * - videoUrl: The URL of the video to be played. This can be a YouTube link,
+ *   an OmniFlix video link, or a direct video file URL.
+ *
+ * Usage:
+ * <VideoPlayer videoUrl="https://example.com/video.mp4" />
  */
 import React, { useState, useEffect, useRef } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 
 // Extract YouTube video ID from various URL formats
+/**
+ * Extracts the YouTube video ID from a given URL.
+ *
+ * @param {string} url - The URL of the YouTube video.
+ * @returns {string|null} - The extracted video ID or null if not found.
+ */
 function getYouTubeId(url) {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
@@ -18,6 +29,12 @@ function getYouTubeId(url) {
 }
 
 // Determine video MIME type from file extension
+/**
+ * Determines the MIME type of a video based on its file extension.
+ *
+ * @param {string} url - The URL of the video file.
+ * @returns {string|null} - The MIME type of the video or null if unsupported.
+ */
 function getVideoType(url) {
   const extension = url.split('.').pop().toLowerCase();
   switch (extension) {
@@ -37,11 +54,25 @@ function getVideoType(url) {
 }
 
 // Check if the URL is an OmniFlix video page
+/**
+ * Checks if the provided URL is an OmniFlix video page.
+ *
+ * @param {string} url - The URL to check.
+ * @returns {boolean} - True if the URL is an OmniFlix video page, false otherwise.
+ */
 function isOmniFlixUrl(url) {
   return url && url.startsWith('https://omniflix.tv/iv/');
 }
 
 // Placeholder function to fetch IPFS source
+/**
+ * Fetches the video source from OmniFlix based on the provided URL.
+ *
+ * @param {string} url - The OmniFlix video URL.
+ * @returns {Promise<Object>} - A promise that resolves to an object containing
+ *   the video source, type, and poster image.
+ * @throws {Error} - Throws an error if the video source cannot be fetched.
+ */
 async function fetchOmniFlixVideoSource(url) {
   // console.log('Fetching OmniFlix video source for:', url);
   if (url === 'https://omniflix.tv/iv/66c3c9c36107f6706716f134') {

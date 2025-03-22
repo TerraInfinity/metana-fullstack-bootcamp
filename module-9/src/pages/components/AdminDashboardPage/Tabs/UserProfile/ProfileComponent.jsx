@@ -32,6 +32,40 @@ const socialPlatforms = [
   { key: 'facebook', label: 'Facebook', icon: FaFacebookF, domains: ['facebook.com'] },
 ];
 
+/**
+ * ProfileComponent is a React component that displays and allows editing of user profile information.
+ * It includes fields for name, email, bio, age, gender, orientation, pronouns, and social links.
+ * It also provides functionality for changing the password and validating the input fields.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.user - The user object containing user information.
+ * @param {boolean} props.isEditing - Flag to indicate if the profile is in editing mode.
+ * @param {string} props.name - The user's name.
+ * @param {function} props.setName - Function to update the user's name.
+ * @param {string} props.email - The user's email.
+ * @param {function} props.setEmail - Function to update the user's email.
+ * @param {string} props.bio - The user's bio.
+ * @param {function} props.setBio - Function to update the user's bio.
+ * @param {Object} props.socialLinks - The user's social links.
+ * @param {function} props.setSocialLinks - Function to update the user's social links.
+ * @param {function} props.onValidationChange - Callback function to handle validation state changes.
+ * @param {function} props.onEdit - Callback function to handle edit action.
+ * @param {function} props.onCancel - Callback function to handle cancel action.
+ * @param {string} props.currentPassword - The user's current password.
+ * @param {function} props.setCurrentPassword - Function to update the current password.
+ * @param {string} props.newPassword - The new password.
+ * @param {function} props.setNewPassword - Function to update the new password.
+ * @param {string} props.confirmNewPassword - The confirmation for the new password.
+ * @param {function} props.setConfirmNewPassword - Function to update the confirmation password.
+ * @param {string} props.age - The user's age.
+ * @param {function} props.setAge - Function to update the user's age.
+ * @param {string} props.gender - The user's gender.
+ * @param {function} props.setGender - Function to update the user's gender.
+ * @param {string} props.orientation - The user's orientation.
+ * @param {function} props.setOrientation - Function to update the user's orientation.
+ * @param {string} props.pronouns - The user's pronouns.
+ * @param {function} props.setPronouns - Function to update the user's pronouns.
+ */
 function ProfileComponent({
   user,
   isEditing,
@@ -52,59 +86,67 @@ function ProfileComponent({
   setNewPassword,
   confirmNewPassword,
   setConfirmNewPassword,
+  age,
+  setAge,
+  gender,
+  setGender,
+  orientation,
+  setOrientation,
+  pronouns,
+  setPronouns,
 }) {
+  // State to track URL validation errors for social links
   const [urlErrors, setUrlErrors] = useState({});
+  // State to toggle the visibility of the change password form
   const [showChangePassword, setShowChangePassword] = useState(false);
+  // State to manage the selection of social platforms for editing
   const [selectedSocials, setSelectedSocials] = useState({});
+  // State to control the visibility of all social icons
   const [showAllIcons, setShowAllIcons] = useState(false);
+  // State to limit the number of displayed social icons based on screen size
   const [iconLimit, setIconLimit] = useState(7);
 
-  const [age, setAge] = useState(user.age || '');
-  const [gender, setGender] = useState(user.gender || '');
-  const [orientation, setOrientation] = useState(user.orientation || '');
-  const [pronouns, setPronouns] = useState(user.pronouns || '');
-
+  // Effect to validate the form whenever relevant fields change
   useEffect(() => {
     validateForm();
   }, [name, email, bio, socialLinks, age, gender, orientation, pronouns, currentPassword, newPassword, confirmNewPassword]);
 
+  // Effect to adjust the icon limit based on the window size
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIconLimit(6);
-      } else {
-        setIconLimit(7);
-      }
+      setIconLimit(window.innerWidth >= 768 ? 6 : 7);
     };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    handleResize(); // Initial call to set the icon limit
+    window.addEventListener('resize', handleResize); // Add event listener for window resize
+    return () => window.removeEventListener('resize', handleResize); // Cleanup on component unmount
   }, []);
 
+  // Function to toggle the selection of a social platform
   const toggleSocial = (key) => {
     setSelectedSocials((prev) => ({
       ...prev,
-      [key]: !prev[key],
+      [key]: !prev[key], // Toggle the selected state for the given key
     }));
   };
 
+  // Function to validate a given URL against allowed domains
   const validateUrl = (url, domains) => {
     const urlPattern = /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(\/[^\s]*)?$/;
-    if (!url || !urlPattern.test(url)) return false;
-    if (!domains) return true;
+    if (!url || !urlPattern.test(url)) return false; // Check if URL is valid
+    if (!domains) return true; // If no domains are specified, return true
     const urlDomain = new URL(url.startsWith('http') ? url : `https://${url}`).hostname.toLowerCase();
-    return domains.some((domain) => urlDomain === domain || urlDomain.endsWith(`.${domain}`));
+    return domains.some((domain) => urlDomain === domain || urlDomain.endsWith(`.${domain}`)); // Check if URL domain matches allowed domains
   };
 
-
+  // Function to validate the entire form and set error messages
   const validateForm = () => {
     const errors = {};
-    if (!name) errors.name = 'Name is required';
+    if (!name) errors.name = 'Name is required'; // Validate name
     if (user.provider === 'local') {
       if (!email) {
-        errors.email = 'Email is required';
+        errors.email = 'Email is required'; // Validate email
       } else if (!/\S+@\S+\.\S+/.test(email)) {
-        errors.email = 'Invalid email format';
+        errors.email = 'Invalid email format'; // Check email format
       }
     }
     Object.keys(socialLinks).forEach((key) => {
@@ -112,33 +154,31 @@ function ProfileComponent({
       if (url) {
         const platform = socialPlatforms.find((p) => p.key === key);
         if (!validateUrl(url, platform.domains)) {
-          errors[key] = `Please enter a valid ${platform.label} URL`;
+          errors[key] = `Please enter a valid ${platform.label} URL`; // Validate social link URL
         }
       }
     });
-    if (user.provider === 'local') {
-      if (showChangePassword) {
-        if (newPassword && newPassword.length < 8) {
-          errors.newPassword = 'New password must be at least 8 characters';
-        }
-        if (newPassword && confirmNewPassword && newPassword !== confirmNewPassword) {
-          errors.confirmNewPassword = 'Passwords do not match';
-        }
-        if ((newPassword || confirmNewPassword) && !currentPassword) {
-          errors.currentPassword = 'Current password is required to update password';
-        }
+    if (user.provider === 'local' && showChangePassword) {
+      if (newPassword && newPassword.length < 8) {
+        errors.newPassword = 'New password must be at least 8 characters'; // Validate new password length
+      }
+      if (newPassword && confirmNewPassword && newPassword !== confirmNewPassword) {
+        errors.confirmNewPassword = 'Passwords do not match'; // Check if passwords match
+      }
+      if ((newPassword || confirmNewPassword) && !currentPassword) {
+        errors.currentPassword = 'Current password is required to update password'; // Ensure current password is provided
       }
     }
-    setUrlErrors(errors);
-    onValidationChange(Object.keys(errors).length === 0);
+    setUrlErrors(errors); // Update state with validation errors
+    onValidationChange(Object.keys(errors).length === 0); // Notify parent component of validation state
   };
-
 
   return (
     <div className="text-white space-y-2">
+      {/* Profile header displaying user avatar and stats */}
       <ProfileHeader
         avatar={user.avatar}
-        username={user.name}
+        username={name}
         level={user.level || 1}
         xp={user.xp || 0}
         nextLevelXP={user.nextLevelXP || 100}
@@ -152,12 +192,12 @@ function ProfileComponent({
               id="name"
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)} // Update name on change
               placeholder="Username"
               className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
               required
             />
-            {urlErrors.name && <p className="text-red-500 text-sm">{urlErrors.name}</p>}
+            {urlErrors.name && <p className="text-red-500 text-sm">{urlErrors.name}</p>} {/* Display name error */}
           </div>
           {/* Email Field */}
           <div>
@@ -167,7 +207,7 @@ function ProfileComponent({
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)} // Update email on change
                 placeholder="Email"
                 className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
                 required
@@ -176,70 +216,74 @@ function ProfileComponent({
               <div>
                 <p className="text-white">{email}</p>
                 <p className="text-sm text-gray-400">
-                  Your email is managed by {user.provider}.
+                  Your email is managed by {user.provider}. {/* Display provider information */}
                 </p>
               </div>
             )}
             {user.provider === 'local' && urlErrors.email && (
-              <p className="text-red-500 text-sm">{urlErrors.email}</p>
+              <p className="text-red-500 text-sm">{urlErrors.email}</p> // Display email error
             )}
           </div>
           {/* Bio Field */}
           <div className="relative">
             <textarea
               value={bio}
-              onChange={(e) => setBio(e.target.value)}
+              onChange={(e) => setBio(e.target.value)} // Update bio on change
               placeholder="Bio"
               className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
               rows={4}
-              maxLength={5000}
+              maxLength={5000} // Limit bio length
             />
             <div className="absolute right-2 bottom-2 text-gray-400">
-              {5000 - bio.length}
+              {5000 - bio.length} {/* Display remaining character count */}
             </div>
           </div>
           {/* Additional Details Fields */}
           <div>
+            {/* Age Field */}
             <div>
               <label className="text-gray-300" htmlFor="age">Age:</label>
               <input
                 id="age"
                 type="text"
                 value={age}
-                onChange={(e) => setAge(e.target.value)}
+                onChange={(e) => setAge(e.target.value)} // Update age on change
                 placeholder="Age"
                 className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
               />
             </div>
+            {/* Gender Field */}
             <div>
               <label className="text-gray-300" htmlFor="gender">Gender:</label>
               <input
                 id="gender"
                 type="text"
                 value={gender}
-                onChange={(e) => setGender(e.target.value)}
+                onChange={(e) => setGender(e.target.value)} // Update gender on change
                 placeholder="Gender"
                 className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
               />
             </div>
+            {/* Orientation Field */}
             <div>
               <label className="text-gray-300" htmlFor="orientation">Orientation:</label>
               <input
                 id="orientation"
                 type="text"
                 value={orientation}
-                onChange={(e) => setOrientation(e.target.value)}
+                onChange={(e) => setOrientation(e.target.value)} // Update orientation on change
                 placeholder="Orientation"
                 className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
               />
             </div>
+            {/* Pronouns Field */}
             <div>
               <label className="text-gray-300" htmlFor="pronouns">Pronouns:</label>
               <input
                 id="pronouns"
                 type="text"
                 value={pronouns}
-                onChange={(e) => setPronouns(e.target.value)}
+                onChange={(e) => setPronouns(e.target.value)} // Update pronouns on change
                 placeholder="Pronouns"
                 className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
               />
@@ -254,7 +298,7 @@ function ProfileComponent({
                   <button
                     key={key}
                     type="button"
-                    onClick={() => toggleSocial(key)}
+                    onClick={() => toggleSocial(key)} // Toggle social link selection
                     className={`text-2xl p-2 rounded-full transition-colors ${
                       selectedSocials[key] ? 'text-gray-500 bg-gray-700' : 'text-white hover:bg-gray-600'
                     }`}
@@ -276,13 +320,13 @@ function ProfileComponent({
                     <input
                       type="text"
                       value={socialLinks[key] || ''}
-                      onChange={(e) => setSocialLinks({ ...socialLinks, [key]: e.target.value })}
+                      onChange={(e) => setSocialLinks({ ...socialLinks, [key]: e.target.value })} // Update social link on change
                       placeholder={`${label} URL`}
                       className={`w-full p-2 bg-gray-800 border ${
                         urlErrors[key] ? 'border-red-500' : 'border-gray-700'
                       } rounded text-white`}
                     />
-                    {urlErrors[key] && <p className="text-red-500 text-sm">{urlErrors[key]}</p>}
+                    {urlErrors[key] && <p className="text-red-500 text-sm">{urlErrors[key]}</p>} {/* Display URL error */}
                   </div>
                 )
               ))}
@@ -293,13 +337,13 @@ function ProfileComponent({
             <div className="flex justify-between items-center">
               <p
                 className="text-sm text-blue-600 cursor-pointer"
-                onClick={() => setShowChangePassword(!showChangePassword)}
+                onClick={() => setShowChangePassword(!showChangePassword)} // Toggle change password form visibility
               >
                 {showChangePassword ? 'Hide Change Password' : 'Change Password'}
               </p>
               <p
                 className="text-sm text-blue-600 cursor-pointer"
-                onClick={() => setShowAllIcons(!showAllIcons)}
+                onClick={() => setShowAllIcons(!showAllIcons)} // Toggle visibility of all social icons
               >
                 {showAllIcons ? 'Collapse' : 'Expand'}
               </p>
@@ -309,21 +353,21 @@ function ProfileComponent({
             <div>
               <ChangePasswordForm
                 currentPassword={currentPassword}
-                setCurrentPassword={setCurrentPassword}
+                setCurrentPassword={setCurrentPassword} // Update current password
                 newPassword={newPassword}
-                setNewPassword={setNewPassword}
+                setNewPassword={setNewPassword} // Update new password
                 confirmNewPassword={confirmNewPassword}
-                setConfirmNewPassword={setConfirmNewPassword}
+                setConfirmNewPassword={setConfirmNewPassword} // Update confirmation password
               />
-              {urlErrors.currentPassword && <p className="text-red-500 mt-2">{urlErrors.currentPassword}</p>}
-              {urlErrors.newPassword && <p className="text-red-500 mt-2">{urlErrors.newPassword}</p>}
-              {urlErrors.confirmNewPassword && <p className="text-red-500 mt-2">{urlErrors.confirmNewPassword}</p>}
+              {urlErrors.currentPassword && <p className="text-red-500 mt-2">{urlErrors.currentPassword}</p>} {/* Display current password error */}
+              {urlErrors.newPassword && <p className="text-red-500 mt-2">{urlErrors.newPassword}</p>} {/* Display new password error */}
+              {urlErrors.confirmNewPassword && <p className="text-red-500 mt-2">{urlErrors.confirmNewPassword}</p>} {/* Display confirmation password error */}
             </div>
           )}
           {/* Cancel Button */}
           <button
             type="button"
-            onClick={onCancel}
+            onClick={onCancel} // Handle cancel action
             className="w-full p-2 bg-gray-600 rounded text-white hover:bg-gray-700"
           >
             Cancel
@@ -331,16 +375,16 @@ function ProfileComponent({
         </div>
       ) : (
         <>
-          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Name:</strong> {name}</p>
           <p>
-            <strong>Email:</strong> {user.email}{' '}
-            {user.provider !== 'local' && <span className="text-gray-400">({user.provider})</span>}
+            <strong>Email:</strong> {email}{' '}
+            {user.provider !== 'local' && <span className="text-gray-400">({user.provider})</span>} {/* Display provider information if not local */}
           </p>
           <AdditionalDetails details={{ age, gender, orientation, pronouns }} />
-          <BioComponent bio={user.bio} />
-          {user.socialLinks && <SocialBar socialLinks={user.socialLinks} />}
+          <BioComponent bio={bio} />
+          {socialLinks && <SocialBar socialLinks={socialLinks} />} {/* Display social links if available */}
           <button
-            onClick={onEdit}
+            onClick={onEdit} // Handle edit action
             className="w-full p-2 bg-blue-600 rounded hover:bg-blue-700"
           >
             Edit Profile

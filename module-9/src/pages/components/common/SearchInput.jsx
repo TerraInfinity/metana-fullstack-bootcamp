@@ -1,10 +1,15 @@
 /**
  * SearchInput.jsx
- * A component for the search input field.
+ * A functional component that renders a search input field.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.id - A unique identifier for the input field, used for accessibility.
+ * @returns {JSX.Element} A form containing the search input field.
  */
 import React from 'react';
 
 const SearchInput = ({ id }) => {
+  // Prevent the default form submission behavior
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <label htmlFor={id} className="sr-only">Search</label>

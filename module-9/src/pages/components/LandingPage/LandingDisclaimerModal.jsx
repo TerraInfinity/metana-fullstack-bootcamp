@@ -2,6 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from '../common/Modal';
 
+/**
+ * LandingDisclaimerModal component displays a modal with a disclaimer message
+ * and options for the user to accept or decline the terms.
+ *
+ * @param {Object} props - The props for the component.
+ * @param {boolean} props.isOpen - Indicates if the modal is open.
+ * @param {function} props.onClose - Function to call when the modal is closed.
+ * @param {React.node} props.disclaimerText - The text or elements to display as the disclaimer.
+ * @param {function} props.onAccept - Function to call when the user accepts the disclaimer.
+ * @param {function} props.onDecline - Function to call when the user declines the disclaimer.
+ * @param {function} props.onLearnMore - Function to call for more information about the disclaimer.
+ */
 const LandingDisclaimerModal = ({
   isOpen,
   onClose,
@@ -35,6 +47,7 @@ const LandingDisclaimerModal = ({
         </div>
 
         <ul className="bg-white p-4 rounded-lg shadow-md space-y-2">
+          {/* List of warnings regarding the content */}
           <li className="text-sm md:text-base text-gray-700 flex items-center">
             <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
             This content may include explicit language or imagery
@@ -51,6 +64,7 @@ const LandingDisclaimerModal = ({
 
         <div className="bg-white p-4 rounded-lg shadow-md">
           <div className="grid grid-cols-3 gap-3">
+            {/* Button to exit the disclaimer */}
             <button
               className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               onClick={() => {
@@ -61,6 +75,7 @@ const LandingDisclaimerModal = ({
             >
               Exit
             </button>
+            {/* Button to continue with restrictions (SFW) */}
             <button
               className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
               onClick={() => {
@@ -73,6 +88,7 @@ const LandingDisclaimerModal = ({
             >
               Continue (SFW)
             </button>
+            {/* Button to accept the disclaimer (NSFW) */}
             <button
               className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               onClick={() => {
@@ -91,6 +107,7 @@ const LandingDisclaimerModal = ({
   );
 };
 
+// PropTypes for type checking
 LandingDisclaimerModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -100,6 +117,7 @@ LandingDisclaimerModal.propTypes = {
   onLearnMore: PropTypes.func.isRequired
 };
 
+// Default props for the component
 LandingDisclaimerModal.defaultProps = {
   disclaimerText: 'Please review the terms and conditions.',
 };

@@ -1,6 +1,19 @@
 /**
  * NewsletterForm.jsx
  * A component for the newsletter subscription form.
+ * 
+ * This component renders a form that allows users to subscribe to a newsletter
+ * by entering their email address. It includes an input field for the email
+ * and a submit button. The form prevents the default submission behavior to 
+ * allow for custom handling of the subscription logic.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <NewsletterForm />
+ * )
+ * 
+ * @returns {JSX.Element} The rendered newsletter subscription form.
  */
 import React from 'react';
 

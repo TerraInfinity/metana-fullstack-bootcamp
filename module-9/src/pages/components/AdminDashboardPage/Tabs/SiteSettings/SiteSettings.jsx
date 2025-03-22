@@ -2,13 +2,26 @@
 import React, { useState } from 'react';
 import ChooseYourPath from './ChooseYourPath';
 
+/**
+ * SiteSettings component allows users to configure site settings, including enabling NSFW content and selecting preferred content categories.
+ *
+ * This component provides a user interface for managing site preferences, allowing users to toggle NSFW content and select from a variety of content categories.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.settings - The current settings for the site, including:
+ *   @param {boolean} props.settings.nsfwEnabled - Indicates if NSFW content is enabled.
+ *   @param {Array<string>} props.settings.selectedCategories - The currently selected content categories.
+ *   @param {string} props.settings.selectedPath - The currently selected path for content.
+ * @param {Function} props.onUpdateSettings - Callback function to update the settings when changes are made.
+ */
 const SiteSettings = ({ settings = {}, onUpdateSettings }) => {
-  // State for NSFW toggle and selected categories
-  const [nsfwEnabled, setNsfwEnabled] = useState(settings.nsfwEnabled || false);
-  const [selectedCategories, setSelectedCategories] = useState(settings.selectedCategories || []);
-  const [selectedPath, setSelectedPath] = useState(settings.selectedPath || '');
+  // State for managing NSFW toggle and selected categories
+  const [nsfwEnabled, setNsfwEnabled] = useState(settings.nsfwEnabled || false); // Tracks if NSFW content is enabled
+  const [selectedCategories, setSelectedCategories] = useState(settings.selectedCategories || []); // Tracks selected content categories
+  const [selectedPath, setSelectedPath] = useState(settings.selectedPath || ''); // Tracks the selected path
 
-  // List of available content categories
+  // List of available content categories for user selection
   const categories = [
     'Articles', 'Audio', 'Video', 'Spiritual', 'Educational', 'Entertainment',
     'Glaum-Inspired', 'Chaos Manual Inspired', 'Bambi Inspired', 'Crystal Inspired',
@@ -16,19 +29,35 @@ const SiteSettings = ({ settings = {}, onUpdateSettings }) => {
     'Miscellaneous', 'Community Created', 'Web3 Entrepreneurial'
   ];
 
-  // Handle category checkbox changes
+  /**
+   * Handles changes to the selected categories by toggling the category's inclusion in the selected list.
+   * 
+   * This function updates the selectedCategories state based on whether the category is already selected or not.
+   * 
+   * @param {string} category - The category that was toggled (added or removed).
+   */
   const handleCategoryChange = (category) => {
     setSelectedCategories((prev) =>
       prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
     );
   };
 
-  // Handle path selection
+  /**
+   * Handles the selection of a path by updating the selectedPath state.
+   * 
+   * This function sets the selectedPath to the provided path.
+   * 
+   * @param {string} path - The selected path to be set.
+   */
   const handleSelectPath = (path) => {
     setSelectedPath(path);
   };
 
-  // Save settings when the user clicks the button
+  /**
+   * Saves the current settings when the user clicks the save button.
+   * 
+   * This function triggers the onUpdateSettings callback with the current settings, including NSFW status, selected categories, and selected path.
+   */
   const handleSave = () => {
     onUpdateSettings({ nsfwEnabled, selectedCategories, selectedPath });
   };

@@ -13,19 +13,20 @@ const express = require('express');
 const router = express.Router();
 const Blog = require('../../models/coreBlogModel');
 const User = require('../../models/coreUserModel');
-const { protect, admin } = require('../../middleware/authMiddleware');
+const { protect, isAdmin, isCreatorOrAdmin } = require('../../middleware/authMiddleware');
 const { Sequelize, SequelizeDatabaseError } = require('sequelize');
 const BlogComment = require('../../models/blogModel/blogCommentModel');
 const Path = require('../../models/common/pathsModel');
 const PointTypes = require('../../models/common/pointTypesModel');
-var unirest = require('unirest')
+var unirest = require('unirest');
 
 /**
  * @route POST /api/blogs/create
- * @desc Create new blog posts
- * @access Private - Requires authentication
- * @param {Object|Array} req.body - A single blog object or an array of blog objects to create
- * @returns {Array|Object} Created blog posts
+ * @desc Create new blog posts. This endpoint allows users to create one or multiple blog posts.
+ * @access Private - Requires authentication.
+ * @param {Object|Array} req.body - A single blog object or an array of blog objects to create.
+ * Each blog object should contain the necessary fields such as title, content, and author information.
+ * @returns {Array|Object} Created blog posts, either as an array or a single object based on input.
  */
 router.post('/create', protect, async(req, res) => {
     try {
@@ -82,7 +83,6 @@ router.post('/create', protect, async(req, res) => {
                             content: comment.content,
                             blogId: blog.id,
                             rating: comment.rating
-
                         });
                     }
                 }
@@ -99,9 +99,10 @@ router.post('/create', protect, async(req, res) => {
 
 /**
  * @route GET /api/blogs
- * @desc Get all blog posts
+ * @desc Retrieve all blog posts. This endpoint fetches all blog posts along with their associated authors,
+ * paths, and comments, ordered by creation date.
  * @access Public
- * @returns {Array} Array of blog posts
+ * @returns {Array} An array of blog posts, each including details about the author and comments.
  */
 router.get('/', async(req, res) => {
     try {
@@ -163,10 +164,11 @@ router.get('/', async(req, res) => {
 
 /**
  * @route GET /api/blogs/:id
- * @desc Get a single blog post by ID
+ * @desc Retrieve a single blog post by its ID. This endpoint returns the blog post along with its author,
+ * associated path, and comments.
  * @access Public
- * @param {string} req.params.id - Blog post ID
- * @returns {Object} Blog post
+ * @param {string} req.params.id - The ID of the blog post to retrieve.
+ * @returns {Object} The blog post object, including details about the author and comments, or a 404 error if not found.
  */
 router.get('/:id', async(req, res) => {
     try {
@@ -210,27 +212,27 @@ router.get('/:id', async(req, res) => {
 
 /**
  * @route PUT /api/blogs/update/:id
- * @desc Update a blog post
- * @access Private - Only author can update
- * @param {string} req.params.id - Blog post ID
- * @param {Object} req.body.title - Updated title
- * @param {Object} req.body.content - Updated content
- * @returns {Object} Updated blog post
+ * @desc Update an existing blog post. This endpoint allows the author of the blog to update its title,
+ * summary, content, audio URL, and video URL.
+ * @access Private - Only the author can update their blog post.
+ * @param {string} req.params.id - The ID of the blog post to update.
+ * @param {Object} req.body - The updated blog data, including title, blogSummary, content, audioUrl, and videoUrl.
+ * @returns {Object} The updated blog post object.
  */
 router.put('/update/:id', protect, async(req, res) => {
-    try {
-        const { title, content } = req.body;
+    const { title, blogSummary, content, audioUrl, videoUrl } = req.body;
 
-        const blog = await Blog.findByPk(req.params.id); // Changed from findById()
+    try {
+        const blog = await Blog.findByPk(req.params.id);
         if (!blog) {
             return res.status(404).json({ message: 'Blog not found' });
         }
 
-        if (blog.authorId !== req.user.id) { // Changed from author.toString()
+        if (blog.authorId !== req.user.id) {
             return res.status(401).json({ message: 'User not authorized' });
         }
 
-        await blog.update({ title, content }); // Changed from findByIdAndUpdate()
+        await blog.update({ title, blogSummary, content, audioUrl, videoUrl });
 
         const updatedBlog = await Blog.findByPk(req.params.id, {
             include: [{
@@ -242,22 +244,19 @@ router.put('/update/:id', protect, async(req, res) => {
 
         res.json(updatedBlog);
     } catch (error) {
-        console.error(error);
-        if (error.kind === 'ObjectId') {
-            return res.status(404).json({ message: 'Blog not found' });
-        }
-        res.status(500).json({ message: 'Error updating blog post', error: error.message });
+        console.error('Error updating blog:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
 /**
  * @route DELETE /api/blogs/delete/:id
- * @desc Delete a blog post
- * @access Private - Author or Admin only
- * @param {string} req.params.id - Blog post ID
- * @returns {Object} Success message with deleted blog details
+ * @desc Delete a blog post. This endpoint allows the author or an admin to delete a specific blog post.
+ * @access Private - Only the author or an admin can delete the blog post.
+ * @param {string} req.params.id - The ID of the blog post to delete.
+ * @returns {Object} A success message along with the details of the deleted blog post.
  */
-router.delete('/delete/:id', protect, async(req, res) => {
+router.delete('/delete/:id', protect, isCreatorOrAdmin, async(req, res) => {
     try {
         const blog = await Blog.findByPk(req.params.id);
 
@@ -266,35 +265,38 @@ router.delete('/delete/:id', protect, async(req, res) => {
         }
 
         // Check if user is the author of the blog or an admin
-        if (blog.authorId.toString() !== req.user.id.toString() && !req.user.isAdmin) {
-            return res.status(403).json({ message: 'User not authorized' });
+        const isOwner = blog.authorId.toString() === req.user.id.toString();
+        const isAdmin = req.user.role === 'admin';
+
+        if (!(isOwner || isAdmin)) {
+            return res.status(403).json({ message: 'Access denied: You must be the author or an admin' });
         }
 
-        // Return the blog details in the response before deletion
-        const deletedBlog = blog.get({ plain: true }); // Get a plain object representation of the blog
+        // Capture blog details before deletion
+        const deletedBlog = blog.get({ plain: true });
 
+        // Delete the blog
         await Blog.destroy({ where: { id: req.params.id } });
 
-        // Return the deleted blog details in the response
         res.json({ message: 'Blog removed', deletedBlog });
     } catch (error) {
         console.error(error);
-        if (error.kind === 'ObjectId') {
-            return res.status(404).json({ message: 'Blog not found' });
-        }
-        res.status(500).json({ message: 'Error deleting blog post', error: error.message });
+        res.status(500).json({
+            message: 'Error deleting blog post',
+            error: process.env.REACT_APP_NODE_ENV === 'development' ? error.message : undefined,
+        });
     }
 });
 
 /**
  * @route DELETE /api/blogs/delete-all
- * @desc Delete all blog posts
+ * @desc Delete all blog posts. This endpoint allows an admin to delete all blog posts in the system.
  * @access Private - Admin only
- * @returns {Object} Success message with delete count
+ * @returns {Object} A success message with the count of deleted blog posts.
  */
-router.delete('/delete-all', protect, admin, async(req, res) => {
+router.delete('/delete-all', protect, isAdmin, async(req, res) => {
     try {
-        const deletedCount = await Blog.destroy({ where: {} }); // Changed from deleteMany()
+        const deletedCount = await Blog.destroy({ where: {} }); // Deletes all blog posts
 
         res.json({
             message: 'All blogs have been deleted',
@@ -308,22 +310,23 @@ router.delete('/delete-all', protect, admin, async(req, res) => {
 
 /**
  * @route DELETE /api/blogs/delete-all/:id
- * @desc Delete all blog posts for a specific user
+ * @desc Delete all blog posts for a specific user. This endpoint allows an admin to delete all blog posts
+ * authored by a specific user.
  * @access Private - Admin only
- * @param {string} req.params.id - User ID
- * @returns {Object} Success message with delete count
+ * @param {string} req.params.id - The ID of the user whose blog posts are to be deleted.
+ * @returns {Object} A success message with the count of deleted blog posts for the specified user.
  */
-router.delete('/delete-all/:id', protect, admin, async(req, res) => {
+router.delete('/delete-all/:id', protect, isAdmin, async(req, res) => {
     try {
         const userId = req.params.id;
 
-        const user = await User.findByPk(userId); // Changed from findById()
+        const user = await User.findByPk(userId); // Check if the user exists
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const deletedCount = await Blog.destroy({ // Changed from deleteMany()
-            where: { authorId: userId } // Changed from author: userId
+        const deletedCount = await Blog.destroy({ // Deletes all blogs for the specified user
+            where: { authorId: userId }
         });
 
         res.json({
@@ -338,12 +341,13 @@ router.delete('/delete-all/:id', protect, admin, async(req, res) => {
 
 /**
  * @route POST /api/comments/create
- * @desc Create a new comment
- * @access Private - Requires authentication
- * @param {Object} req.body - Comment object to create
- * @returns {Object} Created comment
+ * @desc Create a new comment on a blog post. This endpoint allows authenticated users to add comments
+ * to a specific blog post.
+ * @access Private - Requires authentication.
+ * @param {Object} req.body - The comment object to create, including content, blogId, and rating.
+ * @returns {Object} The created comment object.
  */
-router.post('/create', protect, async(req, res) => {
+router.post('/create', protect, isCreatorOrAdmin, async(req, res) => {
     try {
         const { content, blogId, rating } = req.body;
 

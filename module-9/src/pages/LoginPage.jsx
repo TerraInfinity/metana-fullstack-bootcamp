@@ -3,7 +3,14 @@
  * The main login and registration page, handling user authentication.
  * This component manages user login and registration processes, including form handling, API calls, and OAuth options.
  *
+ * @component
  * @returns {JSX.Element} The rendered login page component.
+ * @description This component allows users to log in or register using either email/password or OAuth methods. 
+ * It handles the state for toggling between login and registration forms, as well as OAuth options.
+ * 
+ * @context {AuthContext} AuthContext - Provides authentication methods and state.
+ * @state {boolean} isLogin - Indicates whether the user is in login mode.
+ * @state {boolean} useOAuth - Indicates whether to display OAuth options.
  */
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';

@@ -4,6 +4,12 @@
  * This component displays a brief summary of the blog post content.
  * It includes functionality to expand or collapse the summary text.
  * 
+ * Props:
+ * @param {string} summary - The summary text to display. If not provided, a default message will be shown.
+ * 
+ * Usage:
+ * <Summary summary="Your summary text here" />
+ * 
  * File: Summary.jsx
  */
 import React from 'react';

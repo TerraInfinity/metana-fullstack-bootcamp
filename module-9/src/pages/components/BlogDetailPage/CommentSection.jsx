@@ -1,13 +1,14 @@
 /**
  * CommentSection component
  * 
- * This component displays a list of comments for a blog post and includes a form for adding new comments.
- * It handles user authentication and prompts for login if the user is not authenticated.
+ * This component displays a list of comments for a specific blog post and includes a form for adding new comments.
+ * It manages user authentication and prompts for login if the user is not authenticated.
  * 
- * @param {Array} comments - The list of comments to display.
- * @param {string} blogId - The ID of the blog post for which comments are being displayed.
- * @param {boolean} isLoggedIn - Whether the user is logged in.
- * @returns {JSX.Element} The rendered comment section component.
+ * @param {Object} props - The component props.
+ * @param {Array} props.comments - The list of comments to display for the blog post.
+ * @param {string} props.blogId - The ID of the blog post for which comments are being displayed.
+ * @param {boolean} props.isLoggedIn - Indicates whether the user is currently logged in.
+ * @returns {JSX.Element} The rendered comment section component, including the comments and the comment form if logged in.
  */
 import React, { useState, useEffect } from 'react';
 import CommentForm from './CommentForm'; // Import CommentForm
@@ -15,49 +16,54 @@ import CommentForm from './CommentForm'; // Import CommentForm
 /**
  * CommentSection component
  * 
- * This component displays a list of comments for a blog post and includes a form for adding new comments.
- * It handles user authentication and prompts for login if the user is not authenticated.
+ * This component displays a list of comments for a specific blog post and includes a form for adding new comments.
+ * It manages user authentication and prompts for login if the user is not authenticated.
  * 
- * @param {Array} comments - The list of comments to display.
- * @param {string} blogId - The ID of the blog post for which comments are being displayed.
- * @param {boolean} isLoggedIn - Whether the user is logged in.
- * @returns {JSX.Element} The rendered comment section component.
+ * @param {Object} props - The component props.
+ * @param {Array} props.comments - The list of comments to display for the blog post.
+ * @param {string} props.blogId - The ID of the blog post for which comments are being displayed.
+ * @param {boolean} props.isLoggedIn - Indicates whether the user is currently logged in.
+ * @returns {JSX.Element} The rendered comment section component, including the comments and the comment form if logged in.
  */
 function CommentSection({ isLoggedIn, comments, blogId }) {
+  // State to hold the list of comments and the new comment input
   const [commentList, setCommentList] = useState(comments || []);
   const [newComment, setNewComment] = useState('');
-  const [rating, setRating] = useState(0); // State for rating
+  const [rating, setRating] = useState(0); // State for storing the rating of the new comment
 
   useEffect(() => {
+    // Log comments when they are loaded or if no comments are found
     if (!comments) {
       console.log('No comment data found in the API response.');
     } else {
-      console.log('Loaded comments:', JSON.stringify(comments)); // Log the comments when loaded
+      console.log('Loaded comments:', JSON.stringify(comments));
     }
   }, [comments]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (newComment.trim() && newComment.length <= 512) { // Check character limit
+    // Validate the new comment before adding it to the list
+    if (newComment.trim() && newComment.length <= 512) {
       const comment = {
         id: commentList.length + 1,
         author: 'Current User',
         content: newComment,
-        rating: rating, // Include rating in the comment
-        date: new Date().toISOString().split('T')[0],
+        rating: rating, // Include rating in the comment object
+        date: new Date().toISOString().split('T')[0], // Format date as YYYY-MM-DD
       };
-      setCommentList([...commentList, comment]);
-      setNewComment('');
-      setRating(0); // Reset rating after submission
+      setCommentList([...commentList, comment]); // Update the comment list
+      setNewComment(''); // Clear the new comment input
+      setRating(0); // Reset the rating after submission
     }
   };
 
   const handleNewComment = (newComment) => {
-    console.log('Previous comments:', commentList); // Log previous comments
-    console.log('New comment being added:', newComment); // Log new comment
+    // Log previous comments and the new comment being added
+    console.log('Previous comments:', commentList);
+    console.log('New comment being added:', newComment);
 
-    // Check if User object exists before accessing name
-    if (newComment.userId) { // Adjusted to check for userId instead of User object
+    // Ensure the new comment has a valid userId before adding it to the list
+    if (newComment.userId) {
       setCommentList((prevComments) => [...prevComments, newComment]);
     } else {
       console.error('New comment does not have a valid userId:', newComment);

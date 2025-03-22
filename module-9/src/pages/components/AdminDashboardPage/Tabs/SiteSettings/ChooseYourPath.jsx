@@ -22,22 +22,48 @@ const paths = [
     },
 ];
 
+/**
+ * ChooseYourPath component allows users to select a path with associated perks.
+ *
+ * This component displays a selection of paths, each with a description and perks.
+ * Users can click on a path to select it temporarily and then lock in their choice.
+ *
+ * @param {Object} props - The component props.
+ * @param {function} props.onSelectPath - Callback function to handle the selection of a path.
+ * @param {string} props.selectedPath - The currently selected path, used to initialize the component state.
+ * @returns {JSX.Element} The rendered component.
+ */
 const ChooseYourPath = ({ onSelectPath, selectedPath }) => {
+  // State to temporarily hold the selected path
   const [tempSelectedPath, setTempSelectedPath] = useState(selectedPath);
+  // State to manage the height of the bottom div for dynamic positioning
   const [bottomHeight, setBottomHeight] = useState(0);
   const bottomDivRef = useRef(null);
 
-  // Fixed the useEffect to use correct ref name
+  // Effect to set the height of the bottom div after the component mounts
   useEffect(() => {
     if (bottomDivRef.current) {
       setBottomHeight(bottomDivRef.current.offsetHeight);
     }
   }, []);
 
+  /**
+   * Handles the click event on a path to set it as the temporary selected path.
+   *
+   * This function updates the state to reflect the path that the user has clicked on.
+   *
+   * @param {string} pathName - The name of the path that was clicked.
+   */
   const handlePathClick = (pathName) => {
     setTempSelectedPath(pathName);
   };
 
+  /**
+   * Locks in the currently selected path and triggers the onSelectPath callback.
+   *
+   * This function is called when the user confirms their selection by clicking the "Lock In" button.
+   * It passes the selected path back to the parent component.
+   */
   const handleLockIn = () => {
     onSelectPath(tempSelectedPath);
     console.log(`Locked in path: ${tempSelectedPath}`);

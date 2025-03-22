@@ -1,10 +1,18 @@
 /**
  * HomePage.jsx
- * The main home page component.
- * This component displays the main content of the application, including featured posts and a grid of blog posts.
+ * The main home page component that displays featured posts and a grid of blog posts.
  * It fetches blog data from the backend API and manages loading and error states.
- * 
+ *
+ * @component
  * @returns {JSX.Element} The rendered home page component.
+ * 
+ * @state {Array} blogs - The list of blog posts fetched from the API.
+ * @state {boolean} loading - Indicates whether the blog data is currently being loaded.
+ * @state {string|null} error - Contains error message if fetching blogs fails.
+ * 
+ * @example
+ * // Usage of HomePage component
+ * <HomePage />
  */
 import React, { useState, useEffect } from 'react';
 import Layout from './components/common/Layout'; // Import the Layout component

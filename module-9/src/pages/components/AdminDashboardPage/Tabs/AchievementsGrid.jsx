@@ -5,16 +5,17 @@ import React from 'react';
  * AchievementsGrid component
  * 
  * This component displays a grid of user achievements, including icons and titles.
- * It shows a message if no achievements are available.
+ * If no achievements are available, it shows a message indicating that.
  * 
- * @description Displays a grid of user achievements with icons and titles.
- * @param {Array} achievements - The list of achievements to display.
- * @param {Object} achievements[].id - Unique identifier for the achievement.
- * @param {string} achievements[].iconUrl - URL of the achievement icon.
- * @param {string} achievements[].name - Name of the achievement.
- * @returns {JSX.Element} The rendered achievements grid component.
+ * @component
+ * @param {Object[]} achievements - An array of achievement objects to display.
+ * @param {string} achievements[].id - A unique identifier for each achievement.
+ * @param {string} achievements[].iconUrl - The URL of the achievement's icon image.
+ * @param {string} achievements[].name - The name of the achievement.
+ * @returns {JSX.Element} A grid layout of achievement icons and titles, or a message if none are available.
  */
 const AchievementsGrid = ({ achievements }) => {
+  // Check if there are no achievements to display
   if (!achievements || achievements.length === 0) {
     return <div className="text-white">No achievements yet.</div>;
   }
@@ -27,7 +28,7 @@ const AchievementsGrid = ({ achievements }) => {
             src={achievement.iconUrl}
             alt={achievement.name}
             className="w-16 h-16 hover:scale-105 transition"
-            title={achievement.name} // Tooltip on hover
+            title={achievement.name} // Tooltip displayed on hover
           />
         </div>
       ))}

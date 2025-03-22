@@ -1,6 +1,16 @@
 /**
  * Header.jsx
- * A component for the website header.
+ * A functional component that renders the website header, including navigation links and a search input.
+ * 
+ * This component manages the state of a mobile menu, allowing users to toggle its visibility.
+ * 
+ * @component
+ * @example
+ * return (
+ *   <Header />
+ * )
+ * 
+ * @returns {JSX.Element} The rendered header component.
  */
 import React, { useState } from 'react';
 import MobileMenu from './Menu';
@@ -8,13 +18,16 @@ import SearchInput from './SearchInput';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
+  // State to manage the visibility of the mobile menu
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Function to toggle the mobile menu's open/closed state
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
+    // Main header element with styling
     <header className="bg-slate-900 text-white sticky top-0 z-50">
       <div className="flex justify-between items-center px-20 py-5 max-md:px-10 max-sm:p-5">
         <Link to="/Home" className="text-2xl font-semibold">The Bambi Cloud Podcast</Link>

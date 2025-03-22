@@ -1,7 +1,7 @@
 /**
  * AdminDashboardPage.jsx
- * The user profile page with tab navigation for managing profiles, viewing stats, activity, and privacy settings.
- * This file defines the layout and functionality of the admin dashboard, including components for managing user profiles and settings.
+ * This component serves as the user profile page, featuring tab navigation for managing user profiles, viewing statistics, activity logs, and privacy settings.
+ * It defines the layout and functionality of the admin dashboard, including components for user management and settings.
  */
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
@@ -18,8 +18,8 @@ import SiteSettings from './components/AdminDashboardPage/Tabs/SiteSettings/Site
 
 /**
  * The AdminDashboardPage component manages the layout and functionality of the admin dashboard.
- * It handles user authentication, profile data fetching, and tab navigation.
- * @returns {JSX.Element} The admin dashboard page component.
+ * It handles user authentication, fetches profile data from the backend, and facilitates tab navigation for different user management features.
+ * @returns {JSX.Element} The rendered admin dashboard page component, including user profile management and settings.
  */
 export function AdminDashboardPage() {
   const { token, logout, isAuthenticated, loading } = useContext(AuthContext);
@@ -33,7 +33,8 @@ export function AdminDashboardPage() {
 
   /**
    * Fetches the user profile data from the backend API.
-   * Handles authentication and redirects to login page if unauthorized.
+   * It handles authentication and redirects to the login page if the user is unauthorized.
+   * This effect runs when the token, logout function, or navigate function changes.
    */
   useEffect(() => {
     const fetchProfile = async () => {
@@ -66,7 +67,8 @@ export function AdminDashboardPage() {
 
   /**
    * Handles profile updates by sending a PUT request to the backend API.
-   * @param {object} formData The updated profile data.
+   * @param {object} formData - The updated profile data to be sent to the server.
+   * @returns {Promise<void>} A promise that resolves when the update is complete.
    */
   const handleUpdate = async (formData) => {
     const response = await fetch(backendProfileAPIUrl, {
@@ -84,7 +86,8 @@ export function AdminDashboardPage() {
   };
 
   /**
-   * Handles account deletion by logging out and redirecting to the home page.
+   * Handles account deletion by logging out the user and redirecting to the home page.
+   * This function is called when the user confirms account deletion.
    */
   const handleDeleteAccount = () => {
     console.log('Account deleted');

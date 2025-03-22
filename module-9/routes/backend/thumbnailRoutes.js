@@ -1,7 +1,8 @@
 /**
  * @file thumbnailRoutes.js
  * @description This file contains routes for acquiring video thumbnails used in blog cards.
- * This file defines the routes for fetching and processing thumbnails from various sources.
+ * It defines endpoints for fetching and processing thumbnails from various sources, including
+ * proxying requests for oEmbed data and extracting thumbnails from HTML content.
  */
 
 const express = require('express');
@@ -9,11 +10,18 @@ const router = express.Router();
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const axios = require('axios'); // Use axios for better request handling
+const { protect, isAdmin, isCreatorOrAdmin } = require('../../middleware/authMiddleware');
 
 // Helper function to resolve Twitter URLs (t.co, pic.twitter.com) to pbs.twimg.com
 // Removed Twitter image resolution logic
 
 // Proxy endpoint for Twitter/X oEmbed
+/**
+ * @route GET /proxy-oembed
+ * @param {string} url - The URL to fetch oEmbed data from.
+ * @returns {Object} 404 error if no thumbnail is found or 400 if URL is missing.
+ * @throws {500} If there is an error fetching oEmbed data.
+ */
 router.get('/proxy-oembed', async(req, res) => {
     const url = req.query.url;
     if (!url) {
@@ -32,6 +40,12 @@ router.get('/proxy-oembed', async(req, res) => {
 });
 
 // Proxy endpoint for thumbnail extraction (e.g., Omniflix)
+/**
+ * @route GET /proxy-thumbnail
+ * @param {string} url - The URL to extract the thumbnail from.
+ * @returns {Object} JSON object containing the extracted thumbnail or 404 error if not found.
+ * @throws {500} If there is an error fetching the thumbnail.
+ */
 router.get('/proxy-thumbnail', async(req, res) => {
     const url = req.query.url;
     if (!url) {

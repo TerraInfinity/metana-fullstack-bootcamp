@@ -13,9 +13,14 @@ import React, { useContext } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../src/context/AuthContext';
 
-
 /**
  * PrivateRoute component.
+ * 
+ * This component serves as a wrapper for routes that require the user to be authenticated.
+ * It utilizes the AuthContext to determine the authentication status of the user.
+ * If the user is authenticated, it renders the specified children components.
+ * If the user is not authenticated, it redirects them to the login page, preserving the 
+ * current location in the state for potential redirection after successful login.
  * 
  * @param {object} props - The component props.
  * @param {React.ReactNode} props.children - The children components to be rendered if the user is authenticated.
@@ -26,15 +31,15 @@ export const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useContext(AuthContext);
   const location = useLocation();
 
-  // Only show this message when testing the app
+  // Log authentication status during development for debugging purposes
   if (process.env.REACT_APP_NODE_ENV === 'development') {
     console.log('PrivateRoute - isAuthenticated:', isAuthenticated);
   }
 
   if (loading) {
-    return <div>Loading...</div>; // Wait while checking if the user is logged in
+    return <div>Loading...</div>; // Display a loading message while checking authentication status
   }
 
-  // If logged in, show the page; if not, send to login and remember where they were
+  // Render children if authenticated; otherwise, redirect to login and remember the current location
   return isAuthenticated ? children : <Navigate to="/login" state={{ from: location }} />;
 };

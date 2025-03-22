@@ -1,5 +1,12 @@
 import React from 'react';
 
+/**
+ * LandingButton component renders a button that triggers an action when clicked.
+ *
+ * @param {Object} props - The props for the component.
+ * @param {function} props.onClick - The function to call when the button is clicked.
+ * @returns {JSX.Element} The rendered button element.
+ */
 const LandingButton = ({ onClick }) => {
   return (
     <button 

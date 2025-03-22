@@ -1,14 +1,15 @@
 /**
  * BlogContent component
  * 
- * This component displays the main content of the blog post, including
+ * This component displays the main content of a blog post, including
  * a summary, audio player, video player, and a description section
  * that can be expanded or collapsed.
  * 
  * @description The BlogContent component is a functional React component
  * that renders the main content of a blog post. It includes a summary,
- * audio player, video player, and a description section that can be
- * expanded or collapsed.
+ * an audio player for audio content, a video player for video content,
+ * and a description section that can be expanded or collapsed for better
+ * user experience.
  * 
  * @param {object} blog - The blog post object containing content details.
  * @param {string} blog.title - The title of the blog post.
@@ -17,7 +18,8 @@
  * @param {string} blog.videoUrl - The URL of the video file associated with the blog post.
  * @param {string} blog.content - The main content of the blog post.
  * 
- * @returns {JSX.Element} The rendered blog content component.
+ * @returns {JSX.Element} The rendered blog content component, which includes
+ * the title, summary, audio player, video player, and an expandable description.
  */
 import React, { useState, useEffect } from 'react';
 import Summary from './Summary';
@@ -30,7 +32,8 @@ import VideoPlayer from './VideoPlayer';
  * @function BlogContent
  * @param {object} props - The component props.
  * @param {object} props.blog - The blog post object containing content details.
- * @returns {JSX.Element} The rendered blog content component.
+ * @returns {JSX.Element} The rendered blog content component, which displays
+ * the blog's title, summary, audio and video players, and an expandable description.
  */
 function BlogContent({ blog }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -58,6 +61,8 @@ function BlogContent({ blog }) {
 
   /**
    * Toggles the expanded state of the description section.
+   * This function updates the `isExpanded` state to show or hide the full
+   * description of the blog post, enhancing user interaction.
    * 
    * @function toggleExpand
    */

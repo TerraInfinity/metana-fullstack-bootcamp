@@ -1,6 +1,16 @@
 /**
  * @file User favorites model for tracking favorite items.
  * @module models/userModel/userFavoritesModel
+ * 
+ * This model represents the user's favorite items in the application.
+ * It allows for the tracking of which items a user has marked as favorites.
+ * 
+ * @class UserFavorites
+ * @extends Model
+ * @property {UUID} id - The unique identifier for the favorite entry.
+ * @property {UUID} userId - The unique identifier of the user who favorited the item.
+ * @property {UUID} favoriteItemId - The unique identifier of the item that is favorited.
+ * @property {string} itemType - The type of the item (e.g., product, article) that is favorited.
  */
 const { DataTypes, Model } = require('sequelize');
 const { sequelize } = require('../../config/db');

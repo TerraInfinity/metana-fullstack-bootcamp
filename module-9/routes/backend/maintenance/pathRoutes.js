@@ -1,10 +1,24 @@
+/**
+ * @module pathRoutes
+ * @description Routes for managing paths, including creation, retrieval, updating, and deletion.
+ */
+
 const express = require('express');
 const router = express.Router();
 const Paths = require('../../../models/common/pathsModel');
 const PointTypes = require('../../../models/common/pointTypesModel');
+const { protect, isCreatorOrAdmin, isAdmin } = require('../../../middleware/authMiddleware');
 
 // Route to create new paths
-router.post('/', async(req, res) => {
+/**
+ * @route POST /
+ * @group Paths - Operations about paths
+ * @param {object} pathData.body.required - Path data to create
+ * @returns {Array.<object>} 201 - An array of created paths
+ * @returns {Error} 400 - Bad request if path data is missing or invalid
+ * @returns {Error} 500 - Internal server error
+ */
+router.post('/', protect, isAdmin, async(req, res) => {
     try {
         let pathsData = req.body; // Expecting either a single path object or an array of path objects
 
@@ -71,6 +85,12 @@ router.post('/', async(req, res) => {
 });
 
 // Route to get all paths
+/**
+ * @route GET /
+ * @group Paths - Operations about paths
+ * @returns {Array.<object>} 200 - An array of paths
+ * @returns {Error} 500 - Internal server error
+ */
 router.get('/', async(req, res) => {
     try {
         console.log('Fetching all paths'); // Log fetching action
@@ -84,7 +104,17 @@ router.get('/', async(req, res) => {
 });
 
 // Route to update a path by ID
-router.put('/:id', async(req, res) => {
+/**
+ * @route PUT /:id
+ * @group Paths - Operations about paths
+ * @param {string} id.path.required - ID of the path to update
+ * @param {object} pathData.body.required - New path data
+ * @returns {object} 200 - The updated path
+ * @returns {Error} 400 - Bad request if name is missing
+ * @returns {Error} 404 - Path not found
+ * @returns {Error} 500 - Internal server error
+ */
+router.put('/:id', protect, isAdmin, async(req, res) => {
     try {
         const { id } = req.params; // Get the path ID from the URL
         const { name } = req.body; // Expecting a name in the request body
@@ -109,7 +139,15 @@ router.put('/:id', async(req, res) => {
 });
 
 // Route to delete a path by ID
-router.delete('/:id', async(req, res) => {
+/**
+ * @route DELETE /:id
+ * @group Paths - Operations about paths
+ * @param {string} id.path.required - ID of the path to delete
+ * @returns {204} 204 - No content if deletion is successful
+ * @returns {Error} 404 - Path not found
+ * @returns {Error} 500 - Internal server error
+ */
+router.delete('/:id', protect, isAdmin, async(req, res) => {
     try {
         const { id } = req.params; // Get the path ID from the URL
         console.log(`Deleting path with ID: ${id}`); // Log delete action
@@ -126,7 +164,13 @@ router.delete('/:id', async(req, res) => {
 });
 
 // Route to delete all paths
-router.delete('/', async(req, res) => {
+/**
+ * @route DELETE /
+ * @group Paths - Operations about paths
+ * @returns {object} 200 - Message and count of deleted paths
+ * @returns {Error} 500 - Internal server error
+ */
+router.delete('/', protect, isAdmin, async(req, res) => {
     try {
         console.log('Deleting all paths'); // Log delete all action
         const deletedPathsCount = await Paths.destroy({ where: {} }); // Delete all paths

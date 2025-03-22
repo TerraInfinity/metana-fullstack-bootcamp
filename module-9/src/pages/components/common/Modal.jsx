@@ -1,36 +1,36 @@
 /**
- * Modal.jsx - Modal component for displaying content in a modal dialog.
+ * Modal.jsx - A reusable modal component for displaying content in a dialog overlay.
  * 
- * @param {boolean} isOpen - Determines if the modal is open.
- * @param {function} onClose - Function to call when the modal should be closed.
- * @param {ReactNode} children - Content to be displayed inside the modal.
+ * @param {boolean} isOpen - Indicates whether the modal is currently open (true) or closed (false).
+ * @param {function} onClose - Callback function to be invoked when the modal is requested to close, typically triggered by user actions.
+ * @param {ReactNode} children - The content to be rendered inside the modal, which can include any valid React elements or components.
  */
 import React from 'react';
 
 const Modal = ({ isOpen, onClose, children }) => {
-  // Prevent background scrolling when modal is open
+  // Prevent background scrolling when the modal is open by modifying the body's overflow style
   React.useEffect(() => {
     console.log('Overflow Effect: isOpen =', isOpen);
     document.body.style.overflow = isOpen ? 'hidden' : 'auto';
     return () => {
-      console.log('Overflow Cleanup');
+      console.log('Overflow Cleanup: Resetting body overflow to auto');
       document.body.style.overflow = 'auto';
     };
   }, [isOpen]);
 
-  // Close modal on ESC key press (accessibility)
+  // Close modal on ESC key press for accessibility
   React.useEffect(() => {
     console.log('Keydown Effect: isOpen =', isOpen);
     if (isOpen) {
       const handleEsc = (event) => {
         if (event.key === 'Escape') {
-          console.log('Escape key pressed, calling onClose');
+          console.log('Escape key pressed, invoking onClose callback');
           onClose();
         }
       };
       window.addEventListener('keydown', handleEsc);
       return () => {
-        console.log('Keydown Cleanup');
+        console.log('Keydown Cleanup: Removing ESC key listener');
         window.removeEventListener('keydown', handleEsc);
       };
     }

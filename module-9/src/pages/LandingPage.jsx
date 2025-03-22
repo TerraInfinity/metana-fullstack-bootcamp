@@ -4,7 +4,13 @@
  * This component serves as the entry point for users, providing navigation to the main application.
  * It includes buttons and disclaimers for user interaction.
  * 
+ * @component
  * @returns {JSX.Element} The rendered landing page component.
+ * 
+ * @state {boolean} isDisclaimerOpen - Indicates whether the disclaimer modal is open or closed.
+ * 
+ * @method handleAccept - Handles the acceptance of the disclaimer and navigates to the homepage.
+ * @method handleDeny - Handles the denial of the disclaimer, sets a restriction in local storage, and navigates to the homepage.
  */
 import React from "react";
 import { useNavigate } from "react-router-dom";

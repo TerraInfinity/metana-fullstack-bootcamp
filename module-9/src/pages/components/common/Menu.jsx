@@ -1,6 +1,20 @@
 /**
  * Menu.jsx
  * A component for the mobile navigation menu.
+ * 
+ * This component renders a navigation menu that allows users to navigate
+ * to different sections of the application, including Home, About, Admin,
+ * and a Random Blog. It also provides functionality for user authentication
+ * with options to log in or log out.
+ * 
+ * Props:
+ * @param {boolean} isOpen - Indicates whether the menu is currently open (true) or closed (false).
+ * 
+ * Functions:
+ * @function fetchRandomBlog - Asynchronously fetches a random blog from the API and updates the state.
+ * @function handleRandomBlogClick - Handles the click event for the Random Blog link,
+ *                                    fetching a random blog and navigating to its page.
+ * @function handleLogout - Logs the user out and navigates to the Home page.
  */
 import React, { useEffect, useState, useContext } from 'react';
 import SearchInput from './SearchInput';
@@ -13,6 +27,11 @@ const Menu = ({ isOpen }) => {
   const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  /**
+   * Fetches a random blog from the API.
+   * If successful, updates the state with the fetched blogs and sets a random blog ID.
+   * @returns {Promise<number|null>} The ID of the randomly selected blog or null if fetching fails.
+   */
   const fetchRandomBlog = async () => {
     try {
       const apiPort = process.env.REACT_APP_BACKEND_PORT;      
@@ -41,6 +60,11 @@ const Menu = ({ isOpen }) => {
     return null;
   };
 
+  /**
+   * Handles the click event for the Random Blog link.
+   * Prevents the default action, fetches a random blog, and navigates to its page if found.
+   * @param {Event} event - The click event.
+   */
   const handleRandomBlogClick = async (event) => {
     event.preventDefault();
     const randomBlog = await fetchRandomBlog();
@@ -49,9 +73,12 @@ const Menu = ({ isOpen }) => {
     }
   };
 
+  /**
+   * Logs the user out and navigates to the Home page.
+   */
   const handleLogout = () => {
     logout();
-    window.location.reload();
+    navigate('/Home');
   };
 
   return (
@@ -92,10 +119,10 @@ const Menu = ({ isOpen }) => {
           Random Blog
         </a>
         <a
-          href="/single-post"
+          href="/blog/create"
           className="py-2 w-full text-center text-white hover:bg-slate-700"
         >
-          Create Blog (Coming Soon)
+          Create Blog
         </a>
         <hr className="my-2 border-white" />
         {token ? (

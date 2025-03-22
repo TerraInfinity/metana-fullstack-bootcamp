@@ -1,12 +1,53 @@
 /**
  * BlogPostGrid.jsx
  * 
- * This component displays a grid of blog posts using the blog data passed as a prop.
- * It no longer fetches data or renders featured posts, as these are handled on the HomePage.
+ * This component renders a responsive grid layout of blog posts using the data provided via the `blogs` prop.
+ * It is designed to display the latest blog posts and does not handle data fetching or featured posts,
+ * as these functionalities are managed by the HomePage component.
  * 
- * @author [Your Name]
- * @version 1.2
- * @since 2023-02-20
+ * Props:
+ * - blogs (Array): An array of blog post objects, where each object contains details about a blog post.
+ * 
+ * Each blog post object should have the following structure:
+ * - id (string): Unique identifier for the blog post.
+ * - category (string): The category of the blog post.
+ * - title (string): The title of the blog post.
+ * - author (Object): An object containing author details.
+ *   - name (string): The name of the author.
+ *   - logo (string): URL to the author's logo.
+ * - createdAt (string): The date the blog post was created in ISO format.
+ * - blogImage (string): URL to the blog post's image.
+ * - isAgeRestricted (boolean): Indicates if the content is age-restricted.
+ * - videoUrl (string): URL to a video associated with the blog post, if available.
+ * - audioUrl (string): URL to an audio file associated with the blog post, if available.
+ * - blogSummary (string): A brief summary of the blog post.
+ * - pathId (string): Identifier for the blog post's path, used for routing.
+ * - blogComments (Array): An array of comments related to the blog post.
+ * 
+ * @component
+ * @example
+ * const blogs = [
+ *   {
+ *     id: '1',
+ *     category: 'Tech',
+ *     title: 'Latest in Tech',
+ *     author: { name: 'John Doe', logo: 'url_to_logo' },
+ *     createdAt: '2023-02-20T12:00:00Z',
+ *     blogImage: 'url_to_image',
+ *     isAgeRestricted: false,
+ *     videoUrl: 'url_to_video',
+ *     audioUrl: 'url_to_audio',
+ *     blogSummary: 'A brief summary of the blog post.',
+ *     pathId: 'latest-in-tech',
+ *     blogComments: []
+ *   }
+ * ];
+ * 
+ * <BlogPostGrid blogs={blogs} />
+ * 
+ * @author Bad Wolf
+ * @version 1.3
+ * @since 2025-03-22
  */
 import React from 'react';
 import BlogPostCard from './BlogPostCard';

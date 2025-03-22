@@ -9,7 +9,18 @@ import { FaPatreon, FaXTwitter  } from "react-icons/fa6";
 // Add the import for the Omniflix icon if available
 // import { OmniflixIcon } from 'path/to/omniflixIcon'; // Uncomment and update the path if you have an icon
 
+/**
+ * SocialBar component displays a list of social media links with corresponding icons.
+ *
+ * This component takes an object of social media links and renders clickable icons
+ * for each platform that has a corresponding link.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.socialLinks - An object containing social media links where keys are platform identifiers.
+ * @returns {JSX.Element} The rendered SocialBar component.
+ */
 const SocialBar = ({ socialLinks = {} }) => {
+    // Define the list of social media platforms and their corresponding icons
     const platforms = [
             { key: 'linktree', icon: SiLinktree },
             { key: 'Discord', icon: FaDiscord },

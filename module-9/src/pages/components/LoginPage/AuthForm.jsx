@@ -1,6 +1,11 @@
 /**
  * AuthForm.jsx
  * A form component for user authentication, handling both login and registration.
+ *
+ * @component
+ * @param {boolean} isLogin - Indicates if the form is for login (true) or registration (false).
+ * @param {function} onAuth - Callback function to handle authentication, receives form data as an argument.
+ * @returns {JSX.Element} The rendered form component for user authentication.
  */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

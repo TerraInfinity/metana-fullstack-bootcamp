@@ -1,6 +1,6 @@
 /**
  * @fileoverview Core Blog model schema definition for the blog application using Sequelize for PostgreSQL.
- * This file defines the Blog model schema, including fields and validation rules.
+ * This file defines the Blog model schema, including fields, validation rules, and associations.
  * @module models/coreBlogModel
  */
 const { DataTypes, Model } = require('sequelize');
@@ -9,22 +9,21 @@ const bcrypt = require('bcrypt');
 const Paths = require('./common/pathsModel');
 
 /**
- * Represents a Blog model.
+ * Represents a Blog model, which encapsulates the structure and behavior of blog entries.
  * @class
  * @extends Model
  */
 class Blog extends Model {}
 
 /**
- * Initializes the Blog model schema.
+ * Initializes the Blog model schema with various properties and their validation rules.
  * @memberof Blog
+ * @static
  */
 Blog.init({
     /**
-     * Unique identifier for the blog.
-     * @property id
-     * @type {DataTypes.UUID}
-     * @primaryKey
+     * Unique identifier for the blog entry.
+     * @property {DataTypes.UUID} id - The primary key for the blog, automatically generated.
      * @defaultValue {DataTypes.UUIDV4}
      */
     id: {
@@ -33,9 +32,8 @@ Blog.init({
         defaultValue: DataTypes.UUIDV4
     },
     /**
-     * Title of the blog.
-     * @property title
-     * @type {DataTypes.STRING(100)}
+     * Title of the blog entry.
+     * @property {DataTypes.STRING(100)} title - The title must be a non-empty string with a maximum length of 100 characters.
      * @allowNull {false}
      * @validate {notEmpty: { msg: 'Please provide a title' }, len: [1, 100]}
      */
@@ -46,9 +44,8 @@ Blog.init({
         validate: { notEmpty: { msg: 'Please provide a title' }, len: [1, 100] }
     },
     /**
-     * Content of the blog.
-     * @property content
-     * @type {DataTypes.TEXT}
+     * Content of the blog entry.
+     * @property {DataTypes.TEXT} content - The main body of the blog, must not be empty.
      * @allowNull {false}
      * @validate {notEmpty: { msg: 'Please provide content' }}
      */
@@ -59,9 +56,8 @@ Blog.init({
         validate: { notEmpty: { msg: 'Please provide content' } }
     },
     /**
-     * Summary of the blog.
-     * @property blogSummary
-     * @type {DataTypes.TEXT}
+     * Summary of the blog entry.
+     * @property {DataTypes.TEXT} blogSummary - An optional brief overview of the blog content.
      * @allowNull {true}
      */
     blogSummary: {
@@ -69,9 +65,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * ID of the author.
-     * @property authorId
-     * @type {DataTypes.UUID}
+     * ID of the author of the blog entry.
+     * @property {DataTypes.UUID} authorId - Optional identifier linking to the author.
      * @allowNull {true}
      */
     authorId: {
@@ -79,9 +74,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * Whether the blog is age-restricted.
-     * @property isAgeRestricted
-     * @type {DataTypes.BOOLEAN}
+     * Indicates whether the blog entry is age-restricted.
+     * @property {DataTypes.BOOLEAN} isAgeRestricted - Optional flag for age-restriction status.
      * @allowNull {true}
      */
     isAgeRestricted: {
@@ -89,9 +83,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * URL of the video.
-     * @property videoUrl
-     * @type {DataTypes.STRING}
+     * URL of a video associated with the blog entry.
+     * @property {DataTypes.STRING} videoUrl - Optional link to a video.
      * @allowNull {true}
      */
     videoUrl: {
@@ -99,9 +92,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * URL of the audio.
-     * @property audioUrl
-     * @type {DataTypes.STRING}
+     * URL of an audio file associated with the blog entry.
+     * @property {DataTypes.STRING} audioUrl - Optional link to an audio file.
      * @allowNull {true}
      */
     audioUrl: {
@@ -109,9 +101,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * URL of the blog image.
-     * @property blogImage
-     * @type {DataTypes.STRING}
+     * URL of the blog entry's image.
+     * @property {DataTypes.STRING} blogImage - Optional link to an image representing the blog.
      * @allowNull {true}
      */
     blogImage: {
@@ -119,9 +110,8 @@ Blog.init({
         allowNull: true
     },
     /**
-     * Website of the author.
-     * @property authorWebsite
-     * @type {DataTypes.STRING}
+     * Website of the author of the blog entry.
+     * @property {DataTypes.STRING} authorWebsite - Optional link to the author's website.
      * @allowNull {true}
      */
     authorWebsite: {
@@ -129,9 +119,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * Logo of the author.
-     * @property authorLogo
-     * @type {DataTypes.STRING}
+     * URL of the author's logo.
+     * @property {DataTypes.STRING} authorLogo - Optional link to the author's logo image.
      * @allowNull {true}
      */
     authorLogo: {
@@ -139,9 +128,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * Disclaimer of the blog.
-     * @property disclaimer
-     * @type {DataTypes.TEXT}
+     * Disclaimer text for the blog entry.
+     * @property {DataTypes.TEXT} disclaimer - Optional disclaimer information.
      * @allowNull {true}
      */
     disclaimer: {
@@ -149,9 +137,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * Easter egg of the blog.
-     * @property easterEgg
-     * @type {DataTypes.TEXT}
+     * Easter egg text for the blog entry.
+     * @property {DataTypes.TEXT} easterEgg - Optional hidden message or feature.
      * @allowNull {true}
      */
     easterEgg: {
@@ -159,9 +146,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * Name of the author.
-     * @property authorName
-     * @type {DataTypes.STRING(69)}
+     * Name of the author of the blog entry.
+     * @property {DataTypes.STRING(69)} authorName - Optional name of the author.
      * @allowNull {true}
      */
     authorName: {
@@ -169,9 +155,8 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * Featured status of the blog.
-     * @property featured
-     * @type {DataTypes.STRING(69)}
+     * Featured status of the blog entry.
+     * @property {DataTypes.STRING(69)} featured - Optional flag indicating if the blog is featured.
      * @allowNull {true}
      */
     featured: {
@@ -179,14 +164,23 @@ Blog.init({
         allowNull: true,
     },
     /**
-     * ID of the path.
-     * @property pathId
-     * @type {DataTypes.UUID}
+     * ID of the path associated with the blog entry.
+     * @property {DataTypes.UUID} pathId - Optional identifier linking to a specific path.
      * @allowNull {true}
      */
     pathId: {
         type: DataTypes.UUID,
         allowNull: true,
+    },
+    /**
+     * Role of the user associated with the blog entry.
+     * @property {DataTypes.STRING} role - Defines the user's role, can be 'user', 'editor', 'creator', or 'admin'.
+     * @default {user}
+     */
+    role: {
+        type: DataTypes.STRING,
+        enum: ['user', 'editor', 'creator', 'admin'],
+        default: 'user',
     },
 }, {
     sequelize,
@@ -199,14 +193,16 @@ Blog.init({
 const BlogComment = require('./blogModel/blogCommentModel');
 
 /**
- * Defines the association between Blog and BlogComment.
+ * Defines the association between the Blog model and the BlogComment model.
  * @memberof Blog
+ * @static
  */
 Blog.hasMany(BlogComment, { foreignKey: 'blogId' });
 
 /**
- * Defines the association between Blog and Paths.
+ * Defines the association between the Blog model and the Paths model.
  * @memberof Blog
+ * @static
  */
 Blog.belongsTo(Paths, { foreignKey: 'pathId' });
 

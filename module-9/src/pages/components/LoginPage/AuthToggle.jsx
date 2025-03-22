@@ -1,9 +1,23 @@
 /**
  * AuthToggle.jsx
  * A component that toggles between login and registration views.
+ * 
+ * @component
+ * @example
+ * const isLogin = true;
+ * const handleAuth = (data) => { handle authentication };
+ * return <AuthForm isLogin={isLogin} onAuth={handleAuth} />;
  */
 import React, { useState } from 'react';
 
+/**
+ * AuthForm component for handling user authentication.
+ *
+ * @param {Object} props - Component props.
+ * @param {boolean} props.isLogin - Indicates if the form is for login or registration.
+ * @param {function} props.onAuth - Callback function to handle authentication with form data.
+ * @returns {JSX.Element} The rendered AuthForm component.
+ */
 function AuthForm({ isLogin, onAuth }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -56,6 +70,14 @@ function AuthForm({ isLogin, onAuth }) {
   );
 }
 
+/**
+ * AuthToggle component for switching between login and registration views.
+ *
+ * @param {Object} props - Component props.
+ * @param {boolean} props.isLogin - Indicates if the current view is login.
+ * @param {function} props.onToggle - Callback function to toggle between login and registration.
+ * @returns {JSX.Element} The rendered AuthToggle component.
+ */
 function AuthToggle({ isLogin, onToggle }) {
   return (
     <div className="text-center p-4">

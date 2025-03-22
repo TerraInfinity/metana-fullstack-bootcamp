@@ -1,16 +1,18 @@
 /**
  * LogoutButton.jsx
- * A button component that triggers user logout.
+ * A React component that renders a button for user logout functionality.
  */
 import React from 'react';
 
 /**
  * LogoutButton component
  * 
- * This component renders a button that triggers user logout when clicked.
+ * This component renders a button that, when clicked, triggers the user logout process.
+ * It is designed to be used in user profile or dashboard sections where logout functionality is needed.
  * 
- * @param {function} onLogout - The function to call when the button is clicked.
- * @returns {JSX.Element} The rendered logout button component.
+ * @param {function} onLogout - The callback function to execute when the button is clicked.
+ * This function should handle the logout logic, such as clearing user data and redirecting to the login page.
+ * @returns {JSX.Element} The rendered logout button component, styled for visibility and user interaction.
  */
 function LogoutButton({ onLogout }) {
     return (

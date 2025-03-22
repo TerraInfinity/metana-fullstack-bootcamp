@@ -1,8 +1,17 @@
 // ActivityFeed.jsx
+/**
+ * ActivityFeed component displays a list of comments for a specific user.
+ * It fetches comments from the backend API and handles loading and error states.
+ *
+ * @param {Object} props - Component properties.
+ * @param {string} props.userId - The ID of the user whose comments are to be fetched.
+ * @returns {JSX.Element} The rendered component.
+ */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ActivityFeed = ({ userId }) => {
+  // State to hold the fetched comments
   const [comments, setComments] = useState([]);
   const apiPort = process.env.REACT_APP_BACKEND_PORT;
   const apiUrl = `${window.location.protocol}//${window.location.hostname}:${apiPort}/api/users/profile/${userId}`;
@@ -39,10 +48,11 @@ const ActivityFeed = ({ userId }) => {
     };
 
     if (userId) {
-      fetchComments();
+      fetchComments(); // Fetch comments only if userId is provided
     }
   }, [userId, apiUrl]);
 
+  // Render a message if no comments are available
   if (!comments || comments.length === 0) {
     return <div className="text-white">No comments available.</div>;
   }
@@ -59,7 +69,7 @@ const ActivityFeed = ({ userId }) => {
             <span 
               className="text-blue-400 cursor-pointer hover:underline"
               onClick={(e) => {
-                e.stopPropagation();
+                e.stopPropagation(); // Prevent click event from bubbling up
                 navigate(`/profile/${comment.userId}`);
               }}
             >
