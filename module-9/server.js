@@ -70,9 +70,13 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong on the server', error: err.message });
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${process.env.REACT_APP_BACKEND_PORT || 5000}`);
-});
 
+
+// Start the server only if run directly
+if (require.main === module) {
+    // Start the server
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${process.env.REACT_APP_BACKEND_PORT || 5000}`);
+    });
+}
 module.exports = app;

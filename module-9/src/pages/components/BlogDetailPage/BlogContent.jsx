@@ -71,24 +71,24 @@ function BlogContent({ blog }) {
   };
 
   return (
-    <article className="mb-12 px-4 sm:px-6 lg:px-8">
-      <h1 className="mb-6 text-2xl font-bold sm:text-3xl lg:text-4xl text-center sm:text-left">
+    <article className="mb-12 px-4 sm:px-6 lg:px-8" id="blog-content">
+      <h1 className="mb-6 text-2xl font-bold sm:text-3xl lg:text-4xl text-center sm:text-left" id="blog-title">
         {blog?.title || 'Category'}
       </h1>
       <Summary summary={summary} />
       {videoVisible && (
-        <div className="my-6">
+        <div className="my-6" id="video-player-container">
           <div className="flex justify-center">
             <div className="relative w-full max-w-3xl overflow-hidden rounded-lg shadow-lg">
               <div className="aspect-video">
-                <VideoPlayer videoUrl={blog?.videoUrl} />
+                <VideoPlayer videoUrl={blog?.videoUrl} id="video-player" />
               </div>
             </div>
           </div>
         </div>
       )}
       {audioVisible && (
-        <div className="my-6">
+        <div className="my-6" id="audio-player-container">
           <div className="flex justify-center">
             <div className="w-full max-w-3xl">
               <AudioPlayer audioUrl={blog?.audioUrl} />
@@ -96,14 +96,14 @@ function BlogContent({ blog }) {
           </div>
         </div>
       )}
-      <section className="mt-8">
+      <section className="mt-8" id="blog-description">
         <h2 className="mb-4 text-xl font-semibold sm:text-2xl">Description</h2>
         <div
           className={`overflow-hidden transition-all duration-300 text-white text-opacity-80 ${
             isExpanded ? 'max-h-full' : 'max-h-32 sm:max-h-40'
           }`}
         >
-          <p className="mb-4 leading-relaxed text-sm sm:text-base">
+          <p className="mb-4 leading-relaxed text-sm sm:text-base" id="blog-content-text">
             {blog?.content || 'Description goes here.'}
           </p>
         </div>
@@ -111,6 +111,7 @@ function BlogContent({ blog }) {
           onClick={toggleExpand}
           className="mt-4 text-blue-400 hover:text-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 text-sm sm:text-base"
           aria-expanded={isExpanded}
+          id="toggle-description-button"
         >
           {isExpanded ? 'Read Less' : 'Read More'}
         </button>

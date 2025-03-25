@@ -17,17 +17,17 @@ const StatsCard = ({ stats = {} }) => {
 
   return (
     <div className="grid grid-cols-3 gap-4 bg-gray-800 text-white p-4 rounded-lg shadow-md">
-      <div className="text-center">
+      <div className="text-center" id="stats-posts">
         <span className="font-bold">Posts: </span>
-        <span>{posts}</span>
+        <span id="stats-posts-count">{posts}</span>
       </div>
-      <div className="text-center">
+      <div className="text-center" id="stats-friends">
         <span className="font-bold">Friends: </span>
-        <span>{friends}</span>
+        <span id="stats-friends-count">{friends}</span>
       </div>
-      <div className="text-center">
+      <div className="text-center" id="stats-badges">
         <span className="font-bold">Badges: </span>
-        <span>{badges}</span>
+        <span id="stats-badges-count">{badges}</span>
       </div>
     </div>
   );

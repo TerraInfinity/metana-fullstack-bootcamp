@@ -61,11 +61,11 @@ function CommentForm({ isLoggedIn, blogId, onNewComment }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8">
-      <h3 className="mb-4 text-xl font-semibold">Leave a Review</h3>
+    <form onSubmit={handleSubmit} className="mb-8" id="comment-form">
+      <h3 className="mb-4 text-xl font-semibold" id="comment-form-title">Leave a Review</h3>
       <div className="mb-4">
         <label htmlFor="rating" className="block mb-2">Rating:</label>
-        <div className="flex">
+        <div className="flex" id="rating-buttons">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
@@ -73,6 +73,7 @@ function CommentForm({ isLoggedIn, blogId, onNewComment }) {
               onClick={() => setRating(star)} // Set the rating when a star is clicked
               className={`text-2xl ${star <= rating ? 'text-yellow-400' : 'text-gray-400'} focus:outline-none`}
               aria-label={`Rate ${star} stars`}
+              id={`rating-star-${star}`}
             >
               ★
             </button>
@@ -94,6 +95,7 @@ function CommentForm({ isLoggedIn, blogId, onNewComment }) {
       <button
         type="submit"
         className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        id="submit-review-button"
       >
         Submit Review
       </button>

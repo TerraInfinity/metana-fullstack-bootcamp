@@ -22,6 +22,7 @@ import AuthToggle from './components/LoginPage/AuthToggle';
 export function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [useOAuth, setUseOAuth] = useState(true); // State to toggle between form and OAuth
+  const [errorMessage, setErrorMessage] = useState(''); // Add this line
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -31,22 +32,27 @@ export function LoginPage() {
 
   // Handle email/password authentication (unchanged)
   const handleAuth = async (formData) => {
-    const url = isLogin ? logonApiUrl : registerApiUrl;
-    const body = isLogin
-      ? JSON.stringify({ email: formData.email, password: formData.password })
-      : JSON.stringify({ name: formData.name, email: formData.email, password: formData.password, isAdmin: false });
+    try {
+      setErrorMessage(''); // Clear any previous errors
+      const url = isLogin ? logonApiUrl : registerApiUrl;
+      const body = isLogin
+        ? JSON.stringify({ email: formData.email, password: formData.password })
+        : JSON.stringify({ name: formData.name, email: formData.email, password: formData.password, isAdmin: false });
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: body,
-    });
-    const data = await response.json();
-    if (response.ok) {
-      login(data.token);
-      navigate(isLogin ? '/home' : '/login');
-    } else {
-      console.error(data.message); // Error handling can be enhanced later
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body,
+      });
+      const data = await response.json();
+      if (response.ok) {
+        login(data.token);
+        navigate(isLogin ? '/home' : '/login');
+      } else {
+        setErrorMessage(data.message || 'Authentication failed'); // Set error message
+      }
+    } catch (error) {
+      setErrorMessage('An error occurred during authentication'); // Handle network/other errors
     }
   };
 
@@ -61,21 +67,27 @@ export function LoginPage() {
 
   return (
     <Layout title={title}>
+      {errorMessage && (
+        <p id="auth-error-message" className="text-red-500 text-center mb-4">{errorMessage}</p>
+      )}
       {useOAuth ? (
         <div style={{ textAlign: 'center' }}>
           <button
+            id="login-google-button"
             onClick={() => handleOAuthLogin('google')}
             style={{ margin: '10px', padding: '10px', backgroundColor: '#db4437', color: 'white', border: 'none', cursor: 'pointer' }}
           >
             Login with Google
           </button>
           <button
+            id="login-github-button"
             onClick={() => handleOAuthLogin('github')}
             style={{ margin: '10px', padding: '10px', backgroundColor: '#333', color: 'white', border: 'none', cursor: 'pointer' }}
           >
             Login with GitHub
           </button>
           <button
+            id="login-twitter-button"
             onClick={() => handleOAuthLogin('twitter')}
             style={{ margin: '10px', padding: '10px', backgroundColor: '#1da1f2', color: 'white', border: 'none', cursor: 'pointer' }}
           >
@@ -84,6 +96,7 @@ export function LoginPage() {
           <p>
             <a
               href="#"
+              id="use-email-link"
               onClick={() => setUseOAuth(false)}
               style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
             >

@@ -41,6 +41,7 @@ function ChangePasswordForm({
         <div className="space-y-2">
             <div>
                 <input
+                    id="current-password"
                     type="password"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
@@ -50,6 +51,7 @@ function ChangePasswordForm({
             </div>
             <div>
                 <input
+                    id="new-password"
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
@@ -59,6 +61,7 @@ function ChangePasswordForm({
             </div>
             <div>
                 <input
+                    id="confirm-new-password"
                     type="password"
                     value={confirmNewPassword}
                     onChange={(e) => setConfirmNewPassword(e.target.value)}
@@ -66,7 +69,7 @@ function ChangePasswordForm({
                     className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
                 />
             </div>
-            {error && <p className="text-red-500">{error}</p>} {/* Display error message if exists */}
+            {error && <p id="password-error" className="text-red-500">{error}</p>}
         </div>
     );
 }

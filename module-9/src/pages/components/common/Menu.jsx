@@ -93,12 +93,14 @@ const Menu = ({ isOpen }) => {
         <a
           href="/Home"
           className="py-2 w-full text-center text-white hover:bg-slate-700"
+          id="menu-home-link"
         >
           Home
         </a>
         <a
           href="/about"
           className="py-2 w-full text-center text-white hover:bg-slate-700"
+          id="menu-about-link"
         >
           About
         </a>
@@ -107,6 +109,7 @@ const Menu = ({ isOpen }) => {
           <a
             href="/admin"
             className="py-2 w-full text-center text-white hover:bg-slate-700"
+            id="menu-admin-link"
           >
             Admin
           </a>
@@ -115,12 +118,14 @@ const Menu = ({ isOpen }) => {
           href="#"
           onClick={handleRandomBlogClick}
           className="py-2 w-full text-center text-white hover:bg-slate-700"
+          id="menu-random-blog-link"
         >
           Random Blog
         </a>
         <a
           href="/blog/create"
           className="py-2 w-full text-center text-white hover:bg-slate-700"
+          id="menu-create-blog-link"
         >
           Create Blog
         </a>
@@ -129,6 +134,7 @@ const Menu = ({ isOpen }) => {
           <button
             onClick={handleLogout}
             className="py-2 w-full text-center text-white hover:bg-slate-700 cursor-pointer"
+            id="menu-logout-button"
           >
             Logout
           </button>
@@ -136,11 +142,12 @@ const Menu = ({ isOpen }) => {
           <a
             href="/Login"
             className="py-2 w-full text-center text-white hover:bg-slate-700"
+            id="menu-login-link"
           >
             Login
           </a>
         )}
-        <div className="py-2 w-full md:hidden flex justify-center">
+        <div className="py-2 w-full md:hidden flex justify-center" id="menu-search-input">
           <SearchInput id="search-input-menu" />
         </div>
       </div>

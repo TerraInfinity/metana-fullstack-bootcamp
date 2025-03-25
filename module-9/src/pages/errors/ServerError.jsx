@@ -13,7 +13,7 @@ const ServerError = () => {
   return (
     <Layout title="500 - Server Error">
       <div className="text-center">
-        <p>Something went wrong on our end. Please try again later.</p>
+        <p id="server-error-message">Something went wrong on our end. Please try again later.</p>
       </div>
     </Layout>
   );

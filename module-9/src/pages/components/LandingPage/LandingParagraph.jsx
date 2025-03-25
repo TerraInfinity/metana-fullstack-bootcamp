@@ -8,7 +8,7 @@ import React from 'react';
  */
 const LandingParagraph = () => {
   return (
-    <p className="self-stretch mt-10 text-stone-500 max-md:max-w-full">
+    <p id="landing-paragraph" className="self-stretch mt-10 text-stone-500 max-md:max-w-full">
         {/* The following text explores the interconnectedness of technology, magic, and art */}
         Any sufficiently advanced Technology is indistinguishable from Magic.
         Any sufficiently advanced Magic is indistinguishable from Art.

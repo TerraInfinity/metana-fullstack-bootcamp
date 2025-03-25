@@ -57,6 +57,7 @@ function AuthForm({ isLogin, onAuth }) {
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 space-y-4">
       {!isLogin && (
         <input
+          id="name-input"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -66,6 +67,7 @@ function AuthForm({ isLogin, onAuth }) {
         />
       )}
       <input
+        id="email-input"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -74,6 +76,7 @@ function AuthForm({ isLogin, onAuth }) {
         required
       />
       <input
+        id="password-input"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -84,6 +87,7 @@ function AuthForm({ isLogin, onAuth }) {
       {!isLogin && (
         <>
           <input
+            id="confirm-password-input"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -97,6 +101,7 @@ function AuthForm({ isLogin, onAuth }) {
         </>
       )}
       <button
+        id="auth-submit-button"
         type="submit"
         className="w-full p-2 bg-blue-600 rounded hover:bg-blue-700"
       >

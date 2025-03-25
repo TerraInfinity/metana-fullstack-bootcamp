@@ -16,9 +16,9 @@ import React from 'react';
 
 function Summary({ summary }) {
   return (
-    <section className="mb-8">
-      <h2 className="mb-4 text-2xl font-semibold">Summary</h2>
-      <div className={`overflow-hidden transition-all duration-300 max-h-full`}>
+    <section className="mb-8" id="summary-section">
+      <h2 className="mb-4 text-2xl font-semibold" id="summary-title">Summary</h2>
+      <div className={`overflow-hidden transition-all duration-300 max-h-full`} id="summary-content">
         <p className="leading-relaxed text-white text-opacity-80">
           {summary || 'AI summary goes here'}
         </p>

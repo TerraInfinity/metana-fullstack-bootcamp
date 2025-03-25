@@ -69,6 +69,7 @@ export function CreateBlogPage() {
           {error && <div className="text-red-500 mb-4">{error}</div>}
           <div className="mb-4">
             <input
+              id="new-blog-title"
               type="text"
               value={newBlog.title}
               onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })}
@@ -79,6 +80,7 @@ export function CreateBlogPage() {
           </div>
           <div className="mb-4">
             <textarea
+              id="new-blog-summary"
               value={newBlog.blogSummary}
               onChange={(e) => setNewBlog({ ...newBlog, blogSummary: e.target.value })}
               className="w-full p-2 text-black rounded"
@@ -88,6 +90,7 @@ export function CreateBlogPage() {
           </div>
           <div className="mb-4">
             <textarea
+              id="new-blog-content"
               value={newBlog.content}
               onChange={(e) => setNewBlog({ ...newBlog, content: e.target.value })}
               className="w-full p-2 text-black rounded"
@@ -98,6 +101,7 @@ export function CreateBlogPage() {
           </div>
           <div className="mb-4">
             <input
+              id="new-blog-audio-url"
               type="url"
               value={newBlog.audioUrl}
               onChange={(e) => setNewBlog({ ...newBlog, audioUrl: e.target.value })}
@@ -107,6 +111,7 @@ export function CreateBlogPage() {
           </div>
           <div className="mb-4">
             <input
+              id="new-blog-video-url"
               type="url"
               value={newBlog.videoUrl}
               onChange={(e) => setNewBlog({ ...newBlog, videoUrl: e.target.value })}
@@ -115,6 +120,7 @@ export function CreateBlogPage() {
             />
           </div>
           <button
+            id="create-blog-button"
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
           >

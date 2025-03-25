@@ -208,9 +208,9 @@ function VideoPlayer({ videoUrl }) {
   if (isOmniFlixUrl(videoUrl) && omniFlixVideo) {
     //console.log('Rendering OmniFlix video with source:', omniFlixVideo.src);
     return (
-      <div className="w-full h-full">
+      <div className="w-full h-full" id="video-player-container">
         {error ? (
-          <p className="text-red-500">Failed to load video.</p>
+          <p className="text-red-500" id="video-error-message">Failed to load video.</p>
         ) : (
           <video
             ref={videoRef}
@@ -218,6 +218,7 @@ function VideoPlayer({ videoUrl }) {
             preload="auto"
             poster={omniFlixVideo.poster}
             data-setup="{}"
+            id="video-element"
           >
             <source src={omniFlixVideo.src} type={omniFlixVideo.type} />
             Your browser does not support the video tag.

@@ -189,10 +189,10 @@ function ProfileComponent({
           <div>
             <label className="text-gray-300" htmlFor="name">Name:</label>
             <input
-              id="name"
+              id="name-input"
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)} // Update name on change
+              onChange={(e) => setName(e.target.value)}
               placeholder="Username"
               className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
               required
@@ -204,10 +204,10 @@ function ProfileComponent({
             <label className="text-gray-300" htmlFor="email">Email:</label>
             {user.provider === 'local' ? (
               <input
-                id="email"
+                id="email-input"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)} // Update email on change
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
                 className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
                 required
@@ -227,12 +227,13 @@ function ProfileComponent({
           {/* Bio Field */}
           <div className="relative">
             <textarea
+              id="bio-input"
               value={bio}
-              onChange={(e) => setBio(e.target.value)} // Update bio on change
+              onChange={(e) => setBio(e.target.value)}
               placeholder="Bio"
               className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white"
               rows={4}
-              maxLength={5000} // Limit bio length
+              maxLength={5000}
             />
             <div className="absolute right-2 bottom-2 text-gray-400">
               {5000 - bio.length} {/* Display remaining character count */}
@@ -384,6 +385,7 @@ function ProfileComponent({
           <BioComponent bio={bio} />
           {socialLinks && <SocialBar socialLinks={socialLinks} />} {/* Display social links if available */}
           <button
+            id="edit-profile-button"
             onClick={onEdit} // Handle edit action
             className="w-full p-2 bg-blue-600 rounded hover:bg-blue-700"
           >

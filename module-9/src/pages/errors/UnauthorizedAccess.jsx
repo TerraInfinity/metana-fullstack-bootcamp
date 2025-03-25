@@ -14,7 +14,7 @@ const UnauthorizedAccess = () => {
   return (
     <Layout title="401 - Unauthorized Access">
       <div className="text-center">
-        <p>You need to log in to access this page.</p>
+        <p id="unauthorized-access-message">You need to log in to access this page.</p>
       </div>
     </Layout>
   );

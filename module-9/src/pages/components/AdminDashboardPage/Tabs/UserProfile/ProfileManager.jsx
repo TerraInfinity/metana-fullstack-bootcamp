@@ -152,7 +152,7 @@ function ProfileManager({ user, onUpdate }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 space-y-4">
+        <form id="profile-form" onSubmit={handleSubmit} className="max-w-md mx-auto p-4 space-y-4">
             {/* ProfileComponent is responsible for rendering the profile fields and handling user input */}
             <ProfileComponent
                 user={user} // Pass the user object to the ProfileComponent
@@ -202,13 +202,14 @@ function ProfileManager({ user, onUpdate }) {
                     {updateError && <p className="text-red-500">{updateError}</p>} {/* Display error message if present */}
                     {updateSuccess && <p className="text-green-500">{updateSuccess}</p>} {/* Display success message if present */}
                     <button
-                        type="submit" // Submit button for the form
-                        disabled={!isValid} // Disable button if form is not valid
+                        id="update-profile-button"
+                        type="submit"
+                        disabled={!isValid}
                         className={`w-full p-2 rounded text-white hover:bg-blue-700 ${
                             isValid ? 'bg-blue-600' : 'bg-gray-600 opacity-50 cursor-not-allowed'
                         }`}
                     >
-                        Update Profile {/* Button text */}
+                        Update Profile
                     </button>
                 </>
             )}

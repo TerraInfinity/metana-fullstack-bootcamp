@@ -16,8 +16,8 @@ const AuthorInfo = ({ name, date, imageUrl }) => {
   return (
     <div className="flex gap-3 items-center">
       <img src={imageUrl} alt={name} className="w-8 h-8 rounded-full" />
-      <div>{name}</div>
-      <div className="text-gray-400">{date}</div>
+      <div id="author-name">{name}</div>
+      <div id="author-date" className="text-gray-400">{date}</div>
     </div>
   );
 };

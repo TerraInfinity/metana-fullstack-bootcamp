@@ -30,7 +30,7 @@ const Header = () => {
     // Main header element with styling
     <header className="bg-slate-900 text-white sticky top-0 z-50">
       <div className="flex justify-between items-center px-20 py-5 max-md:px-10 max-sm:p-5">
-        <Link to="/Home" className="text-2xl font-semibold">The Bambi Cloud Podcast</Link>
+        <Link to="/Home" className="text-2xl font-semibold" id="header-title">The Bambi Cloud Podcast</Link>
         <div className="flex items-center gap-4">
           <div className="hidden md:block">
             <SearchInput id="search-input-header" />
@@ -39,6 +39,7 @@ const Header = () => {
             onClick={toggleMenu}
             aria-expanded={isMenuOpen}
             aria-label="Toggle navigation menu"
+            id="menu-toggle-button"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

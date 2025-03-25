@@ -3,11 +3,14 @@
  * @description This file contains routes for acquiring video thumbnails used in blog cards.
  * It defines endpoints for fetching and processing thumbnails from various sources, including
  * proxying requests for oEmbed data and extracting thumbnails from HTML content.
+ * 
+ * Note: In some instances, certain videos are harder to pull the thumbnail from than others.
+ * This code is designed to manually fetch the thumbnail in those cases to ensure a consistent
+ * user experience.
  */
 
 const express = require('express');
 const router = express.Router();
-const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const axios = require('axios'); // Use axios for better request handling
 const { protect, isAdmin, isCreatorOrAdmin } = require('../../middleware/authMiddleware');
@@ -39,12 +42,16 @@ router.get('/proxy-oembed', async(req, res) => {
     }
 });
 
-// Proxy endpoint for thumbnail extraction (e.g., Omniflix)
+// Proxy endpoint for thumbnail extraction (e.g., Omniflix) - Updated to axios
 /**
  * @route GET /proxy-thumbnail
  * @param {string} url - The URL to extract the thumbnail from.
  * @returns {Object} JSON object containing the extracted thumbnail or 404 error if not found.
  * @throws {500} If there is an error fetching the thumbnail.
+ * 
+ * Note: This endpoint is crucial for manually fetching thumbnails from URLs that may not
+ * provide them easily. It ensures that users receive a thumbnail even when automatic
+ * extraction fails.
  */
 router.get('/proxy-thumbnail', async(req, res) => {
     const url = req.query.url;
@@ -53,8 +60,8 @@ router.get('/proxy-thumbnail', async(req, res) => {
     }
     //console.log('Received request for proxy-thumbnail with URL:', url);
     try {
-        const response = await fetch(url);
-        const html = await response.text();
+        const response = await axios.get(url); // Switched from fetch to axios
+        const html = response.data; // axios provides data directly
         const $ = cheerio.load(html);
         const thumbnail = $('meta[property="og:image"]').attr('content');
         // console.log('Fetched HTML for thumbnail extraction:', html);

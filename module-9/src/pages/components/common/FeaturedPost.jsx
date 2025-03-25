@@ -126,26 +126,27 @@ const FeaturedPost = ({ blogs = [] }) => {
   };
 
   return (
-    <div className="relative mb-10">
+    <div className="relative mb-10" id="featured-post-container">
       {/* Top Block: Blog Title and Summary */}
-      <div className="p-4 bg-gray-800 text-white">
-        <h2 className="text-3xl font-semibold">
+      <div className="p-4 bg-gray-800 text-white" id="featured-post-header">
+        <h2 className="text-3xl font-semibold" id="featured-post-title">
           {currentBlog.title}
           <span className="text-gray-300"> - </span>
-          <span className="text-gray-400 text-sm max-w-xs truncate" style={{ maxWidth: "calc(100% - 200px)" }}>
+          <span className="text-gray-400 text-sm max-w-xs truncate" id="featured-post-summary">
             {currentBlog.blogSummary}
           </span>
         </h2>
       </div>
 
       {/* Middle Block: Video Component */}
-      <div className="w-screen">
+      <div className="w-screen" id="featured-post-media">
         <img
+          id="featured-post-thumbnail"
           src={thumbnails[currentBlog.id] || currentBlog.blogImage}
           alt={currentBlog.title}
           className="w-full h-auto max-h-[35vh]"
         />
-        <Link to={`/blog/${currentBlog.id}`} className="absolute inset-0">
+        <Link to={`/blog/${currentBlog.id}`} className="absolute inset-0" id="featured-post-link">
           <span className="sr-only">Go to blog post</span>
         </Link>
         {/* Navigation Dots */}
@@ -156,6 +157,7 @@ const FeaturedPost = ({ blogs = [] }) => {
                 {blogs.map((_, index) => (
                   <div
                     key={index}
+                    id={`dot-${index}`}
                     className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full cursor-pointer ${
                       index === currentIndex ? 'bg-blue-500' : 'bg-gray-300'
                     }`}
@@ -175,39 +177,40 @@ const FeaturedPost = ({ blogs = [] }) => {
       </div>
 
       {/* Bottom Block: Metadata Container */}
-      <div className="bg-black bg-opacity-50 p-4">
+      <div className="bg-black bg-opacity-50 p-4" id="featured-post-metadata">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           {/* Left: Author and Metadata */}
-          <div className="flex flex-wrap items-center space-x-2 min-w-0 gap-2">
+          <div className="flex flex-wrap items-center space-x-2 min-w-0 gap-2" id="featured-post-author-info">
             <img
+              id="featured-post-author-avatar"
               src={currentBlog.authorLogo || placeholderLogo}
               alt={currentBlog.author?.name || 'Author'}
               className="w-8 h-8 rounded-full flex-shrink-0"
             />
-            <div className="max-w-fit bg-green-500 rounded p-1">
+            <div className="max-w-fit bg-green-500 rounded p-1" id="featured-post-author-name">
               {currentBlog.author?.name || 'Unknown Author'}
             </div>
-            <div className="max-w-fit bg-blue-500 rounded p-1">
+            <div className="max-w-fit bg-blue-500 rounded p-1" id="featured-post-path-name">
               {currentBlog.Path?.name || 'Unknown Path'}
             </div>
             {mediaTag !== 'None' && (
-              <div className="px-2 py-1 bg-green-500 rounded text-white flex-shrink-0">
+              <div className="px-2 py-1 bg-green-500 rounded text-white flex-shrink-0" id="featured-post-media-tag">
                 {mediaTag}
               </div>
             )}
           </div>
           {/* Right: Comments, Age-Restricted, and Date */}
-          <div className="flex items-center space-x-4 flex-shrink-0">
+          <div className="flex items-center space-x-4 flex-shrink-0" id="featured-post-engagement">
             <div className="flex items-center space-x-2">
-              <div className="text-white flex items-center">
+              <div className="text-white flex items-center" id="featured-post-comments">
                 <FaComments className="mr-1" />
                 {currentBlog.blogComments?.length || 0}
               </div>
               {currentBlog.isAgeRestricted && (
-                <div className="text-red-500 ml-2">18+</div>
+                <div className="text-red-500 ml-2" id="featured-post-age-restriction">18+</div>
               )}
             </div>
-            <div className="text-gray-300">
+            <div className="text-gray-300" id="featured-post-date">
               {new Date(currentBlog.createdAt).toLocaleDateString()}
             </div>
           </div>

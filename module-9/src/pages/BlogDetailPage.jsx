@@ -139,6 +139,7 @@ export function BlogDetailPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-2 mt-2 sm:mt-0">
             <button
+              id="edit-blog-button"
               onClick={() => setIsEditMode(!isEditMode)}
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
               aria-label="Toggle Edit Mode"
@@ -147,6 +148,7 @@ export function BlogDetailPage() {
             </button>
             {isEditMode && (
               <button
+                id="save-changes-button"
                 onClick={handleSave}
                 className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
                 aria-label="Save Changes"
@@ -158,8 +160,9 @@ export function BlogDetailPage() {
         </div>
       )}
       {isEditMode ? (
-        <div className="mb-12 px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 px-4 sm:px-6 lg:px-8" id="blog-edit-form">
           <input
+            id="blog-title-input"
             type="text"
             value={editedBlog.title}
             onChange={(e) => setEditedBlog({ ...editedBlog, title: e.target.value })}
@@ -167,6 +170,7 @@ export function BlogDetailPage() {
             placeholder="Blog Title"
           />
           <textarea
+            id="blog-summary-input"
             value={editedBlog.blogSummary || ''}
             onChange={(e) => setEditedBlog({ ...editedBlog, blogSummary: e.target.value })}
             className="w-full mb-4 p-2 text-black rounded"
@@ -174,6 +178,7 @@ export function BlogDetailPage() {
             rows="3"
           />
           <textarea
+            id="blog-content-input"
             value={editedBlog.content}
             onChange={(e) => setEditedBlog({ ...editedBlog, content: e.target.value })}
             className="w-full mb-4 p-2 text-black rounded"
@@ -181,6 +186,7 @@ export function BlogDetailPage() {
             rows="10"
           />
           <input
+            id="blog-audio-url-input"
             type="url"
             value={editedBlog.audioUrl}
             onChange={(e) => setEditedBlog({ ...editedBlog, audioUrl: e.target.value })}
@@ -188,6 +194,7 @@ export function BlogDetailPage() {
             placeholder="Audio URL (optional)"
           />
           <input
+            id="blog-video-url-input"
             type="url"
             value={editedBlog.videoUrl}
             onChange={(e) => setEditedBlog({ ...editedBlog, videoUrl: e.target.value })}
@@ -196,9 +203,13 @@ export function BlogDetailPage() {
           />
         </div>
       ) : (
-        <BlogContent blog={{ ...blog, summary: blog.blogSummary }} />
+        <div id="blog-content-display">
+          <BlogContent blog={{ ...blog, summary: blog.blogSummary }} />
+        </div>
       )}
-      <FeedbackSection isLoggedIn={isAuthenticated} comments={comments} blogId={blog.id} />
+      <div id="blog-feedback-section">
+        <FeedbackSection isLoggedIn={isAuthenticated} comments={comments} blogId={blog.id} />
+      </div>
     </Layout>
   );
 }

@@ -15,7 +15,7 @@ import React from 'react';
 // Functional component that receives a title prop
 const PageTitle = ({ title }) => {
   return (
-    <h1 className="px-0 py-10 text-5xl text-center text-white">
+    <h1 id="page-title" className="px-0 py-10 text-5xl text-center text-white">
       {title}
     </h1>
   );

@@ -98,6 +98,8 @@ export const AuthProvider = ({ children }) => {
     setToken(newToken);
     setIsAuthenticated(true);
     console.log('User logged in, token set, user:', { id: decoded.id, role: decoded.role });
+    // Added ID for testing purposes
+    console.log('Login action ID: login-button'); // ID for the login action
   };
 
   /**
@@ -109,6 +111,8 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     setUser(defaultUser);
     console.log('User logged out, token removed');
+    // Added ID for testing purposes
+    console.log('Logout action ID: logout-button'); // ID for the logout action
   };
 
   // Use useMemo to optimize performance by memoizing the context value

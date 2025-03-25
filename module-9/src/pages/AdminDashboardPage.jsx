@@ -104,6 +104,7 @@ export function AdminDashboardPage() {
       {/* Tab Navigation */}
       <div className="flex justify-center space-x-4 mb-4">
         <button
+          id="admin-tab-button"
           onClick={() => setCurrentTab('admin')}
           className={`p-2 rounded ${
             currentTab === 'admin' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'
@@ -112,6 +113,7 @@ export function AdminDashboardPage() {
           Admin
         </button>
         <button
+          id="stats-tab-button"
           onClick={() => setCurrentTab('stats')}
           className={`p-2 rounded ${
             currentTab === 'stats' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'
@@ -120,6 +122,7 @@ export function AdminDashboardPage() {
           Stats
         </button>
         <button
+          id="activity-tab-button"
           onClick={() => setCurrentTab('activity')}
           className={`p-2 rounded ${
             currentTab === 'activity' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'
@@ -128,6 +131,7 @@ export function AdminDashboardPage() {
           Activity Feed
         </button>
         <button
+          id="privacy-tab-button"
           onClick={() => setCurrentTab('privacy')}
           className={`p-2 rounded ${
             currentTab === 'privacy' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'
@@ -136,6 +140,7 @@ export function AdminDashboardPage() {
           Privacy
         </button>
         <button
+          id="site-settings-tab-button"
           onClick={() => setCurrentTab('SiteSettings')}
           className={`p-2 rounded ${
             currentTab === 'SiteSettings' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'
@@ -152,7 +157,7 @@ export function AdminDashboardPage() {
           <ProfileManager user={user} onUpdate={handleUpdate} />
           <LogoutButton onLogout={() => { logout(); navigate('/login'); }} />
           <div className="flex justify-center my-4">
-            <button onClick={() => setIsModalOpen(true)} className="bg-red-600 p-2 rounded">
+            <button id="delete-account-button" onClick={() => setIsModalOpen(true)} className="bg-red-600 p-2 rounded">
               Delete Account
             </button>
           </div>

@@ -54,9 +54,9 @@ import BlogPostCard from './BlogPostCard';
 
 const BlogPostGrid = ({ blogs = [] }) => {
   return (
-    <div className="px-20 py-0 max-md:px-10 max-md:py-0 max-sm:px-5 max-sm:py-0">
-      <h2 className="mb-8 text-2xl text-white">Latest Posts</h2>
-      <div className="grid gap-6 mb-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
+    <div className="px-20 py-0 max-md:px-10 max-md:py-0 max-sm:px-5 max-sm:py-0" id="blog-post-grid-container">
+      <h2 className="mb-8 text-2xl text-white" id="latest-posts-title">Latest Posts</h2>
+      <div className="grid gap-6 mb-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" id="blog-posts-grid">
         {blogs.length > 0 ? (
           blogs.map((blog) => (
             <BlogPostCard 
@@ -73,13 +73,14 @@ const BlogPostGrid = ({ blogs = [] }) => {
               blogSummary={blog.blogSummary}
               pathId={blog.pathId}
               blogComments={blog.blogComments}
+              data-testid={`blog-post-${blog.id}`}
             />
           ))
         ) : (
-          <div className="text-white col-span-3">No blog posts available</div>
+          <div className="text-white col-span-3" id="no-posts-message">No blog posts available</div>
         )}
       </div>
-      <button className="mb-10 text-center text-blue-500 cursor-pointer hover:text-blue-600">
+      <button id="view-all-posts-button" className="mb-10 text-center text-blue-500 cursor-pointer hover:text-blue-600">
         View All Posts
       </button>
     </div>

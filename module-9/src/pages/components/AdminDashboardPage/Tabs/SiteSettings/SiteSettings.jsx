@@ -67,6 +67,7 @@ const SiteSettings = ({ settings = {}, onUpdateSettings }) => {
       <ChooseYourPath
         onSelectPath={handleSelectPath}
         selectedPath={selectedPath}
+        id="choose-your-path"
       />
       {/* Content Categories */}
       <div>
@@ -75,6 +76,7 @@ const SiteSettings = ({ settings = {}, onUpdateSettings }) => {
           <div>
             <div>
               <input
+                id="checkbox-articles"
                 type="checkbox"
                 checked={selectedCategories.includes('Articles')}
                 onChange={() => handleCategoryChange('Articles')}
@@ -84,6 +86,7 @@ const SiteSettings = ({ settings = {}, onUpdateSettings }) => {
             </div>
             <div>
               <input
+                id="checkbox-educational"
                 type="checkbox"
                 checked={selectedCategories.includes('Educational')}
                 onChange={() => handleCategoryChange('Educational')}
@@ -93,6 +96,7 @@ const SiteSettings = ({ settings = {}, onUpdateSettings }) => {
             </div>
             <div>
               <input
+                id="checkbox-spiritual"
                 type="checkbox"
                 checked={selectedCategories.includes('Spiritual')}
                 onChange={() => handleCategoryChange('Spiritual')}
@@ -102,6 +106,7 @@ const SiteSettings = ({ settings = {}, onUpdateSettings }) => {
             </div>
             <div>
               <input
+                id="checkbox-community-created"
                 type="checkbox"
                 checked={selectedCategories.includes('Community Created')}
                 onChange={() => handleCategoryChange('Community Created')}
@@ -276,6 +281,7 @@ const SiteSettings = ({ settings = {}, onUpdateSettings }) => {
 
       {/* Save Button */}
       <button
+        id="save-settings-button"
         onClick={handleSave}
         className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
       >

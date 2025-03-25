@@ -89,44 +89,43 @@ const BlogPostCard = ({
   };
 
   return (
-    <Link to={`/blog/${id}`} className="overflow-hidden rounded-lg bg-slate-800 shadow-md"> {/* Wrap in Link for navigation */}
+    <Link to={`/blog/${id}`} className="overflow-hidden rounded-lg bg-slate-800 shadow-md" id={`blog-post-link-${id}`}>
       {/* Image Container */}
-      <div className="relative h-[200px] w-full">
-        {/* Display image if available */}
+      <div className="relative h-[200px] w-full" id={`blog-media-container-${id}`}>
         {imgSrc && (
           <img
             src={imgSrc}
             alt="Blog post thumbnail"
             className="absolute inset-0 w-full h-full object-fill"
-            onError={handleImageError} // Handle image load errors
+            onError={handleImageError}
+            id={`blog-post-image-${id}`}
           />
         )}
-        {/* Display category label if available */}
         {category && (
-          <div className="absolute top-4 left-4 px-3 py-1 bg-blue-500 rounded text-white">
+          <div className="absolute top-4 left-4 px-3 py-1 bg-blue-500 rounded text-white" id={`blog-category-${id}`}>
             {category}
           </div>
         )}
-        {/* Display age restriction label if applicable */}
         {isAgeRestricted && (
-          <div className="absolute top-4 right-4 text-red-500">18+</div>
+          <div className="absolute top-4 right-4 text-red-500" id={`age-restricted-label-${id}`}>18+</div>
         )}
       </div>
       {/* Content Container */}
-      <div className="p-4">
+      <div className="p-4" id={`blog-content-container-${id}`}>
         {/* Blog title */}
-        <h3 className="text-white text-xl font-semibold mb-2 truncate">{title}</h3>
+        <h3 className="text-white text-xl font-semibold mb-2 truncate" id={`blog-title-${id}`}>{title}</h3>
         {/* Author and date information */}
-        <div className="flex items-center mb-2">
+        <div className="flex items-center mb-2" id={`author-info-container-${id}`}>
           <img
             src={author?.logo || placeholderLogo}
             alt="Author logo"
             className="w-10 h-10 rounded-full object-cover mr-3"
+            id={`author-logo-${id}`} // ID for the author logo
           />
           <div>
-            <div className="text-white truncate">{author?.name || 'Unknown Author'}</div>
+            <div className="text-white truncate" id={`author-name-${id}`}>{author?.name || 'Unknown Author'}</div>
             {date && (
-              <div className="text-gray-400 text-sm">
+              <div className="text-gray-400 text-sm" id={`blog-date-${id}`}>
                 {new Date(date).toLocaleDateString()} {/* Format date for display */}
               </div>
             )}
@@ -134,19 +133,19 @@ const BlogPostCard = ({
         </div>
         {/* Blog summary */}
         {blogSummary && (
-          <p className="text-gray-300 mb-2 line-clamp-2">{blogSummary}</p>
+          <p className="text-gray-300 mb-2 line-clamp-2" id={`blog-summary-${id}`}>{blogSummary}</p>
         )}
         {/* Path information if available */}
         {pathId?.name && (
-          <div className="text-gray-300 text-sm mb-2">{pathId.name}</div>
+          <div className="text-gray-300 text-sm mb-2" id={`path-id-${id}`}>{pathId.name}</div>
         )}
         {/* Media type and comments count */}
-        <div className="flex justify-between items-center text-sm">
+        <div className="flex justify-between items-center text-sm" id={`blog-footer-${id}`}>
           {mediaType && (
-            <div className="text-white">{mediaType}</div>
+            <div className="text-white" id={`media-type-${id}`}>{mediaType}</div>
           )}
           {blogComments?.length > 0 && (
-            <div className="text-white flex items-center">
+            <div className="text-white flex items-center" id={`comments-count-${id}`}>
               <FaComments className="mr-1" /> {blogComments.length} {/* Display comment count */}
             </div>
           )}

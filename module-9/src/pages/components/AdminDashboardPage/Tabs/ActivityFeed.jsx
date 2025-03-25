@@ -58,12 +58,13 @@ const ActivityFeed = ({ userId }) => {
   }
 
   return (
-    <div className="bg-gray-800 p-4 rounded-lg shadow-md max-h-96 overflow-y-auto">
+    <div className="bg-gray-800 p-4 rounded-lg shadow-md max-h-96 overflow-y-auto" id="activity-feed">
       {comments.map((comment) => (
         <div 
           key={comment.id} 
           className="bg-gray-700 p-4 rounded-lg mb-2 cursor-pointer"
           onClick={() => navigate(`/blog/${comment.blogId}`)}
+          id={`comment-${comment.id}`}
         >
           <div className="flex justify-between items-baseline mb-2">
             <span 
@@ -72,14 +73,17 @@ const ActivityFeed = ({ userId }) => {
                 e.stopPropagation(); // Prevent click event from bubbling up
                 navigate(`/profile/${comment.userId}`);
               }}
+              id={`comment-user-${comment.userId}`}
             >
               Current User
             </span>
-            <span className="text-sm text-gray-400">{new Date(comment.createdAt).toLocaleDateString()}</span>
+            <span className="text-sm text-gray-400" id={`comment-date-${comment.id}`}>
+              {new Date(comment.createdAt).toLocaleDateString()}
+            </span>
           </div>
-          <p>{comment.content}</p>
+          <p id={`comment-content-${comment.id}`}>{comment.content}</p>
           {comment.rating > 0 && (
-            <p className="text-yellow-400">
+            <p className="text-yellow-400" id={`comment-rating-${comment.id}`}>
               Rating: {'★'.repeat(comment.rating)}{'★'.repeat(5 - comment.rating)}
             </p>
           )}

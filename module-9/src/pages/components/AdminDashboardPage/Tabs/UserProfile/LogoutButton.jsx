@@ -18,6 +18,7 @@ function LogoutButton({ onLogout }) {
     return (
       <div className="text-center p-4">
         <button
+          id="logout-button"
           onClick={onLogout}
           className="w-full max-w-md p-2 bg-red-600 rounded hover:bg-red-700"
         >

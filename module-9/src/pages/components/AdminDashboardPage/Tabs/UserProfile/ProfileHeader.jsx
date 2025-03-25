@@ -43,6 +43,7 @@ const ProfileHeader = ({
     <div className="flex items-center space-x-4">
       <div className="relative">
         <img
+          id="user-avatar"
           src={avatar || defaultAvatar} // Use default avatar if none is provided
           alt="User Avatar"
           className="w-16 h-16 rounded-full"

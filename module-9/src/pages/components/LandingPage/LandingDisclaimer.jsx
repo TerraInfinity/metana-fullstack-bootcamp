@@ -15,16 +15,16 @@ const LandingDisclaimer = ({ isOpen, onAccept, onDeny, onClose }) => {
 
   // Define button configurations for the modal
   const buttons = [
-    { text: 'Approve', color: 'bg-green-500', onClick: () => { console.log("Proceed button clicked."); onAccept(); } },
-    { text: 'Proceed with Restrictions', color: 'bg-yellow-500', onClick: () => { console.log("Proceed with Restrictions button clicked."); onDeny(); } },
-    { text: 'Exit', color: 'bg-red-500', onClick: () => { console.log("Exit button clicked."); onClose(); } },
+    { text: 'Approve', color: 'bg-green-500', onClick: () => { console.log("Proceed button clicked."); onAccept(); }, id: 'approve-button' },
+    { text: 'Proceed with Restrictions', color: 'bg-yellow-500', onClick: () => { console.log("Proceed with Restrictions button clicked."); onDeny(); }, id: 'proceed-restrictions-button' },
+    { text: 'Exit', color: 'bg-red-500', onClick: () => { console.log("Exit button clicked."); onClose(); }, id: 'exit-button' },
   ];
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} disclaimerText={
       <>
-        <h2>Disclaimer</h2>
-        <p>
+        <h2 id="disclaimer-heading">Disclaimer</h2>
+        <p id="disclaimer-text">
           Disclaimer: Please Read Carefully Before Proceeding
           {/* Disclaimer content explaining the nature of the platform */}
           By accessing this platform, you acknowledge that the content contains mature, controversial, and morally complex themes, including adult-oriented hypnotic material, esoteric spiritual technologies, and potentially suggestive or explicit content (which may include pornographic material). This includes discussions and depictions of sexuality, dissociation, near-death experiences, trauma, and psychological states that some may find triggering, disrespectful, or unsettling. Viewer discretion is strongly advised.
@@ -40,6 +40,66 @@ const LandingDisclaimer = ({ isOpen, onAccept, onDeny, onClose }) => {
         <p>You assume full responsibility for your experience.</p>
       </>
     }>
+      <div className="flex flex-col">
+        <ul className="bg-white p-4 rounded-lg shadow-md space-y-2">
+          {/* List of warnings regarding the content */}
+          <li id="warning-explicit-language" className="text-sm md:text-base text-gray-700 flex items-center">
+            <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
+            This content may include explicit language or imagery
+          </li>
+          <li id="warning-viewer-discretion" className="text-sm md:text-base text-gray-700 flex items-center">
+            <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
+            Viewer discretion is advised
+          </li>
+          <li id="warning-age-restriction" className="text-sm md:text-base text-gray-700 flex items-center">
+            <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
+            You must be 18+ to view unrestricted content
+          </li>
+        </ul>
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <div className="grid grid-cols-3 gap-3">
+            {/* Button to exit the disclaimer */}
+            <button
+              id="exit-disclaimer-button"
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              onClick={() => {
+                window.location.href = 'https://www.youtube.com/watch?v=oCrhTU9HkVQ';
+              }}
+              aria-label="Exit disclaimer"
+              style={{ fontSize: '1rem' }}
+            >
+              Exit
+            </button>
+            {/* Button to continue with restrictions (SFW) */}
+            <button
+              id="continue-restricted-button"
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              onClick={() => {
+                localStorage.setItem('restricted', 'true');
+                sessionStorage.setItem('disclaimerApproved', 'true');
+                window.location.href = '/home';
+              }}
+              aria-label="Continue with restrictions (SFW)"
+              style={{ fontSize: '1rem' }}
+            >
+              Continue (SFW)
+            </button>
+            {/* Button to accept the disclaimer (NSFW) */}
+            <button
+              id="accept-disclaimer-button"
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+              onClick={() => {
+                sessionStorage.setItem('disclaimerApproved', 'true');
+                window.location.href = '/home';
+              }}
+              aria-label="Accept disclaimer (NSFW)"
+              style={{ fontSize: '1rem' }}
+            >
+              Accept (NSFW)
+            </button>
+          </div>
+        </div>
+      </div>
     </Modal>
   );
 };

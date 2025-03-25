@@ -43,16 +43,19 @@ export const LandingPage = () => {
       <div className="flex flex-col items-center max-w-full w-[941px]">
         <Heading />
         <Paragraph />
-        <Button onClick={() => {
-          console.log("Button clicked. Checking disclaimer approval...");
-          if (sessionStorage.getItem('disclaimerApproved') === 'true') {
-            console.log("Disclaimer approved. Navigating to homepage...");
-            navigate('/home');
-          } else {
-            console.log("Disclaimer not approved. Opening disclaimer modal...");
-            setDisclaimerOpen(true);
-          }
-        }} />
+        <Button
+          id="landing-page-button"
+          onClick={() => {
+            console.log("Button clicked. Checking disclaimer approval...");
+            if (sessionStorage.getItem('disclaimerApproved') === 'true') {
+              console.log("Disclaimer approved. Navigating to homepage...");
+              navigate('/home');
+            } else {
+              console.log("Disclaimer not approved. Opening disclaimer modal...");
+              setDisclaimerOpen(true);
+            }
+          }}
+        />
         <LandingDisclaimer 
           isOpen={isDisclaimerOpen} 
           onAccept={handleAccept} 

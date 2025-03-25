@@ -21,14 +21,15 @@ const AchievementsGrid = ({ achievements }) => {
   }
 
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-4 gap-4" id="achievements-grid">
       {achievements.map((achievement) => (
-        <div key={achievement.id} className="flex justify-center">
+        <div key={achievement.id} className="flex justify-center" id={`achievement-${achievement.id}`}>
           <img
             src={achievement.iconUrl}
             alt={achievement.name}
             className="w-16 h-16 hover:scale-105 transition"
             title={achievement.name} // Tooltip displayed on hover
+            id={`achievement-icon-${achievement.id}`}
           />
         </div>
       ))}

@@ -63,22 +63,25 @@ function DeleteAccountModal({ isOpen, onClose, onDelete, userId, token }) {
           This action will permanently remove all data associated with your account. Are you sure you want to proceed?
         </p>
         <input
+          id="delete-account-password"
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)} // Update password state on input change
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password to confirm"
           className="w-full p-2 mb-4 bg-gray-800 border border-gray-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-red-500"
         />
-        {error && <p className="text-red-500 mb-4">{error}</p>} // Display error message if exists
+        {error && <p id="delete-account-error" className="text-red-500 mb-4">{error}</p>}
         <div className="flex justify-end gap-2">
           <button
-            onClick={handleDelete} // Trigger account deletion on button click
+            id="confirm-delete-account"
+            onClick={handleDelete}
             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
           >
             Delete Account
           </button>
           <button
-            onClick={onClose} // Close the modal on button click
+            id="cancel-delete-account"
+            onClick={onClose}
             className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
           >
             Cancel

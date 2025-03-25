@@ -50,6 +50,7 @@ const SocialBar = ({ socialLinks = {} }) => {
         .map(({ key, icon, isImage }) => (
           <a
             key={key}
+            id={`social-link-${key}`}
             href={socialLinks[key]}
             target="_blank"
             rel="noopener noreferrer"

@@ -66,6 +66,7 @@ const LandingDisclaimerModal = ({
           <div className="grid grid-cols-3 gap-3">
             {/* Button to exit the disclaimer */}
             <button
+              id="exit-disclaimer-button"
               className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               onClick={() => {
                 window.location.href = 'https://www.youtube.com/watch?v=oCrhTU9HkVQ';
@@ -77,6 +78,7 @@ const LandingDisclaimerModal = ({
             </button>
             {/* Button to continue with restrictions (SFW) */}
             <button
+              id="continue-restricted-button"
               className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
               onClick={() => {
                 localStorage.setItem('restricted', 'true');
@@ -90,6 +92,7 @@ const LandingDisclaimerModal = ({
             </button>
             {/* Button to accept the disclaimer (NSFW) */}
             <button
+              id="accept-disclaimer-button"
               className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               onClick={() => {
                 sessionStorage.setItem('disclaimerApproved', 'true');

@@ -57,7 +57,7 @@ const Footer = () => {
           <p className="mb-6 text-gray-400">
             Get blog articles and offers via email
           </p>
-          <NewsletterForm />
+          <NewsletterForm id="newsletter-form" />
         </div>
       </div>
       <div className="flex justify-between items-center pt-10 text-gray-400 border-t border-solid border-t-gray-700 max-sm:flex-col max-sm:gap-5 max-sm:text-center">

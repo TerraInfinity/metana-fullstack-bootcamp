@@ -46,11 +46,12 @@ const PrivacySettings = ({ privacySettings, onUpdatePrivacy }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" id="privacy-settings">
       {/* Activity Visibility Dropdown */}
       <div>
-        <label className="block text-white mb-1">Activity Visibility</label>
+        <label className="block text-white mb-1" htmlFor="activity-visibility">Activity Visibility</label>
         <select
+          id="activity-visibility"
           value={settings.activity}
           onChange={(e) => handleChange('activity', e.target.value)}
           className="w-full bg-gray-700 text-white p-2 rounded"
@@ -62,8 +63,9 @@ const PrivacySettings = ({ privacySettings, onUpdatePrivacy }) => {
       </div>
       {/* Profile Visibility Dropdown */}
       <div>
-        <label className="block text-white mb-1">Profile Visibility</label>
+        <label className="block text-white mb-1" htmlFor="profile-visibility">Profile Visibility</label>
         <select
+          id="profile-visibility"
           value={settings.profile}
           onChange={(e) => handleChange('profile', e.target.value)}
           className="w-full bg-gray-700 text-white p-2 rounded"
@@ -75,6 +77,7 @@ const PrivacySettings = ({ privacySettings, onUpdatePrivacy }) => {
       </div>
       {/* Save Changes Button */}
       <button
+        id="save-privacy-settings"
         onClick={handleSave}
         className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
       >

@@ -18,22 +18,22 @@ const AdditionalDetails = ({ details = {} }) => {
   return (
     <div className="space-y-2">
       {/* Display age with a fallback if not specified */}
-      <p>
+      <p id="user-age">
         <span className="font-bold text-white">Age: </span>
         <span className="text-gray-300">{age || 'Not specified'}</span>
       </p>
       {/* Display gender with a fallback if not specified */}
-      <p>
+      <p id="user-gender">
         <span className="font-bold text-white">Gender: </span>
         <span className="text-gray-300">{gender || 'Not specified'}</span>
       </p>
       {/* Display orientation with a fallback if not specified */}
-      <p>
+      <p id="user-orientation">
         <span className="font-bold text-white">Orientation: </span>
         <span className="text-gray-300">{orientation || 'Not specified'}</span>
       </p>
       {/* Display pronouns with a fallback if not specified */}
-      <p>
+      <p id="user-pronouns">
         <span className="font-bold text-white">Pronouns: </span>
         <span className="text-gray-300">{pronouns || 'Not specified'}</span>
       </p>

@@ -37,9 +37,9 @@ export const PrivateRoute = ({ children }) => {
   }
 
   if (loading) {
-    return <div>Loading...</div>; // Display a loading message while checking authentication status
+    return <div id="loading-message">Loading...</div>; // Display a loading message while checking authentication status
   }
 
   // Render children if authenticated; otherwise, redirect to login and remember the current location
-  return isAuthenticated ? children : <Navigate to="/login" state={{ from: location }} />;
+  return isAuthenticated ? children : <Navigate to="/login" state={{ from: location }} id="redirect-login" />;
 };

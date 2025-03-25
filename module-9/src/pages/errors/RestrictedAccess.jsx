@@ -14,7 +14,7 @@ const RestrictedAccess = () => {
   return (
     <Layout title="403 - Restricted Access">
       <div className="text-center">
-        <p>You do not have permission to view this page.</p>
+        <p id="restricted-access-message">You do not have permission to view this page.</p>
       </div>
     </Layout>
   );

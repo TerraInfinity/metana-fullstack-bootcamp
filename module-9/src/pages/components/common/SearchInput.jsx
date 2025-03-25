@@ -11,7 +11,7 @@ import React from 'react';
 const SearchInput = ({ id }) => {
   // Prevent the default form submission behavior
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
+    <form id={`${id}-form`} onSubmit={(e) => e.preventDefault()}>
       <label htmlFor={id} className="sr-only">Search</label>
       <input
         type="text"

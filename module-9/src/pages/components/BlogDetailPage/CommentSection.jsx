@@ -71,21 +71,21 @@ function CommentSection({ isLoggedIn, comments, blogId }) {
   };
 
   return (
-    <div>
-      <h3 className="mb-4 text-xl font-semibold">Comments</h3>
-      <ul className="space-y-4">
+    <div id="comment-section">
+      <h3 className="mb-4 text-xl font-semibold" id="comments-title">Comments</h3>
+      <ul className="space-y-4" id="comment-list">
         {commentList.map((comment) => (
-          <li key={comment.id} className="bg-gray-800 p-4 rounded-lg">
+          <li key={comment.id} className="bg-gray-800 p-4 rounded-lg" id={`comment-${comment.id}`}>
             <div className="flex justify-between items-baseline mb-2">
               <strong className="text-blue-400">{comment.User.name}</strong>
               <span className="text-sm text-gray-400">{comment.date}</span>
             </div>
             <p>{comment.content}</p>
             {comment.rating > 0 && (
-              <p className="text-yellow-400">
+              <p className="text-yellow-400" id={`comment-rating-${comment.id}`}>
                 Rating: {'★'.repeat(comment.rating)}{'★'.repeat(5 - comment.rating)}
               </p>
-            )} {/* Display rating as stars */}
+            )}
           </li>
         ))}
       </ul>

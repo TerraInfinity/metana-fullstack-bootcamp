@@ -84,6 +84,7 @@ function AuthToggle({ isLogin, onToggle }) {
       <p>
         {isLogin ? "Need an account?" : 'Have an account?'}{' '}
         <button
+          id="auth-toggle-button"
           onClick={onToggle}
           className="text-blue-400 hover:underline"
           type="button"

@@ -81,6 +81,7 @@ const ChooseYourPath = ({ onSelectPath, selectedPath }) => {
             className="flex flex-col items-center"
           >
             <div
+              id={`path-${path.name.toLowerCase().replace(/\s+/g, '-')}`}
               onClick={() => handlePathClick(path.name)}
               className={`relative cursor-pointer rounded-lg overflow-hidden h-160 w-full ${
                 tempSelectedPath === path.name ? 'ring-4 ring-blue-500' : ''
@@ -119,6 +120,7 @@ const ChooseYourPath = ({ onSelectPath, selectedPath }) => {
             </div>
             {tempSelectedPath === path.name && (
               <button
+                id="lock-in-button"
                 onClick={handleLockIn}
                 className="mt-4 bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition-colors duration-200 w-full max-w-xs"
               >

@@ -54,6 +54,7 @@ export function PublicProfilePage() {
       {/* Tab Navigation */}
       <div className="flex justify-center space-x-4 mb-4">
         <button
+          id="public-profile-tab-button"
           onClick={() => setCurrentTab('publicProfile')}
           className={`p-2 rounded ${
             currentTab === 'publicProfile' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'
@@ -62,6 +63,7 @@ export function PublicProfilePage() {
           Public Profile
         </button>
         <button
+          id="stats-tab-button-public"
           onClick={() => setCurrentTab('stats')}
           className={`p-2 rounded ${
             currentTab === 'stats' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'
@@ -70,6 +72,7 @@ export function PublicProfilePage() {
           Stats
         </button>
         <button
+          id="activity-tab-button-public"
           onClick={() => setCurrentTab('activity')}
           className={`p-2 rounded ${
             currentTab === 'activity' ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'

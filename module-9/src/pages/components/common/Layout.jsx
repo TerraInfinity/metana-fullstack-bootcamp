@@ -21,7 +21,7 @@ const Layout = ({ title, children }) => {
     <div className="min-h-screen bg-slate-900 text-white px-4 sm:px-6 lg:px-8">
       <Header />
       <PageTitle title={title} /> {/* Renders the PageTitle component with the provided title prop */}
-      <main className="max-w-full overflow-x-hidden">{children}</main> {/* Main content area, prevents horizontal overflow */}
+      <main id="main-content" className="max-w-full overflow-x-hidden">{children}</main> {/* Main content area, prevents horizontal overflow */}
       <AdBanner />
       <Footer className="max-w-full" /> {/* Renders the Footer component, ensuring it does not exceed full width */}
     </div>

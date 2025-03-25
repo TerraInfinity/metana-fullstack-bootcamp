@@ -28,11 +28,11 @@ function FeedbackSection({ comments, blogId }) {
   const { isAuthenticated } = useContext(AuthContext); // Access the authentication status from AuthContext
 
   return (
-    <section className="mt-12">
-      <h2 className="mb-6 text-2xl font-semibold">Feedback</h2>
+    <section className="mt-12" id="feedback-section">
+      <h2 className="mb-6 text-2xl font-semibold" id="feedback-title">Feedback</h2>
       <CommentSection isLoggedIn={isAuthenticated} comments={comments} blogId={blogId} />
       {!isAuthenticated && (
-        <div className="mt-8 p-4 bg-gray-800 rounded-lg text-center">
+        <div className="mt-8 p-4 bg-gray-800 rounded-lg text-center" id="login-prompt">
           <p className="mb-4">You must be logged in to leave a comment.</p>
         </div>
       )}

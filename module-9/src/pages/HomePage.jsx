@@ -46,13 +46,15 @@ export const HomePage = () => {
     fetchBlogs();
   }, []);
 
-  if (loading) return <div>Loading...</div>; // Handle loading state
-  if (error) return <div>{error}</div>; // Handle error state
+  if (loading) return <div id="loading-message">Loading...</div>; // Handle loading state
+  if (error) return <div id="error-message">{error}</div>; // Handle error state
 
   return (
-    <Layout title="The Bambi Cloud Podcast">
-      <FeaturedPost blogs={blogs.filter(blog => blog.featured)} />
-      <BlogPostGrid blogs={blogs} />
+    <Layout title="The Bambi Cloud Podcast" id="home-page-layout">
+      <div id="home-page-content">
+        <FeaturedPost id="featured-posts-section" blogs={blogs.filter(blog => blog.featured)} />
+        <BlogPostGrid id="blog-posts-grid" blogs={blogs} />
+      </div>
     </Layout>
   );
 };

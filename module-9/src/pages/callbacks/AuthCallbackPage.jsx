@@ -34,5 +34,5 @@ export const AuthCallbackPage = () => {
     }
   }, [location, login, navigate]);
 
-  return <div>Loading...</div>;
+  return <div id="auth-callback-loading">Loading...</div>;
 };
